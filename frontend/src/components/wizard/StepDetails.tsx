@@ -1,0 +1,59 @@
+import { Camera } from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+
+interface StepDetailsProps {
+  pesoKg?: number;
+  valorDeclaradoUsd?: number;
+  onChangePeso: (value: number | undefined) => void;
+  onChangeValor: (value: number | undefined) => void;
+  onSubmit: () => void;
+  onBack: () => void;
+}
+
+export function StepDetails({
+  pesoKg,
+  valorDeclaradoUsd,
+  onChangePeso,
+  onChangeValor,
+  onSubmit,
+  onBack,
+}: StepDetailsProps) {
+  return (
+    <div>
+      <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2">Paso 3 de 3 · Recomendado</p>
+      <h2 className="text-2xl font-semibold text-slate-900 mb-2">Agrega detalles para mayor precisión</h2>
+      <p className="text-sm text-slate-500 mb-6">Este paso es opcional, pero mejora la exactitud del diagnóstico.</p>
+
+      <div className="grid sm:grid-cols-2 gap-4 mb-4">
+        <Input
+          label="Peso aproximado (kg)"
+          type="number"
+          value={pesoKg ?? ""}
+          onChange={(e) => onChangePeso(e.target.value ? Number(e.target.value) : undefined)}
+          placeholder="0.5"
+        />
+        <Input
+          label="Valor declarado (USD)"
+          type="number"
+          value={valorDeclaradoUsd ?? ""}
+          onChange={(e) => onChangeValor(e.target.value ? Number(e.target.value) : undefined)}
+          placeholder="50"
+        />
+      </div>
+
+      <div className="rounded-xl border-2 border-dashed border-slate-300 p-6 text-center text-slate-400 mb-6 cursor-not-allowed">
+        <Camera className="w-8 h-8 mx-auto mb-2" />
+        <p className="text-sm">Agregar foto del ítem (opcional)</p>
+        <p className="text-xs mt-1 text-slate-300">Preparado para auditoría visual — Fase 2</p>
+      </div>
+
+      <div className="flex gap-3">
+        <Button variant="secondary" onClick={onBack}>← Atrás</Button>
+        <Button onClick={onSubmit} className="flex-1 sm:flex-none">
+          🔍 Verificar envío
+        </Button>
+      </div>
+    </div>
+  );
+}
