@@ -1,34 +1,40 @@
-# 📦 BorderCheck AI
+# 📦 BorderCheck AI — Frontend Client
 
-> **Optimización Logística y Cumplimiento Aduanero mediante Inteligencia Artificial**
+> **Interfaz Web para la Optimización Logística y Cumplimiento Aduanero mediante Inteligencia Artificial**
 
-BorderCheck AI es una plataforma diseñada para simplificar y automatizar la gestión de trámites aduaneros, el análisis de documentación de importación/exportación y la verificación de cumplimiento normativo en procesos logísticos.
+BorderCheck AI es una plataforma diseñada para simplificar y automatizar la gestión de trámites aduaneros, el análisis de documentación de importación/exportación y la verificación de cumplimiento normativo en procesos logísticos (restricciones Hazmat, baterías, perfumes, normativas de origen/destino).
 
 ---
 
 ## 🚀 Estado del Proyecto
 
-Actualmente el proyecto se encuentra en la **Fase Inicial de Desarrollo (Versión Web - MVP)**.
+Actualmente, el cliente web se encuentra en la **Fase Inicial de Desarrollo (Web MVP)**, preparado para conectarse con la API REST del backend y la orquestación de reglas aduaneras con la Gemini API.
 
 ---
 
 ## 🛠️ Tecnologías y Herramientas
 
-* **Backend:** NestJS (Node.js / TypeScript)
-* **Frontend:** HTML5, CSS3, JavaScript / Framework Web
-* **Infraestructura:** Docker
+* **Librería/Framework:** React.js (con TypeScript)
+* **Build Tool:** Vite
+* **Estilos:** Tailwind CSS / PostCSS
+* **Contenedores:** Docker & Docker Compose
 * **Control de Versiones:** Git & GitHub
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Repositorio
 
 ```text
-bordercheck-ai/
-├── apps/ / src/        # Código fuente (Backend / Frontend)
-├── docker/             # Configuración de contenedores y Dockerfile
-├── docs/               # Documentación y diagramas del proyecto
+frontend/
+├── src/                # Componentes, vistas y lógica del cliente
+├── public/             # Archivos estáticos
+├── .dockerignore       # Exclusiones para la imagen de Docker
+├── .env                # Variables de entorno locales
 ├── .gitignore          # Archivos excluidos de Git
-├── docker-compose.yml  # Configuración del entorno local
-├── package.json        # Dependencias y scripts
-└── README.md           # Documentación principal
+├── Dockerfile          # Configuración de contenedor Docker
+├── docker-compose.yml  # Servicio para entorno de desarrollo
+├── index.html          # Punto de entrada HTML
+├── package.json        # Dependencias y scripts de Vite
+├── tailwind.config.ts  # Configuración de Tailwind CSS
+├── vite.config.ts      # Configuración del empaquetador Vite
+└── README.md           # Documentación del cliente
