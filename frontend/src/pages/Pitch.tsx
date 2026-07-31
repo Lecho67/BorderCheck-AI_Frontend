@@ -12,6 +12,7 @@ import {
   Radar,
 } from "lucide-react";
 import { FaqItem } from "@/components/pitch/FaqItem";
+import { ComparisonTable } from "@/components/pitch/ComparisonTable";
 
 const valores = [
   {
@@ -131,6 +132,30 @@ export function Pitch() {
           </div>
         </div>
       </header>
+      {/* CTA hacia Herramientas Interactivas */}
+<section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-blue/5 via-white to-ai-accent/5">
+  <div className="max-w-4xl mx-auto text-center">
+    <span className="inline-block mb-4 px-4 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-semibold tracking-wide">
+      Impulsado por IA
+    </span>
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      Rastrea tus envíos y calcula tus impuestos en segundos
+    </h2>
+    <p className="text-gray-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+      Prueba el Rastreador Inteligente y la Calculadora de Envíos e Impuestos Aduaneros de BorderCheck,
+      diseñados con IA para darte resultados precisos al instante.
+    </p>
+    <Link
+      to="/herramientas"
+      className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg shadow-brand-blue/20 transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
+    >
+      Probar herramientas interactivas
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </Link>
+  </div>
+</section>
 
       {/* Diferenciadores */}
       <section className="max-w-4xl mx-auto px-6 pb-20 grid sm:grid-cols-3 gap-5">
@@ -179,6 +204,7 @@ export function Pitch() {
         </div>
       </section>
 
+
       {/* Beneficios / Casos de uso */}
       <section className="max-w-5xl mx-auto px-6 py-20">
         <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
@@ -207,6 +233,20 @@ export function Pitch() {
           })}
         </div>
       </section>
+      {/* Casillero e Importación/Exportación — comparativa */}
+<section className="max-w-4xl mx-auto px-6 py-20">
+  <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+    Casillero e importación/exportación directa
+  </p>
+  <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 text-center mb-4">
+    La misma logística, con cero sorpresas en aduana
+  </h2>
+  <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
+    Así se compara la experiencia de un casillero virtual tradicional frente a un despacho
+    pre-validado por BorderCheck AI.
+  </p>
+  <ComparisonTable />
+</section>
 
       {/* Cita / posicionamiento */}
       <section className="bg-white border-y border-slate-200 py-14 text-center">
@@ -232,18 +272,7 @@ export function Pitch() {
         </div>
       </section>
 
-      {/* CTA final */}
-      <section id="cta" className="text-center py-24 px-6">
-        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-8">
-          ¿Listos para ver el diagnóstico en vivo?
-        </h2>
-        <Link
-          to="/consulta/nueva"
-          className="inline-block bg-brand-blue text-white px-8 py-4 rounded-xl font-medium hover:bg-brand-blue-hover transition-colors"
-        >
-          Solicitar una demo
-        </Link>
-      </section>
+      
     </main>
   );
 }

@@ -63,13 +63,15 @@ export function NewQuery() {
 
       {wizardStep === 2 && (
         <StepDetails
-          pesoKg={wizardData.pesoKg}
-          valorDeclaradoUsd={wizardData.valorDeclaradoUsd}
-          onChangePeso={(v) => updateWizardData({ pesoKg: v })}
-          onChangeValor={(v) => updateWizardData({ valorDeclaradoUsd: v })}
-          onSubmit={handleSubmit}
-          onBack={() => setWizardStep(1)}
-        />
+  pesoKg={wizardData.pesoKg}
+  valorDeclaradoUsd={wizardData.valorDeclaradoUsd}
+  partidaArancelariaTentativa={wizardData.partidaArancelariaTentativa}
+  onChangePeso={(v) => updateWizardData({ pesoKg: v })}
+  onChangeValor={(v) => updateWizardData({ valorDeclaradoUsd: v })}
+  onChangePartida={(v) => updateWizardData({ partidaArancelariaTentativa: v })}
+  onSubmit={handleSubmit}
+  onBack={() => setWizardStep(1)}
+/>
       )}
     </main>
   );

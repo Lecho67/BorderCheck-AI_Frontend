@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/Button";
 interface StepDetailsProps {
   pesoKg?: number;
   valorDeclaradoUsd?: number;
+  partidaArancelariaTentativa?: string;
   onChangePeso: (value: number | undefined) => void;
   onChangeValor: (value: number | undefined) => void;
+  onChangePartida: (value: string) => void;
   onSubmit: () => void;
   onBack: () => void;
 }
@@ -14,8 +16,11 @@ interface StepDetailsProps {
 export function StepDetails({
   pesoKg,
   valorDeclaradoUsd,
+  partidaArancelariaTentativa,
+  
   onChangePeso,
   onChangeValor,
+  onChangePartida,
   onSubmit,
   onBack,
 }: StepDetailsProps) {
@@ -40,6 +45,18 @@ export function StepDetails({
           onChange={(e) => onChangeValor(e.target.value ? Number(e.target.value) : undefined)}
           placeholder="50"
         />
+      </div>
+
+      <div className="mb-4">
+        <Input
+          label="Partida arancelaria tentativa (HS Code) — opcional"
+          value={partidaArancelariaTentativa ?? ""}
+          onChange={(e) => onChangePartida(e.target.value)}
+          placeholder="Ej: 8517.70.00"
+        />
+        <p className="text-xs text-slate-400 mt-1">
+          Si no la conoces, la IA propondrá una tentativa según la descripción del ítem.
+        </p>
       </div>
 
       <div className="rounded-xl border-2 border-dashed border-slate-300 p-6 text-center text-slate-400 mb-6 cursor-not-allowed">

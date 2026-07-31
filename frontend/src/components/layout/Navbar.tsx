@@ -18,6 +18,15 @@ export function Navbar() {
           <Link to="/dashboard/historial" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
             Historial
           </Link>
+          <Link to="/casillero" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+            Casillero
+          </Link>
+          <Link to="/documentos" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+            Documentos
+          </Link>
+          <Link to="/herramientas" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+            Herramientas
+          </Link>
           <Link to="/dashboard" className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-medium text-slate-600">
             JD
           </Link>

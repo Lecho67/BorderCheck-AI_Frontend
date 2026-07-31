@@ -3,6 +3,7 @@ import { CheckCircle2, Download } from "lucide-react";
 import { VerdictCard } from "@/components/verdict/VerdictCard";
 import { JustificationCard } from "@/components/verdict/JustificationCard";
 import { DocumentChecklist } from "@/components/verdict/DocumentChecklist";
+import { TaxBreakdownCard } from "@/components/verdict/TaxBreakdownCard";
 import { Button } from "@/components/ui/Button";
 import { useQueryStore } from "@/store/useQueryStore";
 
@@ -33,9 +34,18 @@ export function ResultView() {
         <DocumentChecklist documentos={diagnostico.documentosRequeridos} nivel={diagnostico.nivel} />
       </div>
 
+      <div className="mb-6">
+        <TaxBreakdownCard
+          desglose={diagnostico.desgloseImpuestos}
+          partidaArancelariaTentativa={diagnostico.partidaArancelariaTentativa}
+        />
+      </div>
+
       {diagnostico.accionesSugeridas.length > 0 && (
         <div className="rounded-xl border border-slate-200 bg-white p-6 mb-6">
-          <p className="text-sm font-semibold text-slate-900 mb-3">💡 ¿Qué puedes hacer ahora?</p>
+          <p className="text-sm font-semibold text-slate-900 mb-3">
+            📋 Recomendaciones de cumplimiento aduanero
+          </p>
           <ul className="space-y-1.5 text-sm text-slate-600">
             {diagnostico.accionesSugeridas.map((a, i) => (
               <li key={i}>— {a}</li>
@@ -52,6 +62,9 @@ export function ResultView() {
           <Button variant="secondary">
             <Download className="w-4 h-4 inline mr-1" /> Exportar PDF
           </Button>
+          <Link to="/dashboard/historial">
+            <Button variant="secondary">Ver historial</Button>
+          </Link>
           <Link to="/consulta/nueva">
             <Button>Nueva consulta</Button>
           </Link>
