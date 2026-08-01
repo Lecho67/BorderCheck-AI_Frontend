@@ -1,47 +1,48 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Landing } from "@/pages/Landing";
-import { Login } from "@/pages/Login";
-import { Register } from "@/pages/Register";
-import { Dashboard } from "@/pages/Dashboard";
-import { NewQuery } from "@/pages/NewQuery";
-import { ResultView } from "@/pages/ResultView";
-import { History } from "@/pages/History";
-import { Pitch } from "@/pages/Pitch";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Navbar } from "./components/layout/Navbar";
+import { Pitch } from "./pages/Pitch";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Locker from "./pages/Locker";
 import Documents from "./pages/Documents";
-import Tools from './pages/Tools';
-
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1">{children}</div>
-      <Footer />
-    </div>
-  );
-}
+import Tools from "./pages/Tools";
+// import Historial, Dashboard, ConsultaNueva según ya existan en tu proyecto
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
         <Routes>
-          <Route path="/pitch" element={<Pitch />} />
           <Route path="/" element={<Pitch />} />
-          <Route path="/landing" element={<Landing />} />
+          <Route path="/pitch" element={<Pitch />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/historial" element={<History />} />
-          <Route path="/consulta/nueva" element={<NewQuery />} />
-          <Route path="/consulta/:id" element={<ResultView />} />
-          <Route path="/casillero" element={<Locker />} />\
+          <Route path="/register" element={<Register />} />
           <Route path="/herramientas" element={<Tools />} />
-          <Route path="/documentos" element={<Documents />} />
+
+          {/* Rutas privadas */}
+          <Route
+            path="/casillero"
+            element={
+              <ProtectedRoute>
+                <Locker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/documentos"
+            element={
+              <ProtectedRoute>
+                <Documents />
+              </ProtectedRoute>
+            }
+          />
+          {/* Repite el mismo patrón para /dashboard/historial y /consulta/nueva
+              si también deben ser privadas */}
         </Routes>
-      </Layout>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
