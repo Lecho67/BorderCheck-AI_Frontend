@@ -14,7 +14,7 @@ export function Dashboard() {
       <h1 className="text-2xl font-semibold text-slate-900 mb-1">Hola, {userName}</h1>
       <p className="text-slate-500 mb-8">Tienes {consultas.length} consultas registradas.</p>
 
-      <div className="rounded-xl border-2 border-brand-blue bg-blue-50 p-6 mb-8 flex items-center justify-between">
+      <div className="rounded-xl border-2 border-brand-blue bg-brand-blue/5 p-6 mb-8 flex items-center justify-between">
         <div>
           <p className="font-semibold text-slate-900">¿Nuevo envío?</p>
           <p className="text-sm text-slate-600">Obtén tu diagnóstico en menos de 1 minuto.</p>

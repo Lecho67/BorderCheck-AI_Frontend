@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { CheckCircle2, Download } from "lucide-react";
+import { CheckCircle2, Download, ClipboardList } from "lucide-react";
 import { VerdictCard } from "@/components/verdict/VerdictCard";
 import { JustificationCard } from "@/components/verdict/JustificationCard";
 import { DocumentChecklist } from "@/components/verdict/DocumentChecklist";
@@ -43,8 +43,8 @@ export function ResultView() {
 
       {diagnostico.accionesSugeridas.length > 0 && (
         <div className="rounded-xl border border-slate-200 bg-white p-6 mb-6">
-          <p className="text-sm font-semibold text-slate-900 mb-3">
-            📋 Recomendaciones de cumplimiento aduanero
+          <p className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+            <ClipboardList className="w-4 h-4" /> Recomendaciones de cumplimiento aduanero
           </p>
           <ul className="space-y-1.5 text-sm text-slate-600">
             {diagnostico.accionesSugeridas.map((a, i) => (

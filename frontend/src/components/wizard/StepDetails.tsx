@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+import { Camera, Search } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -67,8 +67,8 @@ export function StepDetails({
 
       <div className="flex gap-3">
         <Button variant="secondary" onClick={onBack}>← Atrás</Button>
-        <Button onClick={onSubmit} className="flex-1 sm:flex-none">
-          🔍 Verificar envío
+        <Button onClick={onSubmit} className="flex-1 sm:flex-none flex items-center justify-center gap-2">
+          <Search className="w-4 h-4" /> Verificar envío
         </Button>
       </div>
     </div>

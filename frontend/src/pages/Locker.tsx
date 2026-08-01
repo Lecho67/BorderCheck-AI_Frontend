@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Check, Copy } from "lucide-react";
 import { PreAlertForm } from "../components/PreAlertForm";
 
 interface LockerAddress {
@@ -23,13 +24,20 @@ const ADDRESSES: LockerAddress[] = [
 
 export default function Locker() {
   const [showForm, setShowForm] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  function handleCopy(addr: LockerAddress) {
+    navigator.clipboard.writeText(`${addr.suite}, ${addr.addressLine}, ${addr.city}`);
+    setCopiedId(addr.id);
+    setTimeout(() => setCopiedId((current) => (current === addr.id ? null : current)), 2000);
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       <header className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mi Casillero</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900">Mi Casillero</h1>
+          <p className="text-sm text-slate-500 mt-1">
             Direcciones asignadas y pre-alertas de paquetes en tránsito.
           </p>
         </div>
@@ -48,7 +56,7 @@ export default function Locker() {
         {ADDRESSES.map((addr) => (
           <div
             key={addr.id}
-            className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm"
+            className="border border-slate-200 rounded-xl p-5 bg-white shadow-sm"
           >
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wide
@@ -56,20 +64,28 @@ export default function Locker() {
                 {addr.country}
               </span>
             </div>
-            <p className="font-medium text-gray-900">{addr.suite}</p>
-            <p className="text-sm text-gray-600 mt-1">{addr.addressLine}</p>
-            <p className="text-sm text-gray-600">{addr.city}</p>
+            <p className="font-medium text-slate-900">{addr.suite}</p>
+            <p className="text-sm text-slate-600 mt-1">{addr.addressLine}</p>
+            <p className="text-sm text-slate-600">{addr.city}</p>
             <button
-              className="text-sm text-brand-blue font-medium mt-3
-                         hover:underline focus:outline-none focus:ring-2
-                         focus:ring-brand-blue rounded"
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  `${addr.suite}, ${addr.addressLine}, ${addr.city}`
-                )
-              }
+              className={`flex items-center gap-1.5 text-sm font-medium mt-3
+                         focus:outline-none focus:ring-2
+                         focus:ring-brand-blue rounded transition-colors ${
+                           copiedId === addr.id
+                             ? "text-verdict-green-text"
+                             : "text-brand-blue hover:underline"
+                         }`}
+              onClick={() => handleCopy(addr)}
             >
-              Copiar dirección
+              {copiedId === addr.id ? (
+                <>
+                  <Check className="w-3.5 h-3.5" /> Copiado
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" /> Copiar dirección
+                </>
+              )}
             </button>
           </div>
         ))}
@@ -77,10 +93,10 @@ export default function Locker() {
 
       {/* Listado de pre-alertas (placeholder para conectar a data real) */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">
+        <h2 className="text-lg font-semibold text-slate-900 mb-3">
           Pre-alertas activas
         </h2>
-        <div className="border border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 text-sm">
+        <div className="border border-dashed border-slate-300 rounded-xl p-8 text-center text-slate-500 text-sm">
           Aún no tienes paquetes pre-alertados. Usa el botón "Pre-alertar
           paquete" para que la IA escanee tu factura antes de que llegue a
           bodega.

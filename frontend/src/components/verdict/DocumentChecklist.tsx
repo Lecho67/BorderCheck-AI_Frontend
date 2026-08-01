@@ -24,7 +24,7 @@ export function DocumentChecklist({ documentos, nivel }: DocumentChecklistProps)
           {documentos.map((doc, i) => (
             <Checkbox key={i} label={doc} checked={!!checked[i]} onChange={() => toggle(i)} />
           ))}
-          <Button variant="secondary" className="mt-3 w-full !bg-slate-900 !text-white !border-0 hover:!bg-slate-800">
+          <Button variant="secondary" className="mt-3 w-full">
             Descargar plantillas
           </Button>
         </div>

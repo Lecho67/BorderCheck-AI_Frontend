@@ -18,7 +18,7 @@ export function LoadingSkeleton() {
 
   return (
     <div>
-      <div className="rounded-xl border-l-4 border-slate-300 bg-white p-6 mb-6">
+      <div className="rounded-xl border-l-4 border-ai-accent bg-white p-6 mb-6">
         <div className="h-6 w-2/3 rounded bg-slate-100 animate-pulse mb-3"></div>
         <div className="h-4 w-1/2 rounded bg-slate-100 animate-pulse"></div>
       </div>
@@ -34,7 +34,7 @@ export function LoadingSkeleton() {
         </div>
       </div>
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <Loader2 className="w-4 h-4 animate-spin text-brand-blue" />
+        <Loader2 className="w-4 h-4 animate-spin text-ai-accent" />
         <span>{mensajes[index]}</span>
       </div>
     </div>

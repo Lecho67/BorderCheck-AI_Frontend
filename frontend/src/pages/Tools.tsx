@@ -8,24 +8,24 @@ export default function Tools() {
   const [activeTab, setActiveTab] = useState<Tab>('tracking');
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Encabezado */}
         <div className="mb-8 text-center sm:text-left">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Herramientas Interactivas</h1>
-          <p className="text-gray-600 mt-2 max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Herramientas Interactivas</h1>
+          <p className="text-slate-600 mt-2 max-w-2xl">
             Rastrea tus paquetes y calcula tus impuestos aduaneros con la asistencia de la IA de BorderCheck.
           </p>
         </div>
 
         {/* Tabs - móvil apiladas, desktop en fila */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 bg-white p-2 rounded-xl shadow-sm border border-gray-100 w-full sm:w-fit">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 bg-white p-2 rounded-xl shadow-sm border border-slate-200 w-full sm:w-fit">
           <button
             onClick={() => setActiveTab('tracking')}
             className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-colors ${
               activeTab === 'tracking'
                 ? 'bg-brand-blue text-white'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             Rastreador Inteligente
@@ -35,7 +35,7 @@ export default function Tools() {
             className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-colors ${
               activeTab === 'calculator'
                 ? 'bg-brand-blue text-white'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             Calculadora de Envíos e Impuestos
@@ -43,14 +43,14 @@ export default function Tools() {
         </div>
 
         {/* Contenido */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 lg:p-8">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 lg:p-8">
           {activeTab === 'tracking' && (
             <div>
               <div className="flex items-start gap-3 mb-6 p-4 rounded-xl bg-ai-accent/5 border border-ai-accent/20">
                 <svg className="w-5 h-5 text-ai-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-slate-700">
                   <span className="font-semibold text-ai-accent">Cómo ayuda la IA:</span> nuestro modelo cruza el estado
                   de tu paquete con patrones históricos de aduana para anticipar retrasos y notificarte antes de que ocurran.
                 </p>
@@ -65,7 +65,7 @@ export default function Tools() {
                 <svg className="w-5 h-5 text-ai-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-slate-700">
                   <span className="font-semibold text-ai-accent">Cómo ayuda la IA:</span> clasificamos automáticamente tu
                   producto por categoría arancelaria para estimar impuestos con mayor precisión que un cálculo manual.
                 </p>

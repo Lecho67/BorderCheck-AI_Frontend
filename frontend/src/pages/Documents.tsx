@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DocumentCard, DocumentItem } from "../components/DocumentCard";
+import { Chip } from "@/components/ui/Chip";
 
 const MOCK_DOCS: DocumentItem[] = [
   {
@@ -40,10 +41,10 @@ export default function Documents() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-slate-900">
           Centro de Documentación Aduanera
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Organiza facturas, certificados de origen y registros de
           importación por envío.
         </p>
@@ -57,19 +58,7 @@ export default function Documents() {
             { key: "revision", label: "Requiere revisión" },
           ] as { key: FilterType; label: string }[]
         ).map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition
-              focus:outline-none focus:ring-2 focus:ring-brand-blue
-              ${
-                filter === f.key
-                  ? "bg-brand-blue text-white border-brand-blue"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-brand-blue"
-              }`}
-          >
-            {f.label}
-          </button>
+          <Chip key={f.key} label={f.label} active={filter === f.key} onClick={() => setFilter(f.key)} />
         ))}
       </div>
 
@@ -80,7 +69,7 @@ export default function Documents() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="border border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 text-sm">
+        <div className="border border-dashed border-slate-300 rounded-xl p-8 text-center text-slate-500 text-sm">
           No hay documentos en esta categoría.
         </div>
       )}

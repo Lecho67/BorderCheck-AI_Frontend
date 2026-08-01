@@ -44,7 +44,7 @@ export function Select({ options, value, onChange, placeholder = "Selecciona..."
                   setOpen(false);
                   setSearch("");
                 }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 text-sm text-slate-700"
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-blue/10 text-sm text-slate-700"
               >
                 {option}
               </button>

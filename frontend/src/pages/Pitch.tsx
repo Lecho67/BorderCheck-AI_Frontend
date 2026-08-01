@@ -101,7 +101,7 @@ export function Pitch() {
     <main>
       {/* Hero */}
       <header className="max-w-2xl mx-auto px-6 pt-24 pb-16 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-ai-accent text-xs font-medium mb-6">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ai-accent/10 text-ai-accent text-xs font-medium mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
           Validación de IA aplicada a reglas de negocio críticas
         </span>
@@ -138,10 +138,10 @@ export function Pitch() {
     <span className="inline-block mb-4 px-4 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-semibold tracking-wide">
       Impulsado por IA
     </span>
-    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-4">
       Rastrea tus envíos y calcula tus impuestos en segundos
     </h2>
-    <p className="text-gray-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+    <p className="text-slate-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
       Prueba el Rastreador Inteligente y la Calculadora de Envíos e Impuestos Aduaneros de BorderCheck,
       diseñados con IA para darte resultados precisos al instante.
     </p>
@@ -161,7 +161,7 @@ export function Pitch() {
       <section className="max-w-4xl mx-auto px-6 pb-20 grid sm:grid-cols-3 gap-5">
         {valores.map((v) => (
           <div key={v.numero} className="rounded-xl border border-slate-200 bg-white p-6">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center font-bold text-sm mb-4">
+            <div className="w-9 h-9 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-sm mb-4">
               {v.numero}
             </div>
             <h3 className="font-semibold text-slate-900 mb-2">{v.titulo}</h3>
@@ -223,7 +223,7 @@ export function Pitch() {
             const Icon = b.icon;
             return (
               <div key={b.titulo} className="rounded-xl border border-slate-200 bg-white p-6">
-                <div className="w-10 h-10 rounded-lg bg-indigo-50 text-ai-accent flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-lg bg-ai-accent/10 text-ai-accent flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-semibold text-slate-900 mb-2">{b.titulo}</h3>

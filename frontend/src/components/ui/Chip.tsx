@@ -12,7 +12,7 @@ export function Chip({ label, active = false, onClick }: ChipProps) {
       className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
         active
           ? "bg-brand-blue text-white"
-          : "bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-brand-blue"
+          : "bg-slate-100 text-slate-600 hover:bg-brand-blue/10 hover:text-brand-blue"
       }`}
     >
       {label}

@@ -14,7 +14,7 @@ export function ProgressBar({ step, steps }: ProgressBarProps) {
                 i < step
                   ? "bg-brand-blue text-white"
                   : i === step
-                  ? "bg-brand-blue text-white ring-4 ring-blue-100"
+                  ? "bg-brand-blue text-white ring-4 ring-brand-blue/20"
                   : "bg-slate-200 text-slate-500"
               }`}
             >

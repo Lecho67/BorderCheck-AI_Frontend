@@ -26,12 +26,12 @@ export function DocumentCard({ doc }: { doc: DocumentItem }) {
   const status = STATUS_CONFIG[doc.status];
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm
+    <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm
                     hover:shadow-md transition flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="font-medium text-gray-900 truncate">{doc.name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{doc.type}</p>
+          <p className="font-medium text-slate-900 truncate">{doc.name}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{doc.type}</p>
         </div>
         <span
           className={`flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full shrink-0 ${status.bg} ${status.text}`}
@@ -41,7 +41,7 @@ export function DocumentCard({ doc }: { doc: DocumentItem }) {
         </span>
       </div>
 
-      <div className="text-xs text-gray-500 flex items-center justify-between">
+      <div className="text-xs text-slate-500 flex items-center justify-between">
         <span>{doc.shipment}</span>
         <span>{doc.date}</span>
       </div>

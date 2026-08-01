@@ -16,7 +16,7 @@ const variantStyles = {
 export function Button({ variant = "primary", className = "", children, ...props }: ButtonProps) {
   return (
     <button
-      className={`px-6 py-3 rounded-xl font-medium transition-colors disabled:cursor-not-allowed ${variantStyles[variant]} ${className}`}
+      className={`px-6 py-3 rounded-xl font-medium transition-colors disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 ${variantStyles[variant]} ${className}`}
       {...props}
     >
       {children}
