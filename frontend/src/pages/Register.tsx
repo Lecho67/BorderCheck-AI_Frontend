@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-export default function Register() {
+export function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState("");
