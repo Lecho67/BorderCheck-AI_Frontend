@@ -1,15 +1,40 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { CheckCircle2, Download, ClipboardList } from "lucide-react";
+import { CheckCircle2, Download, ClipboardList, Loader2 } from "lucide-react";
 import { VerdictCard } from "@/components/verdict/VerdictCard";
 import { JustificationCard } from "@/components/verdict/JustificationCard";
 import { DocumentChecklist } from "@/components/verdict/DocumentChecklist";
 import { TaxBreakdownCard } from "@/components/verdict/TaxBreakdownCard";
 import { Button } from "@/components/ui/Button";
 import { useQueryStore } from "@/store/useQueryStore";
+import { fetchConsultaById } from "@/lib/queryHistoryService";
+import type { DiagnosticoEnvio } from "@/lib/types";
 
 export function ResultView() {
   const { id } = useParams<{ id: string }>();
-  const diagnostico = useQueryStore((s) => s.getConsultaById(id ?? ""));
+  const desdeStoreLocal = useQueryStore((s) => s.getConsultaById(id ?? ""));
+  const [diagnostico, setDiagnostico] = useState<DiagnosticoEnvio | undefined>(desdeStoreLocal);
+  const [loading, setLoading] = useState(!desdeStoreLocal);
+
+  useEffect(() => {
+    // Si ya lo tenemos en memoria (venimos justo de crear la consulta), no
+    // hace falta ir a buscarlo a Supabase.
+    if (desdeStoreLocal || !id) {
+      setLoading(false);
+      return;
+    }
+    fetchConsultaById(id)
+      .then((d) => setDiagnostico(d ?? undefined))
+      .finally(() => setLoading(false));
+  }, [id, desdeStoreLocal]);
+
+  if (loading) {
+    return (
+      <main className="max-w-2xl mx-auto px-6 py-10 flex items-center justify-center gap-2 text-slate-400">
+        <Loader2 className="w-4 h-4 animate-spin" /> Cargando consulta...
+      </main>
+    );
+  }
 
   if (!diagnostico) {
     return (

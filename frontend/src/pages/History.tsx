@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { Chip } from "@/components/ui/Chip";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { VerdictBadge } from "@/components/verdict/VerdictBadge";
-import { useQueryStore } from "@/store/useQueryStore";
+import { fetchConsultas } from "@/lib/queryHistoryService";
 import type { DiagnosticoEnvio, NivelVeredicto } from "@/lib/types";
 
 const filtros: { label: string; value: NivelVeredicto | "todos" }[] = [
@@ -16,10 +16,17 @@ const filtros: { label: string; value: NivelVeredicto | "todos" }[] = [
 ];
 
 export function History() {
-  const consultas = useQueryStore((s) => s.consultas);
+  const [consultas, setConsultas] = useState<DiagnosticoEnvio[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState<NivelVeredicto | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
   const [seleccionada, setSeleccionada] = useState<DiagnosticoEnvio | null>(null);
+
+  useEffect(() => {
+    fetchConsultas()
+      .then(setConsultas)
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtradas = consultas
     .filter((c) => filtro === "todos" || c.nivel === filtro)
@@ -54,7 +61,11 @@ export function History() {
         ))}
       </div>
 
-      {filtradas.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center py-16 text-slate-400 gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" /> Cargando historial...
+        </div>
+      ) : filtradas.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-slate-400 mb-4">
             {consultas.length === 0 ? "Aún no tienes consultas." : "No hay resultados con ese filtro o búsqueda."}
