@@ -1,116 +1,99 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarInitials: string;
-  lockerCode: string; // ej. "CL-89421"
-}
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
+import type { Session, User } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
+import type { Profile } from '../types/database.types';
 
 interface AuthContextType {
   user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  session: Session | null;
+  profile: Profile | null;
+  loading: boolean;
+  signUp: (email: string, password: string, fullName?: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const STORAGE_KEY = "bordercheck_session";
-
-function generateLockerCode(): string {
-  const num = Math.floor(10000 + Math.random() * 89999);
-  return `CL-${num}`;
-}
-
-function getInitials(name: string): string {
-  return name
-    .trim()
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0]?.toUpperCase())
-    .join("");
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Restaurar sesión al cargar la app
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
-      }
+  const fetchProfile = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error al cargar perfil:', error.message);
+      return;
     }
-    setIsLoading(false);
+    setProfile(data as Profile);
+  };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id).finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  function persist(u: User) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-    setUser(u);
-  }
-
-  // --- Simulación de red. Reemplazar por llamadas a Supabase/Clerk/API real ---
-  async function login(email: string, _password: string) {
-    await new Promise((r) => setTimeout(r, 500));
-    const mockUser: User = {
-      id: crypto.randomUUID(),
-      name: email.split("@")[0],
+  const signUp = async (email: string, password: string, fullName?: string) => {
+    const { error } = await supabase.auth.signUp({
       email,
-      avatarInitials: getInitials(email.split("@")[0]),
-      lockerCode: generateLockerCode(),
-    };
-    persist(mockUser);
-  }
+      password,
+      options: { data: { full_name: fullName ?? '' } },
+    });
+    if (error) throw error;
+  };
 
-  async function loginWithGoogle() {
-    await new Promise((r) => setTimeout(r, 500));
-    const mockUser: User = {
-      id: crypto.randomUUID(),
-      name: "Usuario Google",
-      email: "usuario@gmail.com",
-      avatarInitials: "UG",
-      lockerCode: generateLockerCode(),
-    };
-    persist(mockUser);
-  }
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  };
 
-  async function register(name: string, email: string, _password: string) {
-    await new Promise((r) => setTimeout(r, 500));
-    const mockUser: User = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      avatarInitials: getInitials(name),
-      lockerCode: generateLockerCode(),
-    };
-    persist(mockUser);
-  }
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  };
 
-  function logout() {
-    localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
-  }
+  const refreshProfile = async () => {
+    if (user) await fetchProfile(user.id);
+  };
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        loginWithGoogle,
-        register,
-        logout,
-      }}
+      value={{ user, session, profile, loading, signUp, signIn, signOut, refreshProfile }}
     >
       {children}
     </AuthContext.Provider>
@@ -118,7 +101,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
-  return ctx;
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth debe usarse dentro de un AuthProvider');
+  }
+  return context;
 }

@@ -2,16 +2,19 @@ import { Link } from "react-router-dom";
 import { VerdictBadge } from "@/components/verdict/VerdictBadge";
 import { Button } from "@/components/ui/Button";
 import { useQueryStore } from "@/store/useQueryStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuth } from "@/context/AuthContext";
 
 export function Dashboard() {
   const consultas = useQueryStore((s) => s.consultas);
-  const userName = useAuthStore((s) => s.userName);
+  const { user, profile } = useAuth();
   const recientes = consultas.slice(0, 5);
+
+  const displayName =
+    profile?.full_name?.trim() || user?.email?.split("@")[0] || "usuario";
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-2xl font-semibold text-slate-900 mb-1">Hola, {userName}</h1>
+      <h1 className="text-2xl font-semibold text-slate-900 mb-1">Hola, {displayName}</h1>
       <p className="text-slate-500 mb-8">Tienes {consultas.length} consultas registradas.</p>
 
       <div className="rounded-xl border-2 border-brand-blue bg-brand-blue/5 p-6 mb-8 flex items-center justify-between">
