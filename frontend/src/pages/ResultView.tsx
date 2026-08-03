@@ -1,100 +1,55 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { CheckCircle2, Download, ClipboardList, Loader2 } from "lucide-react";
-import { VerdictCard } from "@/components/verdict/VerdictCard";
-import { JustificationCard } from "@/components/verdict/JustificationCard";
-import { DocumentChecklist } from "@/components/verdict/DocumentChecklist";
-import { TaxBreakdownCard } from "@/components/verdict/TaxBreakdownCard";
-import { Button } from "@/components/ui/Button";
-import { useQueryStore } from "@/store/useQueryStore";
-import { fetchConsultaById } from "@/lib/queryHistoryService";
-import type { DiagnosticoEnvio } from "@/lib/types";
+import React from 'react';
+import { ShipmentEvaluationResponse } from '../types/shipment';
 
-export function ResultView() {
-  const { id } = useParams<{ id: string }>();
-  const desdeStoreLocal = useQueryStore((s) => s.getConsultaById(id ?? ""));
-  const [diagnostico, setDiagnostico] = useState<DiagnosticoEnvio | undefined>(desdeStoreLocal);
-  const [loading, setLoading] = useState(!desdeStoreLocal);
+interface ResultViewProps {
+  data: ShipmentEvaluationResponse;
+}
 
-  useEffect(() => {
-    // Si ya lo tenemos en memoria (venimos justo de crear la consulta), no
-    // hace falta ir a buscarlo a Supabase.
-    if (desdeStoreLocal || !id) {
-      setLoading(false);
-      return;
-    }
-    fetchConsultaById(id)
-      .then((d) => setDiagnostico(d ?? undefined))
-      .finally(() => setLoading(false));
-  }, [id, desdeStoreLocal]);
-
-  if (loading) {
-    return (
-      <main className="max-w-2xl mx-auto px-6 py-10 flex items-center justify-center gap-2 text-slate-400">
-        <Loader2 className="w-4 h-4 animate-spin" /> Cargando consulta...
-      </main>
-    );
-  }
-
-  if (!diagnostico) {
-    return (
-      <main className="max-w-2xl mx-auto px-6 py-10 text-center">
-        <p className="text-slate-500 mb-4">No encontramos esa consulta.</p>
-        <Link to="/consulta/nueva" className="text-brand-blue font-medium">
-          Hacer una nueva consulta →
-        </Link>
-      </main>
-    );
-  }
+export  function ResultView({ data }: ResultViewProps) {
+  const isApproved = data.verdict.status === 'approved';
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-10">
-      <VerdictCard diagnostico={diagnostico} />
+    <div className={`result-banner ${isApproved ? 'success' : 'warning'}`}>
+      <h2>{data.verdict.title}</h2>
+      <p>{data.verdict.description}</p>
 
-      <div className="grid sm:grid-cols-2 gap-4 my-6">
-        <JustificationCard
-          justificacion={diagnostico.justificacion}
-          fuenteNormativa={diagnostico.fuenteNormativa}
-        />
-        <DocumentChecklist documentos={diagnostico.documentosRequeridos} nivel={diagnostico.nivel} />
-      </div>
+      <section className="legal-justification">
+        <h3>Justificación legal (IA)</h3>
+        <p>{data.legal_justification.summary}</p>
+        <span className="source-tag">Fuente: {data.legal_justification.source}</span>
+      </section>
 
-      <div className="mb-6">
-        <TaxBreakdownCard
-          desglose={diagnostico.desgloseImpuestos}
-          partidaArancelariaTentativa={diagnostico.partidaArancelariaTentativa}
-        />
-      </div>
+      <section className="required-documents">
+        <h3>Documentos requeridos</h3>
+        <ul>
+          {data.required_documents.map((doc, idx) => (
+            <li key={idx}>{doc.fulfilled ? '✓' : '✗'} {doc.label}</li>
+          ))}
+        </ul>
+      </section>
 
-      {diagnostico.accionesSugeridas.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 mb-6">
-          <p className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
-            <ClipboardList className="w-4 h-4" /> Recomendaciones de cumplimiento aduanero
-          </p>
-          <ul className="space-y-1.5 text-sm text-slate-600">
-            {diagnostico.accionesSugeridas.map((a, i) => (
-              <li key={i}>— {a}</li>
-            ))}
-          </ul>
+      <section className="tax-breakdown">
+        <h3>Desglose de impuestos estimados</h3>
+        <div className="row">
+          <span>Partida arancelaria tentativa</span>
+          <span>{data.tax_breakdown.tariff_heading ?? 'Sin partida tentativa declarada'}</span>
         </div>
-      )}
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="text-xs text-slate-400 flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5" /> Guardado en tu historial
-        </span>
-        <div className="flex gap-3">
-          <Button variant="secondary">
-            <Download className="w-4 h-4 inline mr-1" /> Exportar PDF
-          </Button>
-          <Link to="/dashboard/historial">
-            <Button variant="secondary">Ver historial</Button>
-          </Link>
-          <Link to="/consulta/nueva">
-            <Button>Nueva consulta</Button>
-          </Link>
+        <div className="row">
+          <span>Flete estimado</span>
+          <span>${data.tax_breakdown.estimated_freight.toFixed(2)}</span>
         </div>
-      </div>
-    </main>
+        <div className="row">
+          <span>Arancel estimado ({data.tax_breakdown.duty_rate_percentage}%)</span>
+          <span>${data.tax_breakdown.estimated_duty.toFixed(2)}</span>
+        </div>
+        <div className="row total">
+          <strong>Total estimado</strong>
+          <strong>${data.tax_breakdown.total_estimated.toFixed(2)}</strong>
+        </div>
+        {data.tax_breakdown.disclaimer && (
+          <p className="disclaimer">{data.tax_breakdown.disclaimer}</p>
+        )}
+      </section>
+    </div>
   );
 }
