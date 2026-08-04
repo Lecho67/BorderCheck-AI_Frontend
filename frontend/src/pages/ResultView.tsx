@@ -1,55 +1,110 @@
-import React from 'react';
-import { ShipmentEvaluationResponse } from '../types/shipment';
+// src/pages/ResultView.tsx
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Download, History as HistoryIcon, Plus, CheckCircle2 } from "lucide-react";
+import { useQueryStore } from "@/store/useQueryStore";
+import { fetchConsultaById } from "@/lib/queryHistoryService";
+import { VerdictCard } from "@/components/verdict/VerdictCard";
+import { JustificationCard } from "@/components/verdict/JustificationCard";
+import { DocumentChecklist } from "@/components/verdict/DocumentChecklist";
+import { TaxBreakdownCard } from "@/components/verdict/TaxBreakdownCard";
+import { Button } from "@/components/ui/Button";
+import type { DiagnosticoEnvio } from "@/lib/types";
 
-interface ResultViewProps {
-  data: ShipmentEvaluationResponse;
-}
+export function ResultView() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const getConsultaById = useQueryStore((s) => s.getConsultaById);
+  const addConsulta = useQueryStore((s) => s.addConsulta);
 
-export  function ResultView({ data }: ResultViewProps) {
-  const isApproved = data.verdict.status === 'approved';
+  const [diagnostico, setDiagnostico] = useState<DiagnosticoEnvio | null | undefined>(
+    id ? getConsultaById(id) : undefined
+  );
+  const [isLoading, setIsLoading] = useState(!diagnostico);
+
+  useEffect(() => {
+    if (diagnostico || !id) return;
+
+    let cancelado = false;
+    setIsLoading(true);
+
+    fetchConsultaById(id).then((result) => {
+      if (cancelado) return;
+      if (result) {
+        addConsulta(result);
+        setDiagnostico(result);
+      } else {
+        setDiagnostico(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [id, diagnostico, addConsulta]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-10 text-center text-slate-400">
+        Cargando consulta...
+      </div>
+    );
+  }
+
+  if (!diagnostico) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-10 text-center text-slate-500">
+        <p className="mb-4">No encontramos esta consulta.</p>
+        <Link to="/consulta/nueva" className="text-brand-blue underline">
+          Iniciar una nueva consulta
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className={`result-banner ${isApproved ? 'success' : 'warning'}`}>
-      <h2>{data.verdict.title}</h2>
-      <p>{data.verdict.description}</p>
+    <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
+      <VerdictCard diagnostico={diagnostico} />
 
-      <section className="legal-justification">
-        <h3>Justificación legal (IA)</h3>
-        <p>{data.legal_justification.summary}</p>
-        <span className="source-tag">Fuente: {data.legal_justification.source}</span>
-      </section>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <JustificationCard
+          justificacion={diagnostico.justificacion}
+          fuenteNormativa={diagnostico.fuenteNormativa}
+        />
+        <DocumentChecklist
+          documentos={diagnostico.documentosRequeridos}
+          nivel={diagnostico.nivel}
+        />
+      </div>
 
-      <section className="required-documents">
-        <h3>Documentos requeridos</h3>
-        <ul>
-          {data.required_documents.map((doc, idx) => (
-            <li key={idx}>{doc.fulfilled ? '✓' : '✗'} {doc.label}</li>
-          ))}
-        </ul>
-      </section>
+      <TaxBreakdownCard
+        desglose={diagnostico.desgloseImpuestos}
+        partidaArancelariaTentativa={diagnostico.partidaArancelariaTentativa}
+      />
 
-      <section className="tax-breakdown">
-        <h3>Desglose de impuestos estimados</h3>
-        <div className="row">
-          <span>Partida arancelaria tentativa</span>
-          <span>{data.tax_breakdown.tariff_heading ?? 'Sin partida tentativa declarada'}</span>
-        </div>
-        <div className="row">
-          <span>Flete estimado</span>
-          <span>${data.tax_breakdown.estimated_freight.toFixed(2)}</span>
-        </div>
-        <div className="row">
-          <span>Arancel estimado ({data.tax_breakdown.duty_rate_percentage}%)</span>
-          <span>${data.tax_breakdown.estimated_duty.toFixed(2)}</span>
-        </div>
-        <div className="row total">
-          <strong>Total estimado</strong>
-          <strong>${data.tax_breakdown.total_estimated.toFixed(2)}</strong>
-        </div>
-        {data.tax_breakdown.disclaimer && (
-          <p className="disclaimer">{data.tax_breakdown.disclaimer}</p>
-        )}
-      </section>
+      <div className="flex items-center gap-2 text-xs text-slate-400">
+        <CheckCircle2 className="w-3.5 h-3.5" /> Guardado en tu historial
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Button variant="secondary" className="flex items-center gap-2">
+          <Download className="w-4 h-4" /> Exportar PDF
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => navigate("/dashboard/historial")}
+          className="flex items-center gap-2"
+        >
+          <HistoryIcon className="w-4 h-4" /> Ver historial
+        </Button>
+        <Button
+          onClick={() => navigate("/consulta/nueva")}
+          className="flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> Nueva consulta
+        </Button>
+      </div>
     </div>
   );
 }

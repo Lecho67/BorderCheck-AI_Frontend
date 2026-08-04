@@ -1,71 +1,120 @@
-import React, { useState } from 'react';
-import { evaluateShipment, ShipmentServiceError } from '../services/shipmentService';
-import { ShipmentFormData, ShipmentEvaluationResponse } from '../types/shipment';
-import { ResultView } from './ResultView';
+// src/pages/NewQuery.tsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQueryStore } from "@/store/useQueryStore";
+import { evaluarEnvio } from "@/lib/api";
+import { declaracionesEspecialesVacias } from "@/lib/types";
+import { StepCountrySelect } from "@/components/wizard/StepCountrySelect";
+import { StepItemDescription } from "@/components/wizard/StepItemDescription";
+import { StepDetails } from "@/components/wizard/StepDetails";
+import { StepSpecialDeclarations } from "@/components/wizard/StepSpecialDeclarations";
+import { LoadingSkeleton } from "@/components/wizard/LoadingSkeleton";
 
 export function NewQuery() {
-  const [formData, setFormData] = useState<ShipmentFormData>({
-    category: '',
-    subcategory: '',
-    originCountry: '',
-    destinationCountry: '',
-    transportType: 'air',
-    shipmentModality: 'commercial_shipment',
-    declaredValue: 0,
-    currency: 'USD',
-    grossWeight: 0,
-    weightUnit: 'kg',
-    unitQuantity: 1,
-    hsCode: '',
-    hasHazmat: false,
-  });
+  const navigate = useNavigate();
+  const {
+    wizardStep,
+    wizardData,
+    setWizardStep,
+    updateWizardData,
+    resetWizard,
+    addConsulta,
+  } = useQueryStore();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [result, setResult] = useState<ShipmentEvaluationResponse | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setIsLoading(true);
-    setConnectionError(null);
-    setResult(null);
+  const declaraciones = wizardData.declaracionesEspeciales ?? declaracionesEspecialesVacias();
+
+  async function handleSubmit() {
+    setIsSubmitting(true);
+    setError(null);
 
     try {
-      const data = await evaluateShipment(formData);
-      setResult(data);
+      const diagnostico = await evaluarEnvio({
+        paisDestino: wizardData.paisDestino ?? "",
+        categoria: wizardData.categoria,
+        descripcionItem: wizardData.descripcionItem ?? "",
+        pesoKg: wizardData.pesoKg,
+        valorDeclaradoUsd: wizardData.valorDeclaradoUsd,
+        cantidadUnidades: wizardData.cantidadUnidades,
+        partidaArancelariaTentativa: wizardData.partidaArancelariaTentativa,
+        declaracionesEspeciales: declaraciones,
+      });
+
+      addConsulta(diagnostico);
+      resetWizard();
+      navigate(`/consulta/${diagnostico.id}`);
     } catch (err) {
-      setConnectionError(
-        err instanceof ShipmentServiceError
+      setError(
+        err instanceof Error
           ? err.message
-          : 'Ocurrió un error inesperado al evaluar el envío.'
+          : "No se pudo completar el análisis. Inténtalo de nuevo."
       );
-    } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   }
 
+  if (isSubmitting) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-10">
+        <LoadingSkeleton />
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {/* ...inputs existentes de StepDetails.tsx conectados a formData/setFormData... */}
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Evaluando...' : 'Evaluar envío'}
-        </button>
-      </form>
-
-      {isLoading && (
-        <div className="loading-skeleton" role="status" aria-live="polite">
-          <p>Analizando normativa y calculando impuestos...</p>
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <strong>⚠ Error:</strong> {error}
         </div>
       )}
 
-      {connectionError && (
-        <div className="error-banner" role="alert">
-          <strong>⚠ Error de conexión:</strong> {connectionError}
-        </div>
+      {wizardStep === 0 && (
+        <StepCountrySelect
+          value={wizardData.paisDestino ?? ""}
+          onChange={(value) => updateWizardData({ paisDestino: value })}
+          onNext={() => setWizardStep(1)}
+        />
       )}
 
-      {result && !isLoading && <ResultView data={result} />}
+      {wizardStep === 1 && (
+        <StepItemDescription
+          value={wizardData.descripcionItem ?? ""}
+          onChange={(value) => updateWizardData({ descripcionItem: value })}
+          categoria={wizardData.categoria ?? ""}
+          onChangeCategoria={(categoria) => updateWizardData({ categoria })}
+          onNext={() => setWizardStep(2)}
+          onBack={() => setWizardStep(0)}
+        />
+      )}
+
+      {wizardStep === 2 && (
+        <StepDetails
+          pesoKg={wizardData.pesoKg}
+          valorDeclaradoUsd={wizardData.valorDeclaradoUsd}
+          cantidadUnidades={wizardData.cantidadUnidades}
+          partidaArancelariaTentativa={wizardData.partidaArancelariaTentativa}
+          onChangePeso={(pesoKg) => updateWizardData({ pesoKg })}
+          onChangeValor={(valorDeclaradoUsd) => updateWizardData({ valorDeclaradoUsd })}
+          onChangeCantidad={(cantidadUnidades) => updateWizardData({ cantidadUnidades })}
+          onChangePartida={(partidaArancelariaTentativa) =>
+            updateWizardData({ partidaArancelariaTentativa })
+          }
+          onNext={() => setWizardStep(3)}
+          onBack={() => setWizardStep(1)}
+        />
+      )}
+
+      {wizardStep === 3 && (
+        <StepSpecialDeclarations
+          value={declaraciones}
+          onChange={(declaracionesEspeciales) => updateWizardData({ declaracionesEspeciales })}
+          onSubmit={handleSubmit}
+          onBack={() => setWizardStep(2)}
+        />
+      )}
     </div>
   );
 }
