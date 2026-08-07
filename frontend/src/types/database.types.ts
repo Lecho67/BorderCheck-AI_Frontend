@@ -4,6 +4,8 @@ export interface Profile {
   full_name: string | null;
   locker_code: string | null;
   phone: string | null;
+  role: 'admin' | 'gestor' | 'agente' | 'cliente';
+  gestor_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -28,6 +30,11 @@ export interface CustomsQuery {
   ai_confidence: number | null;
   raw_response: Record<string, unknown> | null;
   created_at: string;
+  overridden_by: string | null;
+  override_reason: string | null;
+  overridden_at: string | null;
+  original_ai_verdict: string | null;
+  assigned_agent_id: string | null;
 }
 
 export interface DocumentRecord {
@@ -38,4 +45,9 @@ export interface DocumentRecord {
   file_type: string;
   related_pre_alert_id: string | null;
   created_at: string;
+  status: 'pendiente' | 'aprobado' | 'rechazado';
+  reviewed_by: string | null;
+  review_reason: string | null;
+  reviewed_at: string | null;
+  assigned_agent_id: string | null;
 }

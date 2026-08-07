@@ -8,6 +8,13 @@ import type { CustomsQuery } from "@/types/database.types";
  * solo la respuesta cruda del motor. Esto permite reconstruir la pantalla
  * de resultado sin volver a llamar al backend de reglas.
  */
+function mapVerdictToNivel(aiVerdict: string | null): DiagnosticoEnvio["nivel"] {
+  const v = (aiVerdict ?? "").toUpperCase();
+  if (v === "APROBADO") return "verde";
+  if (v === "BLOQUEO") return "rojo";
+  // PRECAUCION, REQUIERE_DOCUMENTACION, o cualquier valor desconocido/nulo
+  return "amarillo";
+}
 function rowToDiagnostico(row: CustomsQuery): DiagnosticoEnvio | null {
   if (row.raw_response && typeof row.raw_response === "object") {
     const stored = row.raw_response as Partial<DiagnosticoEnvio>;
@@ -21,7 +28,7 @@ function rowToDiagnostico(row: CustomsQuery): DiagnosticoEnvio | null {
   // planas de la tabla (sin justificación/desglose detallado).
   return {
     id: row.id,
-    nivel: (row.ai_verdict as DiagnosticoEnvio["nivel"]) ?? "amarillo",
+    nivel: mapVerdictToNivel(row.ai_verdict),
     titulo: "Consulta guardada",
     resumen: "Detalle completo no disponible para esta consulta antigua.",
     justificacion: "",

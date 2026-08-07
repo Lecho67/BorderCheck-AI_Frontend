@@ -1,77 +1,140 @@
-import { useState } from "react";
-import { DocumentCard, DocumentItem } from "../components/DocumentCard";
-import { Chip } from "@/components/ui/Chip";
-
-const MOCK_DOCS: DocumentItem[] = [
-  {
-    id: "1",
-    name: "Factura Comercial - Pedido #4521",
-    type: "Factura Comercial",
-    shipment: "Envío #BC-1029",
-    status: "aprobado",
-    date: "2026-07-20",
-  },
-  {
-    id: "2",
-    name: "Certificado de Origen - TLC",
-    type: "Certificado de Origen",
-    shipment: "Envío #BC-1029",
-    status: "revision",
-    date: "2026-07-21",
-  },
-  {
-    id: "3",
-    name: "Registro de Importación",
-    type: "Registro de Importación",
-    shipment: "Envío #BC-0998",
-    status: "aprobado",
-    date: "2026-07-15",
-  },
-];
-
-type FilterType = "todos" | "aprobado" | "revision";
+import { useEffect, useRef, useState } from "react";
+import { Upload } from "lucide-react";
+import { DocumentCard } from "../components/DocumentCard";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
+import {
+  fetchMisDocumentos,
+  subirDocumento,
+  obtenerUrlDocumento,
+  eliminarDocumento,
+} from "@/lib/documentService";
+import type { DocumentRecord } from "@/types/database.types";
 
 export default function Documents() {
-  const [filter, setFilter] = useState<FilterType>("todos");
+  const [documentos, setDocumentos] = useState<DocumentRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [subiendo, setSubiendo] = useState(false);
+  const [eliminando, setEliminando] = useState<DocumentRecord | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const filtered = MOCK_DOCS.filter((d) =>
-    filter === "todos" ? true : d.status === filter
-  );
+  const cargar = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchMisDocumentos();
+      setDocumentos(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cargar documentos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    cargar();
+  }, []);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSubiendo(true);
+    setError(null);
+    try {
+      await subirDocumento(file);
+      await cargar();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al subir el documento");
+    } finally {
+      setSubiendo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleVer = async (doc: DocumentRecord) => {
+    try {
+      const url = await obtenerUrlDocumento(doc.file_path);
+      window.open(url, "_blank");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al abrir el documento");
+    }
+  };
+
+  const confirmarEliminar = async () => {
+    if (!eliminando) return;
+    try {
+      await eliminarDocumento(eliminando);
+      setDocumentos((prev) => prev.filter((d) => d.id !== eliminando.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar");
+    } finally {
+      setEliminando(null);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">
-          Centro de Documentación Aduanera
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Organiza facturas, certificados de origen y registros de
-          importación por envío.
-        </p>
+      <header className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Centro de Documentación Aduanera</h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Organiza facturas, certificados de origen y registros de importación.
+          </p>
+        </div>
+
+        <div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+            onChange={handleFileChange}
+            className="hidden"
+            id="upload-doc"
+          />
+          <label
+            htmlFor="upload-doc"
+            className="flex items-center gap-2 bg-brand-blue text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-blue/90 cursor-pointer transition"
+          >
+            <Upload className="w-4 h-4" />
+            {subiendo ? "Subiendo..." : "Subir documento"}
+          </label>
+        </div>
       </header>
 
-      <div className="flex gap-2 flex-wrap">
-        {(
-          [
-            { key: "todos", label: "Todos" },
-            { key: "aprobado", label: "Aprobado por IA" },
-            { key: "revision", label: "Requiere revisión" },
-          ] as { key: FilterType; label: string }[]
-        ).map((f) => (
-          <Chip key={f.key} label={f.label} active={filter === f.key} onClick={() => setFilter(f.key)} />
-        ))}
-      </div>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((doc) => (
-          <DocumentCard key={doc.id} doc={doc} />
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
+      {loading ? (
+        <p className="text-sm text-slate-400">Cargando...</p>
+      ) : documentos.length === 0 ? (
         <div className="border border-dashed border-slate-300 rounded-xl p-8 text-center text-slate-500 text-sm">
-          No hay documentos en esta categoría.
+          No has subido ningún documento todavía.
         </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {documentos.map((doc) => (
+            <DocumentCard key={doc.id} doc={doc} onVer={handleVer} onEliminar={setEliminando} />
+          ))}
+        </div>
+      )}
+
+      {eliminando && (
+        <Modal open onClose={() => setEliminando(null)}>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">Eliminar documento</h3>
+          <p className="text-sm text-slate-600 mb-6">
+            ¿Seguro que quieres eliminar{" "}
+            <span className="font-medium text-slate-900">{eliminando.file_name}</span>? Esta acción no se puede deshacer.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button variant="ghost" onClick={() => setEliminando(null)} className="px-4 py-2">
+              Cancelar
+            </Button>
+            <Button onClick={confirmarEliminar} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white">
+              Eliminar
+            </Button>
+          </div>
+        </Modal>
       )}
     </div>
   );

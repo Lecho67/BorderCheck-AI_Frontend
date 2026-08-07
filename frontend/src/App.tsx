@@ -15,6 +15,12 @@ import Locker from "./pages/Locker";
 import Documents from "./pages/Documents";
 import Tools from "./pages/Tools";
 
+import { AdminPanel } from "@/pages/AdminPanel";
+import { GestorPanel } from "@/pages/GestorPanel";
+import { AgentPanel } from "@/pages/AgentPanel";
+import { AgentDocumentsPanel } from "@/pages/AgentDocumentsPanel";
+
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
@@ -86,7 +92,40 @@ export default function App() {
                   <Documents />
                 </ProtectedRoute>
               }
+              
             />
+            <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <AdminPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/gestor"
+                  element={
+                    <ProtectedRoute allowedRoles={['gestor']}>
+                      <GestorPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/panel-agente"
+                  element={
+                    <ProtectedRoute allowedRoles={['agente', 'admin']}>
+                      <AgentPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+  path="/panel-agente/documentos"
+  element={
+    <ProtectedRoute allowedRoles={['agente', 'admin']}>
+      <AgentDocumentsPanel />
+    </ProtectedRoute>
+  }
+/>
           </Routes>
         </Layout>
       </BrowserRouter>

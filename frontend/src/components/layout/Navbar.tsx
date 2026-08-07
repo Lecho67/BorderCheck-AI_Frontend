@@ -11,6 +11,8 @@ export function Navbar() {
     navigate("/");
   }
 
+  const role = profile?.role;
+
   return (
     <nav className="sticky top-0 z-10 bg-white border-b border-slate-200">
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -28,7 +30,8 @@ export function Navbar() {
             </Link>
           )}
 
-          {user && (
+          {/* Cliente: navegación normal de su flujo */}
+          {user && (role === "cliente" || role === "admin") && (
             <>
               <Link to="/dashboard/historial" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Historial
@@ -40,6 +43,32 @@ export function Navbar() {
                 Documentos
               </Link>
             </>
+          )}
+
+          {/* Gestor: acceso a su cartera de clientes */}
+          {user && (role === "gestor" || role === "admin") && (
+            <Link to="/gestor" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+              Mis clientes
+            </Link>
+          )}
+
+          {/* Agente: cola de revisión + documentos */}
+          {user && (role === "agente" || role === "admin") && (
+            <>
+              <Link to="/panel-agente" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Cola de revisión
+              </Link>
+              <Link to="/panel-agente/documentos" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Documentos
+              </Link>
+            </>
+          )}
+
+          {/* Admin: panel de administración */}
+          {user && role === "admin" && (
+            <Link to="/admin" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline font-medium">
+              Administración
+            </Link>
           )}
 
           <Link to="/herramientas" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">

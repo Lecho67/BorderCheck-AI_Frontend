@@ -2,8 +2,15 @@ import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import { useAuth } from "../context/AuthContext";
 
-export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { user, loading } = useAuth();
+type Role = 'admin' | 'gestor' | 'agente' | 'cliente';
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+  allowedRoles?: Role[];
+}
+
+export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { user, profile, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -16,6 +23,11 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Si la ruta exige roles específicos y el perfil aún no cargó o el role no coincide
+  if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
