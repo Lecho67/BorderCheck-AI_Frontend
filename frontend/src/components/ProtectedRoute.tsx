@@ -1,12 +1,11 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import { useAuth } from "../context/AuthContext";
-
-type Role = 'admin' | 'gestor' | 'agente' | 'cliente';
+import type { UserRole } from "@/types/database.types";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles?: Role[];
+  allowedRoles?: UserRole[];
 }
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
@@ -25,7 +24,6 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Si la ruta exige roles específicos y el perfil aún no cargó o el role no coincide
   if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {
     return <Navigate to="/dashboard" replace />;
   }

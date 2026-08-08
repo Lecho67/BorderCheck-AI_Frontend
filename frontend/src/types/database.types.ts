@@ -1,10 +1,12 @@
+// Refactor del tipo role
+export type UserRole = 'admin' | 'gestor' | 'agente' | 'cliente';
 export interface Profile {
   id: string;
   email: string;
   full_name: string | null;
   locker_code: string | null;
   phone: string | null;
-  role: 'admin' | 'gestor' | 'agente' | 'cliente';
+  role: UserRole;
   gestor_id: string | null;
   created_at: string;
   updated_at: string;

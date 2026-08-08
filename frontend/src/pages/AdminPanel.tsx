@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchTodosLosUsuarios, actualizarRol, asignarGestor } from "@/lib/adminService";
 import type { Profile } from "@/types/database.types";
+import type { UserRole } from "@/types/database.types";
 
-const ROLES: Profile["role"][] = ["cliente", "gestor", "agente", "admin"];
+const ROLES: UserRole[] = ["cliente", "gestor", "agente", "admin"];
 
 type AccionPendiente =
   | { tipo: "rol"; userId: string; nombre: string; rolAnterior: Profile["role"]; rolNuevo: Profile["role"] }
