@@ -3,6 +3,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 import { Landing } from "@/pages/Landing";
 import { Login } from "@/pages/Login";
 import { Register } from "@/pages/Register";
@@ -27,6 +28,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <Navbar />
       <div className="flex-1">{children}</div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

@@ -48,6 +48,25 @@ export async function obtenerUrlDocumentoParaRevision(filePath: string): Promise
   if (error) throw new Error(error.message);
   return data.signedUrl;
 }
+
+/**
+ * Documentos de un cliente puntual, usados en el drawer de auditoría del
+ * Panel de Agente (`/panel-agente`) para mostrar los adjuntos del caso que
+ * se está revisando. No hay FK directa entre `customs_queries` y `documents`
+ * (solo `related_pre_alert_id`), así que traemos todos los documentos del
+ * cliente y dejamos que el agente identifique los relevantes por nombre/fecha.
+ */
+export async function fetchDocumentosDeCliente(userId: string): Promise<DocumentRecord[]> {
+  const { data, error } = await supabase
+    .from("documents")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data as DocumentRecord[];
+}
+
 export async function tomarDocumento(docId: string) {
   const { data: sessionData } = await supabase.auth.getSession();
   const agenteId = sessionData.session?.user.id;

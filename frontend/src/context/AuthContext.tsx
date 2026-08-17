@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 import React, {
   createContext,
   useContext,
@@ -7,6 +8,7 @@ import React, {
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { toast } from '../lib/toast';
 import type { Profile } from '../types/database.types';
 
 interface AuthContextType {
@@ -14,6 +16,7 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
+  profileError: string | null;
   signUp: (email: string, password: string, fullName?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -27,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   const fetchProfile = async (userId: string) => {
     const { data, error } = await supabase
@@ -37,9 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error('Error al cargar perfil:', error.message);
+      setProfile(null);
+      setProfileError(error.message);
+      toast.error(
+        'No pudimos cargar tu perfil',
+        'Algunas secciones pueden no estar disponibles. Probá recargar la página.'
+      );
       return;
     }
+
     setProfile(data as Profile);
+    setProfileError(null);
   };
 
   useEffect(() => {
@@ -62,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         fetchProfile(session.user.id);
       } else {
         setProfile(null);
+        setProfileError(null);
       }
     });
 
@@ -93,7 +106,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, profile, loading, signUp, signIn, signOut, refreshProfile }}
+      value={{
+        user,
+        session,
+        profile,
+        loading,
+        profileError,
+        signUp,
+        signIn,
+        signOut,
+        refreshProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>

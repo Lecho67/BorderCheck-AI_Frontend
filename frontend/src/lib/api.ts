@@ -1,6 +1,7 @@
 import type { DiagnosticoEnvio, WizardFormData } from "./types";
 import { evaluarEnvioMock } from "./mockData";
 import { supabase } from "./supabase";
+import { toast } from "./toast";
 import {
   buildShipmentEvaluationRequest,
   mapDecisionResultToDiagnostico,
@@ -55,7 +56,9 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
 
   if (!response.ok) {
     const body = await response.json().catch(() => null);
-    const detail = body?.details?.map((d: { field: string; message: string }) => `${d.field}: ${d.message}`).join(" | ");
+    const detail = body?.details
+      ?.map((d: { field: string; message: string }) => `${d.field}: ${d.message}`)
+      .join(" | ");
     throw new Error(
       detail || body?.message || "No se pudo completar el análisis. Inténtalo de nuevo."
     );
@@ -77,8 +80,9 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
 /**
  * Guarda el veredicto en `customs_queries` para que aparezca en
  * `/dashboard/historial` (que ya lee de Supabase). Si falla, no rompemos el
- * flujo del usuario — solo lo registramos en consola, ya que el veredicto
- * igual se muestra en `/consulta/:id` a partir del store local.
+ * flujo del usuario — el veredicto igual se muestra en `/consulta/:id` a
+ * partir del store local — pero SÍ lo notificamos con un toast, ya que antes
+ * este fallo era completamente silencioso (solo console.error).
  */
 async function guardarConsultaEnHistorial(
   diagnostico: DiagnosticoEnvio,
@@ -105,5 +109,9 @@ async function guardarConsultaEnHistorial(
   if (error) {
     // eslint-disable-next-line no-console
     console.error("No se pudo guardar la consulta en customs_queries:", error);
+    toast.error(
+      "No se pudo guardar en tu historial",
+      "Tu resultado sigue disponible en esta pantalla, pero revisá tu conexión e intentá desde /dashboard/historial más tarde."
+    );
   }
 }
