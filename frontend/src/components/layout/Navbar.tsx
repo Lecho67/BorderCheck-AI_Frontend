@@ -42,6 +42,9 @@ export function Navbar() {
               <Link to="/documentos" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Documentos
               </Link>
+              <Link to="/perfil" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Verificar identidad
+              </Link>
             </>
           )}
 
@@ -73,6 +76,9 @@ export function Navbar() {
 
           <Link to="/herramientas" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
             Herramientas
+          </Link>
+          <Link to="/soporte" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+            Soporte
           </Link>
 
           {user ? (

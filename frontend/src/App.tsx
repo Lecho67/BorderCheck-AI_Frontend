@@ -15,7 +15,9 @@ import { Pitch } from "@/pages/Pitch";
 import Locker from "./pages/Locker";
 import Documents from "./pages/Documents";
 import Tools from "./pages/Tools";
-
+import { SupportCenter } from "@/pages/SupportCenter";
+import { Profile } from "@/pages/Profile";
+import { RequireCompliance } from "@/components/RequireCompliance";
 import { AdminPanel } from "@/pages/AdminPanel";
 import { GestorPanel } from "@/pages/GestorPanel";
 import { AgentPanel } from "@/pages/AgentPanel";
@@ -45,6 +47,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Register />} />
             <Route path="/herramientas" element={<Tools />} />
+            <Route path="/soporte" element={<SupportCenter />} />
 
             {/* Rutas privadas */}
             <Route
@@ -112,6 +115,27 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
+            // Nueva ruta:
+                  <Route
+                    path="/perfil"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  // Ruta /casillero existente: envolver con RequireCompliance
+                  <Route
+                    path="/casillero"
+                    element={
+                      <ProtectedRoute>
+                        <RequireCompliance>
+                          <Locker />
+                        </RequireCompliance>
+                      </ProtectedRoute>
+                    }
+                  />
                 <Route
                   path="/panel-agente"
                   element={
@@ -121,6 +145,7 @@ export default function App() {
                   }
                 />
                 <Route
+                
   path="/panel-agente/documentos"
   element={
     <ProtectedRoute allowedRoles={['agente', 'admin']}>

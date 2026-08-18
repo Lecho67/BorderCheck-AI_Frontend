@@ -1,5 +1,15 @@
 // Refactor del tipo role
 export type UserRole = 'admin' | 'gestor' | 'agente' | 'cliente';
+export type DocumentType = 'CC' | 'CE' | 'Pasaporte' | 'NIT';
+export type KycStatus = 'no_iniciado' | 'pendiente' | 'aprobado' | 'rechazado';
+
+export interface NotificationPreferences {
+  paquete_recibido: boolean;
+  aprobado_aduana: boolean;
+  impuesto_pendiente: boolean;
+  canal_whatsapp_sms: boolean;
+}
+
 export interface Profile {
   id: string;
   email: string;
@@ -10,6 +20,14 @@ export interface Profile {
   gestor_id: string | null;
   created_at: string;
   updated_at: string;
+  document_type: DocumentType | null;
+  document_number: string | null;
+  kyc_status: KycStatus;
+  kyc_document_path: string | null;
+  kyc_rejection_reason: string | null;
+  terms_accepted_at: string | null;
+  habeas_data_accepted_at: string | null;
+  notification_preferences: NotificationPreferences;
 }
 
 export interface PreAlert {
