@@ -22,6 +22,7 @@ import { AdminPanel } from "@/pages/AdminPanel";
 import { GestorPanel } from "@/pages/GestorPanel";
 import { AgentPanel } from "@/pages/AgentPanel";
 import { AgentDocumentsPanel } from "@/pages/AgentDocumentsPanel";
+import { Reports } from "@/pages/Reports";
 
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/registro" element={<Register />} />
             <Route path="/herramientas" element={<Tools />} />
             <Route path="/soporte" element={<SupportCenter />} />
+            
 
             {/* Rutas privadas */}
             <Route
@@ -55,6 +57,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reportes"
+              element={
+                <ProtectedRoute allowedRoles={['cliente', 'admin']}>
+                  <Reports />
                 </ProtectedRoute>
               }
             />

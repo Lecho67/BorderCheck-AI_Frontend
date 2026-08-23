@@ -3,47 +3,24 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryStore } from "@/store/useQueryStore";
 import { evaluarEnvio } from "@/lib/api";
-import { declaracionesEspecialesVacias } from "@/lib/types";
-import { StepCountrySelect } from "@/components/wizard/StepCountrySelect";
-import { StepItemDescription } from "@/components/wizard/StepItemDescription";
-import { StepDetails } from "@/components/wizard/StepDetails";
-import { StepSpecialDeclarations } from "@/components/wizard/StepSpecialDeclarations";
+import type { WizardFormData } from "@/lib/types";
+import { ShipmentForm } from "@/components/ShipmentForm";
 import { LoadingSkeleton } from "@/components/wizard/LoadingSkeleton";
 
 export function NewQuery() {
   const navigate = useNavigate();
-  const {
-    wizardStep,
-    wizardData,
-    setWizardStep,
-    updateWizardData,
-    resetWizard,
-    addConsulta,
-  } = useQueryStore();
+  const addConsulta = useQueryStore((s) => s.addConsulta);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const declaraciones = wizardData.declaracionesEspeciales ?? declaracionesEspecialesVacias();
-
-  async function handleSubmit() {
+  async function handleSubmit(data: WizardFormData) {
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const diagnostico = await evaluarEnvio({
-        paisDestino: wizardData.paisDestino ?? "",
-        categoria: wizardData.categoria,
-        descripcionItem: wizardData.descripcionItem ?? "",
-        pesoKg: wizardData.pesoKg,
-        valorDeclaradoUsd: wizardData.valorDeclaradoUsd,
-        cantidadUnidades: wizardData.cantidadUnidades,
-        partidaArancelariaTentativa: wizardData.partidaArancelariaTentativa,
-        declaracionesEspeciales: declaraciones,
-      });
-
+      const diagnostico = await evaluarEnvio(data);
       addConsulta(diagnostico);
-      resetWizard();
       navigate(`/consulta/${diagnostico.id}`);
     } catch (err) {
       setError(
@@ -71,50 +48,7 @@ export function NewQuery() {
         </div>
       )}
 
-      {wizardStep === 0 && (
-        <StepCountrySelect
-          value={wizardData.paisDestino ?? ""}
-          onChange={(value) => updateWizardData({ paisDestino: value })}
-          onNext={() => setWizardStep(1)}
-        />
-      )}
-
-      {wizardStep === 1 && (
-        <StepItemDescription
-          value={wizardData.descripcionItem ?? ""}
-          onChange={(value) => updateWizardData({ descripcionItem: value })}
-          categoria={wizardData.categoria ?? ""}
-          onChangeCategoria={(categoria) => updateWizardData({ categoria })}
-          onNext={() => setWizardStep(2)}
-          onBack={() => setWizardStep(0)}
-        />
-      )}
-
-      {wizardStep === 2 && (
-        <StepDetails
-          pesoKg={wizardData.pesoKg}
-          valorDeclaradoUsd={wizardData.valorDeclaradoUsd}
-          cantidadUnidades={wizardData.cantidadUnidades}
-          partidaArancelariaTentativa={wizardData.partidaArancelariaTentativa}
-          onChangePeso={(pesoKg) => updateWizardData({ pesoKg })}
-          onChangeValor={(valorDeclaradoUsd) => updateWizardData({ valorDeclaradoUsd })}
-          onChangeCantidad={(cantidadUnidades) => updateWizardData({ cantidadUnidades })}
-          onChangePartida={(partidaArancelariaTentativa) =>
-            updateWizardData({ partidaArancelariaTentativa })
-          }
-          onNext={() => setWizardStep(3)}
-          onBack={() => setWizardStep(1)}
-        />
-      )}
-
-      {wizardStep === 3 && (
-        <StepSpecialDeclarations
-          value={declaraciones}
-          onChange={(declaracionesEspeciales) => updateWizardData({ declaracionesEspeciales })}
-          onSubmit={handleSubmit}
-          onBack={() => setWizardStep(2)}
-        />
-      )}
+      <ShipmentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
     </div>
   );
 }

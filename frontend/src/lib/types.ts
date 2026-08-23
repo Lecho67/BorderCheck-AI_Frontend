@@ -128,7 +128,20 @@ export function declaracionesEspecialesVacias(): DeclaracionesEspeciales {
   };
 }
 
+export type TransportType = "air" | "sea" | "land" | "postal_courier";
+
+export type ShipmentModality =
+  | "carry_on_baggage"
+  | "checked_baggage"
+  | "commercial_shipment"
+  | "personal_shipment_gift";
+
 export interface WizardFormData {
+  // Logística — antes fija por el modelo de casillero, ahora editable
+  paisOrigen: string;
+  transportType: TransportType | "";
+  shipmentModality: ShipmentModality | "";
+
   // Paso 1 — Destino
   paisDestino: string;
 

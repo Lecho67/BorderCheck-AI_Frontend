@@ -97,13 +97,12 @@ export interface DecisionEngineResult {
 }
 
 // ----------------------------------------------------------------------------
-// Suposiciones de negocio fijas (BorderCheck AI es un servicio de casillero:
-// el usuario compra en EE.UU. y reenvía a su país). Si esto cambia, son los
-// únicos 2 valores que hay que tocar.
+// origin_country / transport_type / shipment_modality YA NO son fijos.
+// Hasta esta versión, BorderCheck-AI operaba solo como servicio de casillero
+// (origen US, aéreo, envío personal) y estos 3 valores estaban hardcodeados
+// aquí. El negocio ahora permite que el usuario los declare, así que se leen
+// de wizardData (ver validaciones más abajo).
 // ----------------------------------------------------------------------------
-const ORIGIN_COUNTRY_ALPHA2 = "US";
-const TRANSPORT_TYPE = "air" as const;
-const SHIPMENT_MODALITY = "personal_shipment_gift" as const;
 const RULES_ENGINE_VERSION = "1.0.0"; // debe coincidir con la del backend
 
 const HS_CODE_PATTERN = /^\d{4}(\.\d{2}){0,2}$/;
@@ -119,9 +118,19 @@ export function buildShipmentEvaluationRequest(
   userId: string | null
 ): ShipmentEvaluationRequest {
   const { alpha2: destinationCountry } = getCountryInfo(wizardData.paisDestino);
+  const { alpha2: originCountry } = getCountryInfo(wizardData.paisOrigen);
   const now = new Date().toISOString();
   const decl = wizardData.declaracionesEspeciales;
 
+  if (!wizardData.paisOrigen) {
+    throw new Error("El país de origen es obligatorio.");
+  }
+  if (!wizardData.transportType) {
+    throw new Error("El tipo de transporte es obligatorio.");
+  }
+  if (!wizardData.shipmentModality) {
+    throw new Error("La modalidad de envío es obligatoria.");
+  }
   if (wizardData.pesoKg == null || wizardData.pesoKg <= 0) {
     throw new Error("El peso (kg) es obligatorio y debe ser mayor a 0.");
   }
@@ -146,10 +155,10 @@ export function buildShipmentEvaluationRequest(
       user_id: userId,
     },
     logistics: {
-      origin_country: ORIGIN_COUNTRY_ALPHA2,
+      origin_country: originCountry,
       destination_country: destinationCountry,
-      transport_type: TRANSPORT_TYPE,
-      shipment_modality: SHIPMENT_MODALITY,
+      transport_type: wizardData.transportType as ShipmentEvaluationRequest["logistics"]["transport_type"],
+      shipment_modality: wizardData.shipmentModality as ShipmentEvaluationRequest["logistics"]["shipment_modality"],
       is_transit: false,
     },
     financial_dimensional: {

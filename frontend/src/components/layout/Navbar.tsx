@@ -42,9 +42,13 @@ export function Navbar() {
               <Link to="/documentos" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Documentos
               </Link>
+              <Link to="/reportes" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Reportes
+              </Link>
               <Link to="/perfil" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Verificar identidad
               </Link>
+              
             </>
           )}
 
