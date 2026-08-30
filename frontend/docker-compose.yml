@@ -1,13 +1,25 @@
-
 services:
   frontend:
+    image: lecho67/bordercheck-frontend:dev
     build: .
     container_name: bordercheck_frontend
     restart: always
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:3000
+      # OJO: tu código lee VITE_API_BASE_URL (src/lib/api.ts), no VITE_API_URL.
+      # host.docker.internal apunta a tu máquina host desde DENTRO del
+      # contenedor — úsalo si el motor de reglas corre fuera de Docker.
+      - VITE_API_BASE_URL=http://host.docker.internal:3000
+      # Sin estas dos, src/lib/supabase.ts lanza throw new Error() y la app
+      # no carga. Tómalas de tu .env local (no las escribas aquí en texto
+      # plano si vas a subir este archivo a un repo compartido).
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
     volumes:
       - .:/app
       - /app/node_modules
+    extra_hosts:
+      # Necesario en Linux para que host.docker.internal funcione; en Docker
+      # Desktop (Mac/Windows) ya funciona sin esto, pero no estorba dejarlo.
+      - "host.docker.internal:host-gateway"
