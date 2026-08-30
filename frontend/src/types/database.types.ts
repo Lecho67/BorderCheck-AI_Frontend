@@ -28,6 +28,11 @@ export interface Profile {
   terms_accepted_at: string | null;
   habeas_data_accepted_at: string | null;
   notification_preferences: NotificationPreferences;
+  address_street: string | null;
+  address_city: string | null;
+  address_department: string | null;
+  address_postal_code: string | null;
+  address_country: string | null;
 }
 
 export interface PreAlert {

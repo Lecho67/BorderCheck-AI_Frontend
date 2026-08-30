@@ -63,7 +63,7 @@ export default function App() {
             <Route
               path="/reportes"
               element={
-                <ProtectedRoute allowedRoles={['cliente', 'admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'gestor']}>
                   <Reports />
                 </ProtectedRoute>
               }
@@ -93,14 +93,6 @@ export default function App() {
               }
             />
             <Route
-              path="/casillero"
-              element={
-                <ProtectedRoute>
-                  <Locker />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/documentos"
               element={
                 <ProtectedRoute>
@@ -125,7 +117,7 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-            // Nueva ruta:
+            {/* Perfil de usuario (todos los roles autenticados) */}
                   <Route
                     path="/perfil"
                     element={
@@ -135,7 +127,7 @@ export default function App() {
                     }
                   />
 
-                  // Ruta /casillero existente: envolver con RequireCompliance
+                  {/* Casillero: protegido además por RequireCompliance (Ley 1581 de 2012) */}
                   <Route
                     path="/casillero"
                     element={

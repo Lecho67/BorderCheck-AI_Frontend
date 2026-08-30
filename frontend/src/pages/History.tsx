@@ -41,7 +41,12 @@ export function History() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-2xl font-semibold text-slate-900 mb-6">Historial de consultas</h1>
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-semibold text-slate-900">Historial de consultas</h1>
+        <Link to="/consulta/nueva">
+          <Button className="whitespace-nowrap">+ Nueva consulta</Button>
+        </Link>
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
