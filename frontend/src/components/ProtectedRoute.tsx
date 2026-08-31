@@ -8,6 +8,13 @@ interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
 }
 
+const RUTA_POR_DEFECTO: Record<UserRole, string> = {
+  cliente: "/dashboard",
+  gestor: "/gestor",
+  agente: "/panel-agente",
+  admin: "/admin",
+};
+
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { user, profile, loading } = useAuth();
   const location = useLocation();
@@ -25,7 +32,8 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   }
 
   if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {
-    return <Navigate to="/dashboard" replace />;
+    const destino = profile ? RUTA_POR_DEFECTO[profile.role] : "/login";
+    return <Navigate to={destino} replace />;
   }
 
   return <>{children}</>;

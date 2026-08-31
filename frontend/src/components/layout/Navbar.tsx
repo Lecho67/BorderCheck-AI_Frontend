@@ -8,6 +8,15 @@ import {
   IdCard,
   FileText,
   LifeBuoy,
+  Menu,
+  X,
+  PlusCircle,
+  History as HistoryIcon,
+  Package,
+  Wrench,
+  Users,
+  BarChart3,
+  ClipboardList,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -15,6 +24,7 @@ export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,16 +37,26 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Evita el scroll del body mientras el drawer móvil está abierto
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   async function handleLogout() {
     setIsOpen(false);
+    setIsMobileMenuOpen(false);
     await signOut();
     navigate("/");
   }
 
   const role = profile?.role;
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <nav className="sticky top-0 z-10 bg-white border-b border-slate-200">
+    <nav className="sticky top-0 z-30 bg-white border-b border-slate-200">
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center">
@@ -53,21 +73,22 @@ export function Navbar() {
           )}
 
           {/* Cliente: solo enlaces operacionales de mayor frecuencia */}
-            {user && (role === "cliente" || role === "admin") && (
-              <>
-                <Link to="/dashboard/historial" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
-                  Historial
-                </Link>
-                <Link to="/casillero" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
-                  Casillero
-                </Link>
-                <Link
-                  to="/consulta/nueva"
-                  className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
-                  Nueva consulta
-                </Link>
-              </>
-            )}
+          {user && (role === "cliente" || role === "admin") && (
+            <>
+              <Link to="/dashboard/historial" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Historial
+              </Link>
+              <Link to="/casillero" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Casillero
+              </Link>
+              <Link
+                to="/consulta/nueva"
+                className="bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline"
+              >
+                + Nueva consulta
+              </Link>
+            </>
+          )}
 
           {/* Gestor: acceso a su cartera de clientes */}
           {user && (role === "gestor" || role === "admin") && (
@@ -104,17 +125,15 @@ export function Navbar() {
             Herramientas
           </Link>
 
+          {/* Perfil (dropdown) - solo escritorio/tablet, en mobile vive dentro del drawer */}
           {user ? (
-            <div className="relative" ref={menuRef}>
+            <div className="relative hidden sm:block" ref={menuRef}>
               <button
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors font-medium"
               >
                 <User className="w-4 h-4" />
-                <span className="hidden sm:inline">
-                  Mi Perfil{profile?.full_name ? ` · ${profile.full_name}` : role ? ` · ${role}` : ""}
-                </span>
-                <span className="sm:hidden">Perfil</span>
+                <span>Mi Perfil{profile?.full_name ? ` · ${profile.full_name}` : role ? ` · ${role}` : ""}</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
 
@@ -177,11 +196,235 @@ export function Navbar() {
           ) : (
             <Link
               to="/login"
-              className="bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm"
+              className="bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm hidden sm:inline-block"
             >
               Iniciar sesión
             </Link>
           )}
+
+          {/* Botón hamburguesa - solo mobile */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Abrir menú"
+            className="block sm:hidden text-slate-600 hover:text-slate-900 transition-colors"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* --- Drawer móvil --- */}
+      <div
+        className={`fixed inset-0 z-40 sm:hidden ${isMobileMenuOpen ? "" : "pointer-events-none"}`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-slate-900/40 transition-opacity duration-200 ${
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={closeMobileMenu}
+        />
+
+        {/* Panel */}
+        <div
+          className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-xl flex flex-col transition-transform duration-200 ease-out ${
+            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+            <span className="font-semibold text-slate-900">Menú</span>
+            <button onClick={closeMobileMenu} aria-label="Cerrar menú" className="text-slate-500 hover:text-slate-900">
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 py-4 text-sm">
+            {!user && (
+              <div className="flex flex-col gap-2">
+                <Link
+                  to="/login"
+                  onClick={closeMobileMenu}
+                  className="text-center bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-4 py-3 rounded-xl transition-colors"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  to="/pitch"
+                  onClick={closeMobileMenu}
+                  className="text-center text-slate-600 px-4 py-3 rounded-xl hover:bg-slate-50"
+                >
+                  Presentación
+                </Link>
+              </div>
+            )}
+
+            {user && (
+              <>
+                {/* CTA principal destacado, arriba del todo para el pulgar */}
+                {(role === "cliente" || role === "admin") && (
+                  <Link
+                    to="/consulta/nueva"
+                    onClick={closeMobileMenu}
+                    className="flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold px-4 py-3.5 rounded-xl mb-4 transition-colors"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                    Nueva consulta
+                  </Link>
+                )}
+
+                {(role === "cliente" || role === "admin") && (
+                  <div className="mb-4">
+                    <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                      Mi actividad
+                    </p>
+                    <Link
+                      to="/dashboard/historial"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <HistoryIcon className="w-4 h-4 text-slate-400" />
+                      Historial
+                    </Link>
+                    <Link
+                      to="/casillero"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <Package className="w-4 h-4 text-slate-400" />
+                      Casillero
+                    </Link>
+                  </div>
+                )}
+
+                {(role === "gestor" || role === "admin") && (
+                  <div className="mb-4">
+                    <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                      Gestión
+                    </p>
+                    <Link
+                      to="/gestor"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <Users className="w-4 h-4 text-slate-400" />
+                      Mis clientes
+                    </Link>
+                    <Link
+                      to="/reportes"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <BarChart3 className="w-4 h-4 text-slate-400" />
+                      Reportes
+                    </Link>
+                  </div>
+                )}
+
+                {(role === "agente" || role === "admin") && (
+                  <div className="mb-4">
+                    <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                      Panel de agente
+                    </p>
+                    <Link
+                      to="/panel-agente"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <ClipboardList className="w-4 h-4 text-slate-400" />
+                      Cola de revisión
+                    </Link>
+                    <Link
+                      to="/panel-agente/documentos"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <FileText className="w-4 h-4 text-slate-400" />
+                      Documentos
+                    </Link>
+                  </div>
+                )}
+
+                {role === "admin" && (
+                  <div className="mb-4">
+                    <Link
+                      to="/admin"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50 font-medium"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-slate-400" />
+                      Administración
+                    </Link>
+                  </div>
+                )}
+
+                <div className="mb-4 border-t border-slate-100 pt-3">
+                  <Link
+                    to="/herramientas"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                  >
+                    <Wrench className="w-4 h-4 text-slate-400" />
+                    Herramientas
+                  </Link>
+                </div>
+
+                <div className="mb-4 border-t border-slate-100 pt-3">
+                  <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                    Mi cuenta
+                  </p>
+                  <Link
+                    to="/perfil"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                  >
+                    <User className="w-4 h-4 text-slate-400" />
+                    Mi Perfil{profile?.full_name ? ` · ${profile.full_name}` : ""}
+                  </Link>
+                  <Link
+                    to="/perfil"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                  >
+                    <IdCard className="w-4 h-4 text-slate-400" />
+                    Verificar Identidad
+                  </Link>
+                  <Link
+                    to="/documentos"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                  >
+                    <FileText className="w-4 h-4 text-slate-400" />
+                    Mis Documentos
+                  </Link>
+                </div>
+
+                <div className="mb-4 border-t border-slate-100 pt-3">
+                  <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                    Ayuda &amp; soporte
+                  </p>
+                  <Link
+                    to="/soporte"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                  >
+                    <LifeBuoy className="w-4 h-4 text-slate-400" />
+                    Centro de Soporte
+                  </Link>
+                </div>
+
+                <div className="border-t border-slate-100 pt-3">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-2 py-3 rounded-lg text-red-600 hover:bg-red-50 text-left"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Cerrar Sesión
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ToastContainer } from "@/components/ui/ToastContainer";
 import { Landing } from "@/pages/Landing";
 import { Login } from "@/pages/Login";
+import { ResetPassword } from "@/pages/ResetPassword";
 import { Register } from "@/pages/Register";
 import { Dashboard } from "@/pages/Dashboard";
 import { NewQuery } from "@/pages/NewQuery";
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="/" element={<Pitch />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/restablecer-contrasena" element={<ResetPassword />} />
             <Route path="/registro" element={<Register />} />
             <Route path="/herramientas" element={<Tools />} />
             <Route path="/soporte" element={<SupportCenter />} />
@@ -112,7 +114,7 @@ export default function App() {
                 <Route
                   path="/gestor"
                   element={
-                    <ProtectedRoute allowedRoles={['gestor']}>
+                    <ProtectedRoute allowedRoles={['gestor', 'admin']}>
                       <GestorPanel />
                     </ProtectedRoute>
                   }

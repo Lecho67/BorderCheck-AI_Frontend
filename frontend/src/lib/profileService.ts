@@ -56,7 +56,7 @@ export async function actualizarDireccion(userId: string, direccion: DatosDirecc
 
 export async function solicitarCambioContrasena(email: string): Promise<void> {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/login`,
+    redirectTo: `${window.location.origin}/restablecer-contrasena`,
   });
   if (error) throw new Error(error.message);
 }
