@@ -23,6 +23,7 @@ import { AdminPanel } from "@/pages/AdminPanel";
 import { GestorPanel } from "@/pages/GestorPanel";
 import { AgentPanel } from "@/pages/AgentPanel";
 import { AgentDocumentsPanel } from "@/pages/AgentDocumentsPanel";
+import { AgentKycPanel } from "@/pages/AgentKycPanel";
 import { Reports } from "@/pages/Reports";
 
 
@@ -157,6 +158,14 @@ export default function App() {
     </ProtectedRoute>
   }
 />
+                <Route
+                  path="/panel-agente/kyc"
+                  element={
+                    <ProtectedRoute allowedRoles={['agente', 'admin']}>
+                      <AgentKycPanel />
+                    </ProtectedRoute>
+                  }
+                />
           </Routes>
         </Layout>
       </BrowserRouter>

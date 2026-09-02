@@ -111,6 +111,9 @@ export function Navbar() {
               <Link to="/panel-agente/documentos" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Documentos
               </Link>
+              <Link to="/panel-agente/kyc" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Verificación KYC
+              </Link>
             </>
           )}
 
@@ -341,6 +344,14 @@ export function Navbar() {
                     >
                       <FileText className="w-4 h-4 text-slate-400" />
                       Documentos
+                    </Link>
+                    <Link
+                      to="/panel-agente/kyc"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <IdCard className="w-4 h-4 text-slate-400" />
+                      Verificación KYC
                     </Link>
                   </div>
                 )}
