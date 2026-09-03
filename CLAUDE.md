@@ -73,7 +73,8 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 
 - Bug arreglado: `CasoRevisionCard.tsx` tenía un bloque `<section>` con `<ShipmentTimeline>` incrustado como sentencia dentro de un `useEffect` (merge roto) — la línea de tiempo "Trazabilidad del caso" no se renderizaba. Movida al `return`.
 - `AdminUserTable.tsx`: emoji `⚠️` reemplazado por `<AlertTriangle>` de lucide (convención "solo lucide-react").
-- `AuthContext.tsx`: `fetchProfile` ahora reintenta 3 veces con backoff ante fallos transitorios, descarta respuestas obsoletas (guard con `requestIdRef` para login/logout rápidos), y **no borra un perfil ya cargado** si un refresh posterior falla. `ProtectedRoute` ya no expulsa a `/login` cuando la sesión es válida pero el perfil no cargó: muestra pantalla de "Reintentar" (`profileError`).
+- `AuthContext.tsx`: `fetchProfile` ahora reintenta 3 veces con backoff ante fallos transitorios, descarta respuestas obsoletas (guard con `requestIdRef` para login/logout rápidos), y **no borra un perfil ya cargado** si un refresh posterior falla. `ProtectedRoute` ya no expulsa a `/login` cuando la sesión es válida pero el perfil no cargó: muestra pantalla de "Reintentar" (`profileError`). Verificado bloqueando el dominio de Supabase en DevTools.
+- `AuthContext.tsx`: canal Realtime sobre `profiles` (ver Arquitectura). Verificado: aprobar/rechazar KYC desde el panel de agente actualiza el badge del cliente en otra pestaña sin recargar.
 - `StepSpecialDeclarations.tsx`: 4 `as any` → casts a los tipos union de `@/lib/types`.
 - Pendiente cosmético: `useAuth` se exporta desde `AuthContext.tsx` junto al provider (warning `react-refresh/only-export-components`); moverlo a su propio archivo toca ~20 imports.
 - Bundle de producción: ~1.3 MB en un solo chunk (`powerbi-client` + `recharts` + `framer-motion`). Candidato a `React.lazy` por ruta, sobre todo `/reportes`.
