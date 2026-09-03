@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Upload, CheckCircle2, Clock, XCircle, ShieldCheck, KeyRound } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
 import { KycModal } from "@/components/kyc/KycModal";
 import { toast } from "@/lib/toast";

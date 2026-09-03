@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { VerdictBadge } from "@/components/verdict/VerdictBadge";
 import { Button } from "@/components/ui/Button";
 import { useQueryStore } from "@/store/useQueryStore";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Dashboard() {
   const consultas = useQueryStore((s) => s.consultas);

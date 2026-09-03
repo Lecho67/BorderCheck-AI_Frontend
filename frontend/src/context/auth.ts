@@ -1,0 +1,19 @@
+import { createContext } from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import type { Profile } from "@/types/database.types";
+
+export interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  profile: Profile | null;
+  loading: boolean;
+  profileError: string | null;
+  signUp: (email: string, password: string, fullName?: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
+}
+
+// Objeto de contexto en su propio módulo para no romper el fast-refresh de
+// `AuthContext.tsx` (que solo exporta el provider) ni de `hooks/useAuth.ts`.
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);

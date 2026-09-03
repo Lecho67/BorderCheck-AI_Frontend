@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Clock, Copy, Pencil, Trash2 } from "lucide-react";
 import { PreAlertForm } from "../components/PreAlertForm";
 import { fetchMisPreAlertas, eliminarPreAlerta } from "@/lib/preAlertService";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import type { PreAlert } from "@/types/database.types";
 
 import { Modal } from "@/components/ui/Modal";

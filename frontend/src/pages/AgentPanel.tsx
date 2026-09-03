@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { fetchColaDeRevision, type CasoEnCola } from "@/lib/agentService";
 import { CasoRevisionCard } from "@/components/agent/CasoRevisionCard";
 import type { DiagnosticoEnvio } from "@/lib/types";

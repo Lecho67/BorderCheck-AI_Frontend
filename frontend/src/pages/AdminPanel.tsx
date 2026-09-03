@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { MetricsOverview } from "@/components/admin/MetricsOverview";
 import { AdminUserTable } from "@/components/admin/AdminUserTable";
 

@@ -18,7 +18,7 @@ import {
   BarChart3,
   ClipboardList,
 } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();

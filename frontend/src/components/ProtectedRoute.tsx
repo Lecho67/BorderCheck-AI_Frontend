@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import type { UserRole } from "@/types/database.types";
 
 interface ProtectedRouteProps {
