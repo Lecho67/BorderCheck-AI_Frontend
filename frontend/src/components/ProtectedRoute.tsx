@@ -16,7 +16,7 @@ const RUTA_POR_DEFECTO: Record<UserRole, string> = {
 };
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, profileError, refreshProfile } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -29,6 +29,26 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Sesión válida pero el perfil no cargó (típicamente red): no expulsar, ofrecer reintento.
+  if (!profile && profileError) {
+    return (
+      <div className="max-w-md mx-auto mt-24 p-6 text-center">
+        <h1 className="text-lg font-semibold text-slate-900 mb-2">
+          No pudimos cargar tu perfil
+        </h1>
+        <p className="text-sm text-slate-500 mb-6">
+          Tu sesión sigue activa. Revisá tu conexión y reintentá.
+        </p>
+        <button
+          onClick={() => refreshProfile()}
+          className="inline-block rounded-xl bg-brand-blue px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-blue/90"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
   }
 
   if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {

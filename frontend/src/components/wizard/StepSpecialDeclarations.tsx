@@ -4,7 +4,14 @@ import { Select } from "@/components/ui/Select";
 import { Input } from "@/components/ui/Input";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Chip } from "@/components/ui/Chip";
-import type { DeclaracionesEspeciales, OtraMercanciaPeligrosa } from "@/lib/types";
+import type {
+  CategoriaLiquido,
+  DeclaracionesEspeciales,
+  OtraMercanciaPeligrosa,
+  TipoBateriaLitio,
+  TipoProductoOrganico,
+  TipoRegulacionMedica,
+} from "@/lib/types";
 
 interface StepSpecialDeclarationsProps {
   value: DeclaracionesEspeciales;
@@ -51,7 +58,7 @@ export function StepSpecialDeclarations({ value, onChange, onSubmit, onBack }: S
               <Select
                 options={OPCIONES_BATERIA}
                 value={value.bateria?.tipo ?? ""}
-                onChange={(tipo) => set({ bateria: { ...value.bateria, tipo: tipo as any } })}
+                onChange={(tipo) => set({ bateria: { ...value.bateria, tipo: tipo as TipoBateriaLitio } })}
                 placeholder="Tipo de batería"
               />
               <Input
@@ -76,7 +83,7 @@ export function StepSpecialDeclarations({ value, onChange, onSubmit, onBack }: S
               <Select
                 options={OPCIONES_LIQUIDO}
                 value={value.liquido?.categoria ?? ""}
-                onChange={(categoria) => set({ liquido: { ...value.liquido, categoria: categoria as any } })}
+                onChange={(categoria) => set({ liquido: { ...value.liquido, categoria: categoria as CategoriaLiquido } })}
                 placeholder="Categoría del líquido"
               />
               <Input
@@ -126,7 +133,7 @@ export function StepSpecialDeclarations({ value, onChange, onSubmit, onBack }: S
               <Select
                 options={OPCIONES_ORGANICO}
                 value={value.organico?.tipo ?? ""}
-                onChange={(tipo) => set({ organico: { ...value.organico, tipo: tipo as any } })}
+                onChange={(tipo) => set({ organico: { ...value.organico, tipo: tipo as TipoProductoOrganico } })}
                 placeholder="Tipo de producto"
               />
             </div>
@@ -144,7 +151,7 @@ export function StepSpecialDeclarations({ value, onChange, onSubmit, onBack }: S
               <Select
                 options={OPCIONES_MEDICO}
                 value={value.medico?.tipo ?? ""}
-                onChange={(tipo) => set({ medico: { ...value.medico, tipo: tipo as any } })}
+                onChange={(tipo) => set({ medico: { ...value.medico, tipo: tipo as TipoRegulacionMedica } })}
                 placeholder="Tipo de regulación médica"
               />
             </div>

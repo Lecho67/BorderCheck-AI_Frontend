@@ -1,8 +1,10 @@
 // src/context/AuthContext.tsx
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   ReactNode,
 } from 'react';
@@ -32,27 +34,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
 
-  const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
+  // Cada llamada a fetchProfile toma un id; si llega una más nueva (login/logout
+  // rápido), las respuestas viejas se descartan para no pisar el estado actual.
+  const requestIdRef = useRef(0);
 
-    if (error) {
+  const fetchProfile = useCallback(async (userId: string, intentos = 3) => {
+    const reqId = ++requestIdRef.current;
+
+    for (let intento = 1; intento <= intentos; intento++) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (reqId !== requestIdRef.current) return; // respuesta obsoleta
+
+      if (!error) {
+        setProfile(data as Profile);
+        setProfileError(null);
+        return;
+      }
+
+      // PGRST116 = 0 filas: es un estado real, no un fallo transitorio
+      if (error.code === 'PGRST116') {
+        setProfile(null);
+        setProfileError(error.message);
+        return;
+      }
+
+      if (intento < intentos) {
+        await new Promise((r) => setTimeout(r, 500 * intento));
+        continue;
+      }
+
       console.error('Error al cargar perfil:', error.message);
-      setProfile(null);
       setProfileError(error.message);
       toast.error(
         'No pudimos cargar tu perfil',
-        'Algunas secciones pueden no estar disponibles. Probá recargar la página.'
+        'Revisá tu conexión y reintentá; no cerramos tu sesión.'
       );
-      return;
     }
-
-    setProfile(data as Profile);
-    setProfileError(null);
-  };
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -73,13 +96,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         fetchProfile(session.user.id);
       } else {
+        requestIdRef.current++; // descarta cualquier fetchProfile en vuelo
         setProfile(null);
         setProfileError(null);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchProfile]);
+
+  // Realtime: refleja en vivo los cambios sobre el propio perfil del usuario
+  // (aprobación/rechazo de KYC, cambio de rol, asignación de gestor) sin recargar.
+  // Requiere que la tabla `profiles` esté en la publicación `supabase_realtime`.
+  // Si Realtime no está habilitado, simplemente no dispara (degradación limpia).
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel(`perfil:${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` },
+        () => {
+          fetchProfile(user.id);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, fetchProfile]);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     const { error } = await supabase.auth.signUp({

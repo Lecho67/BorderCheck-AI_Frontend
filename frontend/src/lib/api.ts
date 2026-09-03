@@ -107,7 +107,6 @@ async function guardarConsultaEnHistorial(
   });
 
   if (error) {
-    // eslint-disable-next-line no-console
     console.error("No se pudo guardar la consulta en customs_queries:", error);
     toast.error(
       "No se pudo guardar en tu historial",

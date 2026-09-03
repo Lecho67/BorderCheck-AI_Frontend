@@ -63,7 +63,6 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
     };
   }, [caso.user_id]);
 
-  const esMio = asignadoA != null && asignadoA === currentUserId;
   const deOtroAgente = asignadoA != null && asignadoA !== currentUserId;
 
   const handleVerDocumento = async (doc: DocumentRecord) => {
