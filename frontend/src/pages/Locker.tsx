@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Check, Copy, Pencil, Trash2 } from "lucide-react";
+import { Check, Clock, Copy, Pencil, Trash2 } from "lucide-react";
 import { PreAlertForm } from "../components/PreAlertForm";
 import { fetchMisPreAlertas, eliminarPreAlerta } from "@/lib/preAlertService";
+import { useAuth } from "@/context/AuthContext";
 import type { PreAlert } from "@/types/database.types";
 
 import { Modal } from "@/components/ui/Modal";
@@ -35,6 +36,10 @@ const STATUS_LABEL: Record<PreAlert["status"], string> = {
 };
 
 export default function Locker() {
+  const { profile } = useAuth();
+  // KYC en revisión: casillero en modo lectura (sin crear / editar / eliminar pre-alertas)
+  const soloLectura = profile?.kyc_status === "pendiente";
+
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<PreAlert | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -96,13 +101,25 @@ export default function Locker() {
             setEditando(null);
             setShowForm(true);
           }}
+          disabled={soloLectura}
           className="bg-brand-blue text-white px-5 py-2.5 rounded-lg font-medium
                      hover:bg-brand-blue/90 focus:outline-none focus:ring-2
-                     focus:ring-brand-blue focus:ring-offset-2 transition"
+                     focus:ring-brand-blue focus:ring-offset-2 transition
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-blue"
         >
           + Pre-alertar paquete
         </button>
       </header>
+
+      {soloLectura && (
+        <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <Clock className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+          <p className="text-sm text-amber-800">
+            Tu verificación de identidad está en revisión. Podés ver tu casillero, pero no vas a
+            poder pre-alertar, editar ni eliminar paquetes hasta que se apruebe.
+          </p>
+        </div>
+      )}
 
       <section className="grid sm:grid-cols-2 gap-4">
         {ADDRESSES.map((addr) => (
@@ -158,25 +175,27 @@ export default function Locker() {
                     <span>{STATUS_LABEL[p.status]}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => {
-                      setEditando(p);
-                      setShowForm(true);
-                    }}
-                    className="p-2 text-slate-500 hover:text-brand-blue rounded-lg hover:bg-slate-50"
-                    title="Editar"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => solicitarEliminar(p)}
-                    className="p-2 text-slate-500 hover:text-red-600 rounded-lg hover:bg-red-50"
-                    title="Eliminar"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {!soloLectura && (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => {
+                        setEditando(p);
+                        setShowForm(true);
+                      }}
+                      className="p-2 text-slate-500 hover:text-brand-blue rounded-lg hover:bg-slate-50"
+                      title="Editar"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => solicitarEliminar(p)}
+                      className="p-2 text-slate-500 hover:text-red-600 rounded-lg hover:bg-red-50"
+                      title="Eliminar"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

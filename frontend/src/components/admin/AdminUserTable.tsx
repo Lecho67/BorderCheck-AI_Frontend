@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AlertTriangle } from "lucide-react";
 import { fetchTodosLosUsuarios, actualizarRol, asignarGestor } from "@/lib/adminService";
 import type { Profile, UserRole } from "@/types/database.types";
 import { toast } from "@/lib/toast";
@@ -185,8 +186,9 @@ export function AdminUserTable() {
                 de <span className="font-medium">{accionPendiente.rolAnterior}</span> a{" "}
                 <span className="font-medium">{accionPendiente.rolNuevo}</span>.
                 {accionPendiente.rolNuevo === "admin" && (
-                  <span className="block mt-2 text-orange-600">
-                    ⚠️ Le darás control total del sistema (usuarios, roles, todos los datos).
+                  <span className="mt-2 flex items-start gap-1.5 text-orange-600">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                    Le darás control total del sistema (usuarios, roles, todos los datos).
                   </span>
                 )}
               </p>

@@ -48,13 +48,6 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
   useEffect(() => {
     let activo = true;
     setDocsLoading(true);
-    {/* Línea de tiempo del caso */}
-    <section>
-      <h3 className="mb-2 text-sm font-semibold text-slate-700">Trazabilidad del caso</h3>
-      <div className="rounded-xl border border-slate-200 p-4">
-        <ShipmentTimeline caso={caso} docs={docs} />
-      </div>
-    </section>
     fetchDocumentosDeCliente(caso.user_id)
       .then((data) => {
         if (activo) setDocs(data);
@@ -262,6 +255,18 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
                 ))}
               </ul>
             )}
+          </section>
+
+          {/* Trazabilidad del caso */}
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-slate-700">Trazabilidad del caso</h3>
+            <div className="rounded-xl border border-slate-200 p-4">
+              {docsLoading ? (
+                <p className="text-sm text-slate-400">Cargando línea de tiempo…</p>
+              ) : (
+                <ShipmentTimeline caso={caso} docs={docs} />
+              )}
+            </div>
           </section>
 
           {/* Acciones */}
