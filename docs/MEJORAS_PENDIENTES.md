@@ -43,6 +43,26 @@ verdes tras un merge. Es la pieza que hace que la inversión en pruebas valga.
 
 ---
 
+## 3b. Login: recuperar contraseña ✅ · login con Google ⏳ oculto
+
+**Qué:** `Login.tsx` se rediseñó con el sistema de diseño y suma
+"¿Olvidaste tu contraseña?" (reutiliza `solicitarCambioContrasena` /
+`/restablecer-contrasena`, funcionando).
+
+**Google:** `signInWithGoogle()` ya está implementado en `AuthContext` (y
+probado que compila/lintea), pero el botón está **oculto** en `Login.tsx`
+hasta activar el proveedor. Evaluamos usar Firebase para esto y se descartó:
+duplicaría el sistema de identidad (Supabase Auth ya sostiene RLS, Storage y
+Realtime vía `auth.uid()`). Para habilitarlo:
+1. Google Cloud Console → OAuth consent screen + credencial "Web application".
+2. Redirect URI: `https://<proyecto>.supabase.co/auth/v1/callback`.
+3. Supabase Dashboard → Authentication → Providers → Google → pegar Client ID/Secret.
+4. Supabase Dashboard → Authentication → URL Configuration → agregar las URLs de `redirectTo` (`/dashboard` en dev y prod).
+5. Volver a agregar el botón en `Login.tsx` (se sacó pero el código de `AuthContext` sigue ahí).
+6. Verificar que el primer login con Google cree la fila en `profiles` (debería, vía el mismo trigger que usa el signup por email).
+
+**Dónde:** `frontend/src/pages/Login.tsx`, `frontend/src/context/AuthContext.tsx`, `frontend/src/context/auth.ts`.
+
 ## 3. `git push` 🔷
 
 Los commits de la sesión están solo en local (`main`). Falta `git push`

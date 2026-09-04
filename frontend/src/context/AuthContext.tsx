@@ -130,6 +130,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
   };
 
+  // Redirige a Google y vuelve a /dashboard; la sesión la recoge
+  // automáticamente el listener de arriba (detectSessionInUrl en supabase.ts).
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -149,6 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profileError,
         signUp,
         signIn,
+        signInWithGoogle,
         signOut,
         refreshProfile,
       }}

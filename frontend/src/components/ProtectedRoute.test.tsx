@@ -19,6 +19,7 @@ function renderRoute(auth: Partial<AuthValue>, allowedRoles?: UserRole[]) {
     profileError: null,
     signUp: vi.fn(),
     signIn: vi.fn(),
+    signInWithGoogle: vi.fn(),
     signOut: vi.fn(),
     refreshProfile: vi.fn(),
     ...auth,

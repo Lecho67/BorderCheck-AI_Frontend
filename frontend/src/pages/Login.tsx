@@ -1,15 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { solicitarCambioContrasena } from '@/lib/profileService';
+import { toast } from '@/lib/toast';
+
+// El botón de "Continuar con Google" está listo en AuthContext
+// (signInWithGoogle) pero oculto acá hasta que se habilite el proveedor
+// Google en Supabase — ver docs/MEJORAS_PENDIENTES.md.
+
+type Mode = 'signIn' | 'signUp' | 'forgotPassword';
 
 export function Login() {
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+  const [mode, setMode] = useState<Mode>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [enviandoRecuperacion, setEnviandoRecuperacion] = useState(false);
+  const [recuperacionEnviada, setRecuperacionEnviada] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
@@ -19,88 +31,178 @@ export function Login() {
     }
   }, [user, navigate]);
 
+  const cambiarModo = (nuevoModo: Mode) => {
+    setMode(nuevoModo);
+    setError(null);
+    setRecuperacionEnviada(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError(null);
-  setLoading(true);
-  try {
-    if (mode === 'signUp') {
-      await signUp(email, password, fullName);
-    } else {
-      await signIn(email, password);
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      if (mode === 'signUp') {
+        await signUp(email, password, fullName);
+      } else {
+        await signIn(email, password);
+      }
+      // El useEffect navega cuando "user" se actualice en el AuthContext.
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ocurrió un error');
+    } finally {
+      setLoading(false);
     }
-    // En ambos casos, el useEffect se encarga de navegar
-    // cuando "user" se actualice en el AuthContext.
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Ocurrió un error');
-  } finally {
-    setLoading(false);
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      setError('Ingresá tu correo para enviarte el enlace.');
+      return;
+    }
+    setError(null);
+    setEnviandoRecuperacion(true);
+    try {
+      await solicitarCambioContrasena(email.trim());
+      setRecuperacionEnviada(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'No se pudo enviar el enlace';
+      setError(msg);
+      toast.error('No se pudo enviar el enlace', msg);
+    } finally {
+      setEnviandoRecuperacion(false);
+    }
+  };
+
+  if (mode === 'forgotPassword') {
+    return (
+      <div className="max-w-md mx-auto mt-16 p-6">
+        <button
+          type="button"
+          onClick={() => cambiarModo('signIn')}
+          className="mb-6 flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900"
+        >
+          <ArrowLeft className="h-4 w-4" /> Volver a iniciar sesión
+        </button>
+
+        <h1 className="mb-2 text-2xl font-bold text-slate-900">Recuperar contraseña</h1>
+
+        {recuperacionEnviada ? (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+            Si <span className="font-medium">{email}</span> tiene una cuenta, te enviamos un enlace
+            para restablecer la contraseña. Revisá tu correo (y la carpeta de spam).
+          </div>
+        ) : (
+          <>
+            <p className="mb-6 text-sm text-slate-500">
+              Ingresá tu correo y te enviamos un enlace para elegir una nueva contraseña.
+            </p>
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              {error && <p className="text-sm text-red-500">{error}</p>}
+              <Input
+                type="email"
+                label="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tu@correo.com"
+                required
+              />
+              <Button type="submit" disabled={enviandoRecuperacion} className="w-full">
+                {enviandoRecuperacion ? 'Enviando...' : 'Enviar enlace'}
+              </Button>
+            </form>
+          </>
+        )}
+      </div>
+    );
   }
-};
 
   return (
     <div className="max-w-md mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold mb-4">
+      <h1 className="mb-1 text-2xl font-bold text-slate-900">
         {mode === 'signIn' ? 'Iniciar sesión' : 'Crear cuenta'}
       </h1>
+      <p className="mb-6 text-sm text-slate-500">
+        {mode === 'signIn'
+          ? 'Ingresá a tu cuenta de BorderCheck AI.'
+          : 'Creá tu cuenta para empezar a importar con BorderCheck AI.'}
+      </p>
 
-      <div className="flex mb-6 border rounded overflow-hidden">
+      <div className="mb-6 flex overflow-hidden rounded-xl border border-slate-200">
         <button
           type="button"
-          onClick={() => { setMode('signIn'); setError(null); setInfo(null); }}
-          className={`flex-1 py-2 text-sm ${mode === 'signIn' ? 'bg-black text-white' : 'bg-white text-black'}`}
+          onClick={() => cambiarModo('signIn')}
+          className={`flex-1 py-2 text-sm font-medium transition-colors ${
+            mode === 'signIn' ? 'bg-brand-blue text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+          }`}
         >
           Iniciar sesión
         </button>
         <button
           type="button"
-          onClick={() => { setMode('signUp'); setError(null); setInfo(null); }}
-          className={`flex-1 py-2 text-sm ${mode === 'signUp' ? 'bg-black text-white' : 'bg-white text-black'}`}
+          onClick={() => cambiarModo('signUp')}
+          className={`flex-1 py-2 text-sm font-medium transition-colors ${
+            mode === 'signUp' ? 'bg-brand-blue text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+          }`}
         >
           Crear cuenta
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {info && <p className="text-green-600 text-sm">{info}</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
         {mode === 'signUp' && (
-          <input
+          <Input
             type="text"
+            label="Nombre completo"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="Nombre completo"
-            className="w-full border rounded px-3 py-2"
+            placeholder="Ej: Juan Pérez"
+            required
           />
         )}
 
-        <input
+        <Input
           type="email"
+          label="Correo electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Correo electrónico"
-          className="w-full border rounded px-3 py-2"
+          placeholder="tu@correo.com"
           required
         />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Contraseña"
-          className="w-full border rounded px-3 py-2"
-          required
-          minLength={6}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-black text-white rounded px-3 py-2"
-        >
+
+        <div>
+          <Input
+            type="password"
+            label="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={mode === 'signUp' ? 'Mínimo 6 caracteres' : '••••••••'}
+            required
+            minLength={6}
+          />
+          {mode === 'signIn' && (
+            <button
+              type="button"
+              onClick={() => cambiarModo('forgotPassword')}
+              className="mt-1.5 text-xs font-medium text-brand-blue hover:underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          )}
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full">
           {loading
-            ? mode === 'signIn' ? 'Ingresando...' : 'Creando cuenta...'
-            : mode === 'signIn' ? 'Iniciar sesión' : 'Crear cuenta'}
-        </button>
+            ? mode === 'signIn'
+              ? 'Ingresando...'
+              : 'Creando cuenta...'
+            : mode === 'signIn'
+              ? 'Iniciar sesión'
+              : 'Crear cuenta'}
+        </Button>
       </form>
     </div>
   );
