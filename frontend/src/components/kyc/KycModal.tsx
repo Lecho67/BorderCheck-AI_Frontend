@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 type TipoModal = "terminos" | "habeas_data";
 
@@ -32,10 +34,27 @@ const CONTENIDO: Record<TipoModal, { titulo: string; cuerpo: string[] }> = {
 
 export function KycModal({ tipo, onClose }: Props) {
   const contenido = CONTENIDO[tipo];
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, true);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-      <div className="flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        ref={dialogRef}
+        className="flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
+      >
         <div className="flex items-center justify-between border-b border-slate-100 p-4">
           <h2 className="text-sm font-semibold text-slate-900">{contenido.titulo}</h2>
           <button onClick={onClose} aria-label="Cerrar" className="text-slate-400 hover:text-slate-600">

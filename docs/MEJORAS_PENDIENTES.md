@@ -174,8 +174,13 @@ preferencias en `Profile.tsx`.
 
 ## 11. UX / accesibilidad
 
-- **Foco en modales y drawers:** `Modal`, `CasoRevisionCard`, `KycModal` y el
-  drawer móvil del `Navbar` no atrapan el foco ni lo devuelven al cerrar.
+- **Foco en modales y drawers ✅.** Hook compartido `useFocusTrap`
+  (`src/hooks/useFocusTrap.ts`, con test propio) aplicado en `Modal`,
+  `KycModal`, `CasoRevisionCard` y el drawer móvil del `Navbar`: enfoca el
+  primer elemento al abrir, cicla Tab/Shift+Tab sin escapar del contenedor,
+  y devuelve el foco a lo que estaba activo antes al cerrar. De paso:
+  `KycModal` y `CasoRevisionCard` ahora cierran con Escape (ya lo tenía
+  `Modal`) y el `✕` de `CasoRevisionCard` pasó a `<X>` de lucide.
 - **`AgentKycPanel`:** sin filtros, orden ni paginación (a diferencia de la
   cola de casos y el panel de documentos). Tampoco se actualiza en vivo
   cuando entra un KYC nuevo.

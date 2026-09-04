@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import { revisarCaso, tomarCaso, type CasoEnCola } from "@/lib/agentService";
 import {
   fetchDocumentosDeCliente,
@@ -8,6 +9,7 @@ import type { DocumentRecord } from "@/types/database.types";
 import type { DiagnosticoEnvio } from "@/lib/types";
 import { toast } from "@/lib/toast";
 import { ShipmentTimeline } from "@/components/agent/ShipmentTimeline";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   caso: CasoEnCola;
@@ -37,6 +39,17 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
   const [docs, setDocs] = useState<DocumentRecord[]>([]);
   const [docsLoading, setDocsLoading] = useState(true);
   const [abriendoDocId, setAbriendoDocId] = useState<string | null>(null);
+
+  const panelRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(panelRef, true);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -154,12 +167,15 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} />
 
       {/* Panel */}
-      <div className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-xl">
+      <div
+        ref={panelRef}
+        className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-xl"
+      >
         <div className="flex items-start justify-between border-b border-slate-100 p-6">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -177,7 +193,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
             aria-label="Cerrar"
             className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
           >
-            ✕
+            <X className="h-4 w-4" />
           </button>
         </div>
 

@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **43 casos en 9 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **47 casos en 10 archivos**.
 
 ### 6.1 `src/lib/countryCodes.test.ts` — 2 casos
 
@@ -159,6 +159,15 @@ Monta el `AuthProvider` real con Supabase mockeado (sesión, `profiles`, canal R
 | AC-04 | Un `refreshProfile()` posterior agota los 3 reintentos | `profileError` seteado, pero el perfil previo **se conserva** (no se borra) |
 | AC-05 | Sesión activa | Abre un canal `perfil:<uid>` con `postgres_changes` filtrado por `id=eq.<uid>` |
 
+### 6.10 `src/hooks/useFocusTrap.test.tsx` — 4 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| FT-01 | Se activa | Enfoca el primer elemento focuseable del contenedor |
+| FT-02 | Tab desde el último elemento | Vuelve al primero (no escapa del contenedor) |
+| FT-03 | Shift+Tab desde el primero | Va al último |
+| FT-04 | Se desactiva | Devuelve el foco a lo que estaba activo antes de abrir |
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -196,7 +205,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 43 | ✅ 43/43 |
+| Automatizados (Vitest) | 47 | ✅ 47/47 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.

@@ -93,3 +93,5 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 - `Login.tsx` rediseñado al sistema de diseño (`Button`/`Input`) + flujo "¿Olvidaste tu contraseña?" funcionando. `signInWithGoogle()` implementado en `AuthContext` pero el botón queda oculto en `Login.tsx` hasta habilitar el proveedor Google en Supabase (se evaluó Firebase y se descartó: duplicaría el sistema de identidad que hoy sostiene `auth.uid()` en RLS/Storage/Realtime). Detalle de activación en `docs/MEJORAS_PENDIENTES.md` § 3b.
 - `Register.tsx` rediseñado igual que `Login.tsx` (quedaba con el estilo viejo, inconsistente).
 - `frontend/.env.example` agregado; `*.tsbuildinfo` ahora en `.gitignore` (se destrackeó `tsconfig.tsbuildinfo`).
+- `AuthContext.test.tsx`: 5 tests nuevos (reintento con backoff, `PGRST116` sin reintento, no borra el perfil ante un refresh fallido, canal Realtime).
+- Foco atrapado en modales/drawers: hook `useFocusTrap` (con test propio) aplicado en `Modal`, `KycModal`, `CasoRevisionCard` y el drawer móvil del `Navbar`. `KycModal`/`CasoRevisionCard` ahora cierran con Escape; el `✕` de `CasoRevisionCard` pasó a `<X>` de lucide. 47 tests en 10 archivos.

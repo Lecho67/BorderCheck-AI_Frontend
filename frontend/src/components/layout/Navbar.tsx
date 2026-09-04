@@ -19,6 +19,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -26,6 +27,8 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(mobileDrawerRef, isMobileMenuOpen);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -43,6 +46,15 @@ export function Navbar() {
     return () => {
       document.body.style.overflow = "";
     };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsMobileMenuOpen(false);
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isMobileMenuOpen]);
 
   async function handleLogout() {
@@ -231,6 +243,10 @@ export function Navbar() {
 
         {/* Panel */}
         <div
+          ref={mobileDrawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menú"
           className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-xl flex flex-col transition-transform duration-200 ease-out ${
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
