@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -29,50 +32,61 @@ export function Register() {
 
   if (success) {
     return (
-      <div className="max-w-md mx-auto mt-16 p-6 text-center">
-        <p>Registro exitoso. Serás redirigido al login...</p>
+      <div className="max-w-md mx-auto mt-24 p-6 text-center">
+        <CheckCircle2 className="mx-auto mb-4 h-10 w-10 text-emerald-500" />
+        <h1 className="mb-2 text-lg font-semibold text-slate-900">Registro exitoso</h1>
+        <p className="text-sm text-slate-500">Te estamos redirigiendo al inicio de sesión...</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-md mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold mb-4">Crear cuenta</h1>
+      <h1 className="mb-1 text-2xl font-bold text-slate-900">Crear cuenta</h1>
+      <p className="mb-6 text-sm text-slate-500">
+        Creá tu cuenta para empezar a importar con BorderCheck AI.
+      </p>
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <input
+        {error && <p className="text-sm text-red-500">{error}</p>}
+
+        <Input
           type="text"
+          label="Nombre completo"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          placeholder="Nombre completo"
-          className="w-full border rounded px-3 py-2"
+          placeholder="Ej: Juan Pérez"
           required
         />
-        <input
+        <Input
           type="email"
+          label="Correo electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Correo electrónico"
-          className="w-full border rounded px-3 py-2"
+          placeholder="tu@correo.com"
           required
         />
-        <input
+        <Input
           type="password"
+          label="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Contraseña (mínimo 6 caracteres)"
-          className="w-full border rounded px-3 py-2"
+          placeholder="Mínimo 6 caracteres"
           minLength={6}
           required
         />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-black text-white rounded px-3 py-2"
-        >
+
+        <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Creando cuenta...' : 'Registrarse'}
-        </button>
+        </Button>
       </form>
+
+      <p className="mt-6 text-center text-sm text-slate-500">
+        ¿Ya tenés cuenta?{' '}
+        <Link to="/login" className="font-medium text-brand-blue hover:underline">
+          Iniciar sesión
+        </Link>
+      </p>
     </div>
   );
 }
