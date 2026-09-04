@@ -14,7 +14,6 @@ interface LockerAddress {
   city: string;
   code: string;
   addressLine: string;
-  suite: string;
 }
 
 const ADDRESSES: LockerAddress[] = [
@@ -24,7 +23,6 @@ const ADDRESSES: LockerAddress[] = [
     city: "Miami, FL",
     code: "US",
     addressLine: "8548 NW 72nd St",
-    suite: "Suite BC-{USER_ID}",
   },
 ];
 
@@ -39,6 +37,10 @@ export default function Locker() {
   const { profile } = useAuth();
   // KYC en revisión: casillero en modo lectura (sin crear / editar / eliminar pre-alertas)
   const soloLectura = profile?.kyc_status === "pendiente";
+  // El "suite" es el código de casillero del usuario (columna profiles.locker_code)
+  const suite = profile?.locker_code
+    ? `Suite ${profile.locker_code}`
+    : "Suite pendiente de asignación";
 
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<PreAlert | null>(null);
@@ -66,7 +68,7 @@ export default function Locker() {
   }, []);
 
   function handleCopy(addr: LockerAddress) {
-    navigator.clipboard.writeText(`${addr.suite}, ${addr.addressLine}, ${addr.city}`);
+    navigator.clipboard.writeText(`${suite}, ${addr.addressLine}, ${addr.city}`);
     setCopiedId(addr.id);
     setTimeout(() => setCopiedId((current) => (current === addr.id ? null : current)), 2000);
   }
@@ -129,7 +131,7 @@ export default function Locker() {
                 {addr.country}
               </span>
             </div>
-            <p className="font-medium text-slate-900">{addr.suite}</p>
+            <p className="font-medium text-slate-900">{suite}</p>
             <p className="text-sm text-slate-600 mt-1">{addr.addressLine}</p>
             <p className="text-sm text-slate-600">{addr.city}</p>
             <button
