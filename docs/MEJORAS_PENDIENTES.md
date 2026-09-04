@@ -50,19 +50,16 @@ Los commits de la sesión están solo en local (`main`). Falta `git push`
 
 ---
 
-## 4. Métricas de admin a una vista/RPC de Postgres 🔷 · requiere SQL
+## 4. Métricas de admin a una vista/RPC de Postgres ✅
 
-**Qué:** `fetchMetricasGlobales` (`src/lib/adminService.ts`) descarga
-**toda** la tabla `customs_queries` al navegador y agrega client-side.
+**Qué:** la agregación se movió a la RPC `metricas_globales()`
+(`SECURITY DEFINER`, solo admin) que devuelve `total_consultas`,
+`aprobados`, `bloqueados` y `casos_por_agente`. `fetchMetricasGlobales`
+ahora hace una sola llamada y solo calcula los porcentajes.
 
-**Por qué:** no escala. Con unos miles de consultas la página `/admin` se
-vuelve lenta y transfiere datos de más al cliente.
-
-**Cómo:** crear una vista o RPC agregada en Postgres
-(`total`, `aprobados`, `bloqueados`, `casos_por_agente`) y que el frontend
-solo lea el resultado.
-
-**Dónde:** SQL en Supabase + `src/lib/adminService.ts` + `MetricsOverview.tsx`.
+**Pendiente relacionado:** `casos_por_agente` sigue contando por
+`overridden_by`, así que incluye las confirmaciones "Confirmar IA" hasta
+que se aplique el § 5.
 
 ---
 

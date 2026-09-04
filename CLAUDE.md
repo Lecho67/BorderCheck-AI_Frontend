@@ -69,10 +69,13 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 
 Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 
-1. Métricas de admin (`fetchMetricasGlobales`) a una vista/RPC de Postgres.
-2. `overrideVerdict` atómico (RPC) + que "Confirmar IA" no cuente como override en métricas.
-3. Confirmar con el colaborador que el fix de HS code en Ollama produce códigos reales en producción.
-4. `git push` de los commits de la sesión.
+1. `overrideVerdict` atómico (RPC) + que "Confirmar IA" no cuente como override en métricas (`casos_por_agente` de la RPC `metricas_globales` hoy lo incluye).
+2. Confirmar con el colaborador que el fix de HS code en Ollama produce códigos reales en producción.
+3. `git push` de los commits de la sesión.
+
+## Métricas de admin
+
+`fetchMetricasGlobales` (`src/lib/adminService.ts`) llama a la RPC `metricas_globales()` (`SECURITY DEFINER`, guard `coalesce(get_my_role(),'') <> 'admin'`), que devuelve `jsonb` con `total_consultas`, `aprobados`, `bloqueados` y `casos_por_agente` (agregado por `overridden_by`, join a `profiles` para el nombre). El frontend solo calcula porcentajes.
 
 ## Historial reciente de esta sesión
 

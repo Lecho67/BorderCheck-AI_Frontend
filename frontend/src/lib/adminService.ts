@@ -44,48 +44,39 @@ export interface MetricasGlobales {
   casosPorAgente: { agentId: string; nombre: string; total: number }[];
 }
 
+interface MetricasGlobalesRpc {
+  total_consultas: number;
+  aprobados: number;
+  bloqueados: number;
+  casos_por_agente: { agent_id: string; nombre: string; total: number }[];
+}
+
 /**
- * Métricas globales para /admin. Se calculan client-side sobre
- * `customs_queries` (sin RPC/vista propia todavía) — para volúmenes grandes
- * conviene mover esto a una vista de Postgres o a un RPC agregado.
+ * Métricas globales para /admin. La agregación vive en Postgres (RPC
+ * `metricas_globales`, `SECURITY DEFINER`, solo admin); el frontend solo
+ * lee el resultado y calcula los porcentajes.
+ *
+ * Nota: `casos_por_agente` cuenta por `overridden_by`, así que hoy incluye
+ * las confirmaciones "Confirmar IA". Separarlo depende del cambio a
+ * `overrideVerdict` atómico (ver docs/MEJORAS_PENDIENTES.md § 5).
  */
 export async function fetchMetricasGlobales(): Promise<MetricasGlobales> {
-  const [{ data: consultas, error: errConsultas }, { data: agentes, error: errAgentes }] =
-    await Promise.all([
-      supabase.from("customs_queries").select("id, ai_verdict, overridden_by"),
-      supabase.from("profiles").select("id, full_name, email").eq("role", "agente"),
-    ]);
+  const { data, error } = await supabase.rpc("metricas_globales");
+  if (error) throw new Error(error.message);
 
-  if (errConsultas) throw new Error(errConsultas.message);
-  if (errAgentes) throw new Error(errAgentes.message);
-
-  const totalConsultas = consultas?.length ?? 0;
-  const aprobados = consultas?.filter((c) => c.ai_verdict === "APROBADO").length ?? 0;
-  const bloqueados = consultas?.filter((c) => c.ai_verdict === "BLOQUEO").length ?? 0;
-
-  const nombrePorId = new Map((agentes ?? []).map((a) => [a.id, a.full_name || a.email]));
-
-  const conteoPorAgente = new Map<string, number>();
-  (consultas ?? []).forEach((c) => {
-    if (c.overridden_by) {
-      conteoPorAgente.set(c.overridden_by, (conteoPorAgente.get(c.overridden_by) ?? 0) + 1);
-    }
-  });
-
-  const casosPorAgente = Array.from(conteoPorAgente.entries())
-    .map(([agentId, total]) => ({
-      agentId,
-      nombre: nombrePorId.get(agentId) ?? "Agente desconocido",
-      total,
-    }))
-    .sort((a, b) => b.total - a.total);
+  const m = data as MetricasGlobalesRpc;
+  const total = m.total_consultas ?? 0;
 
   return {
-    totalConsultas,
-    aprobados,
-    bloqueados,
-    porcentajeAprobados: totalConsultas ? Math.round((aprobados / totalConsultas) * 100) : 0,
-    porcentajeBloqueados: totalConsultas ? Math.round((bloqueados / totalConsultas) * 100) : 0,
-    casosPorAgente,
+    totalConsultas: total,
+    aprobados: m.aprobados ?? 0,
+    bloqueados: m.bloqueados ?? 0,
+    porcentajeAprobados: total ? Math.round(((m.aprobados ?? 0) / total) * 100) : 0,
+    porcentajeBloqueados: total ? Math.round(((m.bloqueados ?? 0) / total) * 100) : 0,
+    casosPorAgente: (m.casos_por_agente ?? []).map((a) => ({
+      agentId: a.agent_id,
+      nombre: a.nombre,
+      total: a.total,
+    })),
   };
 }
