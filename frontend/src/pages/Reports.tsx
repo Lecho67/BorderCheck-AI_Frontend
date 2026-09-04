@@ -1,8 +1,24 @@
-import { useState } from "react";
-import { NativeReportsView } from "@/components/reports/NativeReportsView";
-import { PowerBiEmbed } from "@/components/reports/PowerBiEmbed";
+import { lazy, Suspense, useState } from "react";
+
+// Cada pestaña arrastra su propia librería pesada (recharts / powerbi-client)
+// y solo una está visible a la vez — separarlas en chunks propios evita
+// pagar el costo de las dos con solo entrar a /reportes.
+const NativeReportsView = lazy(() =>
+  import("@/components/reports/NativeReportsView").then((m) => ({ default: m.NativeReportsView }))
+);
+const PowerBiEmbed = lazy(() =>
+  import("@/components/reports/PowerBiEmbed").then((m) => ({ default: m.PowerBiEmbed }))
+);
 
 type Tab = "nativa" | "powerbi";
+
+function TabFallback() {
+  return (
+    <div className="flex items-center justify-center py-16">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-blue border-t-transparent" />
+    </div>
+  );
+}
 
 export function Reports() {
   const [tab, setTab] = useState<Tab>("nativa");
@@ -37,7 +53,9 @@ export function Reports() {
         </button>
       </div>
 
-      {tab === "nativa" ? <NativeReportsView /> : <PowerBiEmbed />}
+      <Suspense fallback={<TabFallback />}>
+        {tab === "nativa" ? <NativeReportsView /> : <PowerBiEmbed />}
+      </Suspense>
     </div>
   );
 }

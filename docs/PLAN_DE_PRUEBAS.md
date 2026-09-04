@@ -68,7 +68,12 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **47 casos en 10 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **61 casos en 12 archivos**.
+Los tests que mockean el query builder de `supabase.from(...)` usan el
+helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
+`select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
+`then` para que el builder mismo sea "awaitable" cuando el código no llama
+a `.single()`).
 
 ### 6.1 `src/lib/countryCodes.test.ts` — 2 casos
 
@@ -168,6 +173,37 @@ Monta el `AuthProvider` real con Supabase mockeado (sesión, `profiles`, canal R
 | FT-03 | Shift+Tab desde el primero | Va al último |
 | FT-04 | Se desactiva | Devuelve el foco a lo que estaba activo antes de abrir |
 
+### 6.11 `src/lib/preAlertService.test.ts` — 5 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| PA-01 | `fetchMisPreAlertas` con datos | Devuelve las filas |
+| PA-02 | `fetchMisPreAlertas` con error | Lanza el mensaje |
+| PA-03 | `crearPreAlerta` sin sesión | Lanza "No hay sesión activa" sin llamar a `from` |
+| PA-04 | `crearPreAlerta` con sesión | Inserta con `user_id` de la sesión y `status: "pendiente"` |
+| PA-05 | `eliminarPreAlerta` con error | Lanza el mensaje |
+
+### 6.12 `src/lib/documentReviewService.test.ts` — 6 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| DR-01 | `fetchDocumentosPendientes` con datos | Devuelve las filas (con el cliente) |
+| DR-02 | `fetchDocumentosPendientes` con error | Lanza el mensaje |
+| DR-03 | `obtenerUrlDocumentoParaRevision` | Devuelve la URL firmada |
+| DR-04 | `obtenerUrlDocumentoParaRevision` con error | Lanza el mensaje |
+| DR-05 | `tomarDocumento` ya tomado (`data: null`) | Lanza "Este documento ya fue tomado por otro agente" |
+| DR-06 | `tomarDocumento` disponible | Asigna `assigned_agent_id` al agente de la sesión |
+
+### 6.13 `src/lib/agentService.test.ts` (ampliado) — 3 casos nuevos (5 en total)
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AG-03 | `fetchColaDeRevision` | Filtra por `ai_verdict in (...)` y `overridden_by is null` |
+| AG-04 | `tomarCaso` ya tomado (`data: null`) | Lanza "Este caso ya fue tomado por otro agente" |
+| AG-05 | `tomarCaso` disponible | Asigna `assigned_agent_id` al agente de la sesión |
+
+(AG-01/02 — `revisarCaso` — ya en § 6.8.)
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -205,7 +241,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 47 | ✅ 47/47 |
+| Automatizados (Vitest) | 61 | ✅ 61/61 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.
@@ -214,7 +250,6 @@ Comando: `cd frontend && npm run test:run`.
 
 - **Sin E2E.** Ningún flujo se prueba de punta a punta en un navegador real (login → consulta → veredicto → historial; carga de KYC → aprobación → casillero). Prioridad alta si el proyecto sigue creciendo.
 - **Cobertura de páginas y wizard.** `NewQuery`, `ResultView`, `Locker`, `Documents`, los paneles de agente/admin y los pasos del wizard no tienen tests de componente.
-- **Servicios parcialmente cubiertos.** `kycReviewService`, `adminService` y `revisarCaso` de `agentService` tienen test; faltan `tomarCaso`, `fetchColaDeRevision`, `documentReviewService`, `preAlertService`.
 - **RLS sin automatizar.** Las pruebas de seguridad son manuales; un cambio de política podría regresionar sin que la suite lo note. Automatizarlas requiere un runner que autentique cada cuenta QA contra la API REST.
 - **`buildShipmentEvaluationRequest`:** la validación `!wizardData.paisOrigen` es inalcanzable porque `getCountryInfo("")` lanza antes con otro mensaje. No es un defecto funcional pero conviene limpiarlo.
 

@@ -129,15 +129,18 @@ un entorno de Supabase de pruebas.
 
 ---
 
-## 8. Ampliar cobertura de tests unitarios/componente 🔷 · parcial
+## 8. Ampliar cobertura de tests unitarios/componente 🔷 · servicios completos
 
-Hecho: `adminService.test.ts`, `agentService.test.ts` (`revisarCaso`) y
+Hecho: todos los servicios de datos tienen test (`kycReviewService`,
+`adminService`, `agentService` completo — `revisarCaso`/`tomarCaso`/
+`fetchColaDeRevision` —, `documentReviewService`, `preAlertService`),
 `AuthContext.test.tsx` (reintento con backoff, descarte de respuestas
-obsoletas, no borra el perfil ante un refresh fallido, canal Realtime) — 43
-tests en 9 archivos.
+obsoletas, no borra el perfil ante un refresh fallido, canal Realtime) y
+`useFocusTrap`. Helper compartido `src/test/supabaseQueryMock.ts` para
+mockear los query builders encadenables de supabase-js. **61 tests en 12
+archivos.**
 
 Falta cubrir:
-- Servicios: `tomarCaso`, `fetchColaDeRevision`, `documentReviewService`, `preAlertService`.
 - Componentes: `NewQuery`, `ResultView`, `Locker`, `Documents`, paneles de agente/admin, pasos del wizard.
 - Automatizar las pruebas de RLS (runner que autentique cada cuenta QA contra la API REST).
 
@@ -166,7 +169,7 @@ preferencias en `Profile.tsx`.
 |---|---|
 | `react-router` 6.30.6 | Vulnerabilidad de open-redirect (moderada); el parche está en react-router 7 (migración major). Ver `docs/PLAN_DE_PRUEBAS.md` no aplica; correr como tarea propia. |
 | `vite` 5 / `vitest` 2 | La advisory del dev-server de esbuild solo se resuelve subiendo a vite 8 + vitest 5 (majors). Sin superficie en producción; hacerlo deliberadamente, no con `npm audit fix --force`. |
-| `frontend/dist/assets/Reports-*.js` (~622 kB) | El chunk de `/reportes` sigue pesado (`powerbi-client` + `recharts`). Ya está aislado de la carga inicial; se puede reducir cargando Power BI solo al abrir esa pestaña. |
+| ~~`frontend/dist/assets/Reports-*.js` (~622 kB)~~ ✅ | `Reports.tsx` cargaba `NativeReportsView` (recharts) y `PowerBiEmbed` (powerbi-client) juntos aunque solo una pestaña se ve a la vez. Se separaron con `React.lazy`: entrar a `/reportes` ahora solo baja `NativeReportsView` (384 kB / 112 kB gz); `PowerBiEmbed` (236 kB / 41 kB gz) se carga recién al abrir esa pestaña. Ya no queda ningún chunk sobre 500 kB. |
 | `frontend/tsconfig.tsbuildinfo` versionado | Artefacto de build; debería estar en `.gitignore`. |
 | Warning de lint en `AuthContext` | Resuelto — `useAuth` se movió a `src/hooks/useAuth.ts`. |
 

@@ -1,15 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { revisarCaso } from "./agentService";
+import { fetchColaDeRevision, revisarCaso, tomarCaso } from "./agentService";
 import { supabase } from "./supabase";
+import { createQueryBuilderMock } from "@/test/supabaseQueryMock";
 
 vi.mock("./supabase", () => ({
-  supabase: { rpc: vi.fn(), from: vi.fn() },
+  supabase: { rpc: vi.fn(), from: vi.fn(), auth: { getSession: vi.fn() } },
 }));
 
 const rpc = vi.mocked(supabase.rpc);
+const fromMock = vi.mocked(supabase.from);
+const getSessionMock = vi.mocked(supabase.auth.getSession);
 
 beforeEach(() => {
   rpc.mockReset();
+  fromMock.mockReset();
+  getSessionMock.mockReset();
 });
 
 describe("revisarCaso", () => {
@@ -35,5 +40,41 @@ describe("revisarCaso", () => {
     await expect(revisarCaso("c1", "BLOQUEO", "motivo")).rejects.toThrow(
       "Caso no encontrado o no asignado a vos"
     );
+  });
+});
+
+describe("fetchColaDeRevision", () => {
+  it("excluye los casos ya revisados (overridden_by is null)", async () => {
+    const builder = createQueryBuilderMock({ data: [{ id: "c1" }], error: null });
+    fromMock.mockReturnValue(builder as never);
+
+    const data = await fetchColaDeRevision();
+
+    expect(builder.in).toHaveBeenCalledWith("ai_verdict", [
+      "REQUIERE_DOCUMENTACION",
+      "PRECAUCION",
+    ]);
+    expect(builder.is).toHaveBeenCalledWith("overridden_by", null);
+    expect(data).toEqual([{ id: "c1" }]);
+  });
+});
+
+describe("tomarCaso", () => {
+  it("lanza un error claro si ya fue tomado por otro agente", async () => {
+    getSessionMock.mockResolvedValue({ data: { session: { user: { id: "a1" } } } } as never);
+    fromMock.mockReturnValue(createQueryBuilderMock({ data: null, error: null }) as never);
+
+    await expect(tomarCaso("c1")).rejects.toThrow("Este caso ya fue tomado por otro agente");
+  });
+
+  it("asigna el caso al agente de la sesión", async () => {
+    getSessionMock.mockResolvedValue({ data: { session: { user: { id: "a1" } } } } as never);
+    const builder = createQueryBuilderMock({ data: { id: "c1", assigned_agent_id: "a1" }, error: null });
+    fromMock.mockReturnValue(builder as never);
+
+    const data = await tomarCaso("c1");
+
+    expect(builder.update).toHaveBeenCalledWith({ assigned_agent_id: "a1" });
+    expect(data).toMatchObject({ assigned_agent_id: "a1" });
   });
 });
