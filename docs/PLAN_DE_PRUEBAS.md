@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **32 casos en 6 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **43 casos en 9 archivos**.
 
 ### 6.1 `src/lib/countryCodes.test.ts` — 2 casos
 
@@ -132,6 +132,33 @@ Ejecutar con `npm run test:run` desde `frontend/`. Total: **32 casos en 6 archiv
 | PR-05 | Rol no permitido | Redirige a la home del rol |
 | PR-06 | Rol permitido | Renderiza el contenido protegido |
 
+### 6.7 `src/lib/adminService.test.ts` — 3 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AD-01 | RPC `metricas_globales` con datos | Mapea el resultado y calcula los porcentajes |
+| AD-02 | Sin consultas (`total_consultas: 0`) | No divide por cero; porcentajes en `0` |
+| AD-03 | RPC con error | Propaga el mensaje |
+
+### 6.8 `src/lib/agentService.test.ts` — 2 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AG-01 | `revisarCaso` | Llama al RPC `revisar_caso` con `p_caso_id`/`p_veredicto`/`p_motivo` |
+| AG-02 | `revisarCaso` con error | Propaga el mensaje del RPC |
+
+### 6.9 `src/context/AuthContext.test.tsx` — 5 casos
+
+Monta el `AuthProvider` real con Supabase mockeado (sesión, `profiles`, canal Realtime) y un componente de arnés que expone `profile`/`loading`/`profileError`/`refreshProfile`.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AC-01 | Carga exitosa en el primer intento | `profile` con los datos; `single()` llamado 1 vez |
+| AC-02 | `PGRST116` (perfil inexistente) | `profileError` seteado; **no** reintenta (`single()` 1 vez) |
+| AC-03 | Error transitorio en el 1er intento, éxito en el 2do | Termina con el perfil cargado; `single()` llamado 2 veces |
+| AC-04 | Un `refreshProfile()` posterior agota los 3 reintentos | `profileError` seteado, pero el perfil previo **se conserva** (no se borra) |
+| AC-05 | Sesión activa | Abre un canal `perfil:<uid>` con `postgres_changes` filtrado por `id=eq.<uid>` |
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -169,7 +196,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 32 | ✅ 32/32 |
+| Automatizados (Vitest) | 43 | ✅ 43/43 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.
@@ -177,9 +204,8 @@ Comando: `cd frontend && npm run test:run`.
 ## 10. Riesgos y deuda de pruebas
 
 - **Sin E2E.** Ningún flujo se prueba de punta a punta en un navegador real (login → consulta → veredicto → historial; carga de KYC → aprobación → casillero). Prioridad alta si el proyecto sigue creciendo.
-- **Cobertura de páginas y wizard.** `NewQuery`, `ResultView`, `Locker`, los paneles de agente/admin y los pasos del wizard no tienen tests de componente.
-- **Servicios parcialmente cubiertos.** Solo `kycReviewService`. Faltan `agentService` (`overrideVerdict`, `tomarCaso`), `documentReviewService`, `preAlertService`, `adminService`.
-- **`AuthContext` sin test automatizado** del reintento con backoff y del descarte de respuestas obsoletas; hoy solo verificado manualmente (M-AUTH-01/02).
+- **Cobertura de páginas y wizard.** `NewQuery`, `ResultView`, `Locker`, `Documents`, los paneles de agente/admin y los pasos del wizard no tienen tests de componente.
+- **Servicios parcialmente cubiertos.** `kycReviewService`, `adminService` y `revisarCaso` de `agentService` tienen test; faltan `tomarCaso`, `fetchColaDeRevision`, `documentReviewService`, `preAlertService`.
 - **RLS sin automatizar.** Las pruebas de seguridad son manuales; un cambio de política podría regresionar sin que la suite lo note. Automatizarlas requiere un runner que autentique cada cuenta QA contra la API REST.
 - **`buildShipmentEvaluationRequest`:** la validación `!wizardData.paisOrigen` es inalcanzable porque `getCountryInfo("")` lanza antes con otro mensaje. No es un defecto funcional pero conviene limpiarlo.
 

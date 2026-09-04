@@ -129,12 +129,16 @@ un entorno de Supabase de pruebas.
 
 ---
 
-## 8. Ampliar cobertura de tests unitarios/componente 🔷
+## 8. Ampliar cobertura de tests unitarios/componente 🔷 · parcial
+
+Hecho: `adminService.test.ts`, `agentService.test.ts` (`revisarCaso`) y
+`AuthContext.test.tsx` (reintento con backoff, descarte de respuestas
+obsoletas, no borra el perfil ante un refresh fallido, canal Realtime) — 43
+tests en 9 archivos.
 
 Falta cubrir:
-- Servicios: `agentService`, `documentReviewService`, `preAlertService`, `adminService`.
-- `AuthContext`: reintento con backoff y descarte de respuestas obsoletas (hoy solo manual).
-- Componentes: `NewQuery`, `ResultView`, `Locker`, paneles de agente/admin, pasos del wizard.
+- Servicios: `tomarCaso`, `fetchColaDeRevision`, `documentReviewService`, `preAlertService`.
+- Componentes: `NewQuery`, `ResultView`, `Locker`, `Documents`, paneles de agente/admin, pasos del wizard.
 - Automatizar las pruebas de RLS (runner que autentique cada cuenta QA contra la API REST).
 
 Ver `docs/PLAN_DE_PRUEBAS.md` § 10 para el detalle.
