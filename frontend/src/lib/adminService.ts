@@ -56,9 +56,9 @@ interface MetricasGlobalesRpc {
  * `metricas_globales`, `SECURITY DEFINER`, solo admin); el frontend solo
  * lee el resultado y calcula los porcentajes.
  *
- * Nota: `casos_por_agente` cuenta por `overridden_by`, así que hoy incluye
- * las confirmaciones "Confirmar IA". Separarlo depende del cambio a
- * `overrideVerdict` atómico (ver docs/MEJORAS_PENDIENTES.md § 5).
+ * `casos_por_agente` cuenta solo modificaciones reales
+ * (`original_ai_verdict IS DISTINCT FROM ai_verdict`); una confirmación
+ * "Confirmar IA" no infla el conteo (ver `revisarCaso` en agentService.ts).
  */
 export async function fetchMetricasGlobales(): Promise<MetricasGlobales> {
   const { data, error } = await supabase.rpc("metricas_globales");

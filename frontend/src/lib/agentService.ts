@@ -10,6 +10,7 @@ export async function fetchColaDeRevision(): Promise<CasoEnCola[]> {
     .from("customs_queries")
     .select("*, cliente:profiles!customs_queries_user_id_fkey(*)")
     .in("ai_verdict", ["REQUIERE_DOCUMENTACION", "PRECAUCION"])
+    .is("overridden_by", null) // ya confirmado/sobrescrito por un agente: sale de la cola
     .order("created_at", { ascending: true });
 
   if (error) throw error;
@@ -32,34 +33,23 @@ export async function tomarCaso(shipmentId: string) {
   return data;
 }
 
-export async function overrideVerdict(
-  shipmentId: string,
-  nuevoVeredicto: string,
-  motivo: string,
-) {
-  const { data: original, error: errOriginal } = await supabase
-    .from("customs_queries")
-    .select("ai_verdict")
-    .eq("id", shipmentId)
-    .single();
-
-  if (errOriginal || !original) throw new Error("Caso no encontrado");
-
-  const { data: sessionData } = await supabase.auth.getSession();
-  const agenteId = sessionData.session?.user.id;
-
-  const { data, error } = await supabase
-    .from("customs_queries")
-    .update({
-      ai_verdict: nuevoVeredicto,
-      original_ai_verdict: original.ai_verdict,
-      overridden_by: agenteId,
-      override_reason: motivo,
-      overridden_at: new Date().toISOString(),
-    })
-    .eq("id", shipmentId)
-    .select()
-    .single();
+/**
+ * Confirma o sobrescribe el veredicto de un caso en una sola operación
+ * atómica (RPC `revisar_caso`, `SECURITY DEFINER`). El propio RPC preserva
+ * el veredicto original real con `coalesce(original_ai_verdict, ai_verdict)`
+ * aunque el caso se revise más de una vez, y aplica el mismo filtro de fila
+ * que la política RLS (admin, o agente sin caso asignado o asignado a él).
+ *
+ * Una "confirmación" (mismo `nuevoVeredicto` que el actual) deja
+ * `original_ai_verdict = ai_verdict`, así que las métricas por agente
+ * (`metricas_globales`) no la cuentan como una modificación real.
+ */
+export async function revisarCaso(shipmentId: string, nuevoVeredicto: string, motivo: string) {
+  const { data, error } = await supabase.rpc("revisar_caso", {
+    p_caso_id: shipmentId,
+    p_veredicto: nuevoVeredicto,
+    p_motivo: motivo,
+  });
 
   if (error) throw new Error(error.message);
   return data;

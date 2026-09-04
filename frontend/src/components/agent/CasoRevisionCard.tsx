@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { overrideVerdict, tomarCaso, type CasoEnCola } from "@/lib/agentService";
+import { revisarCaso, tomarCaso, type CasoEnCola } from "@/lib/agentService";
 import {
   fetchDocumentosDeCliente,
   obtenerUrlDocumentoParaRevision,
@@ -101,7 +101,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
     setLoading(true);
     setError(null);
     try {
-      await overrideVerdict(caso.id, caso.ai_verdict, "Confirmado sin cambios por agente humano");
+      await revisarCaso(caso.id, caso.ai_verdict, "Confirmado sin cambios por agente humano");
       toast.success("Veredicto confirmado", "Se registró la confirmación del veredicto de la IA.");
       onResuelto();
     } catch (err) {
@@ -121,7 +121,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
     setLoading(true);
     setError(null);
     try {
-      await overrideVerdict(caso.id, nuevoVeredicto, motivo);
+      await revisarCaso(caso.id, nuevoVeredicto, motivo);
       toast.success("Veredicto sobreescrito", `Nuevo veredicto: ${nuevoVeredicto}.`);
       onResuelto();
     } catch (err) {
@@ -137,7 +137,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
     setLoading(true);
     setError(null);
     try {
-      await overrideVerdict(
+      await revisarCaso(
         caso.id,
         "REQUIERE_DOCUMENTACION",
         motivoDocs.trim() || "Se solicitan documentos adicionales al cliente"

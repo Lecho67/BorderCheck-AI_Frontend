@@ -63,20 +63,21 @@ que se aplique el § 5.
 
 ---
 
-## 5. `overrideVerdict` atómico + "Confirmar IA" 🔷 · requiere SQL
+## 5. `overrideVerdict` atómico + "Confirmar IA" ✅
 
-**Qué:** `overrideVerdict` (`src/lib/agentService.ts`) hace un `SELECT`
-seguido de un `UPDATE` sin transacción. Además, "Confirmar IA" llama a
-`overrideVerdict` con el mismo veredicto, así que queda registrado como un
-override (`overridden_by`, `overridden_at`) y **ensucia las métricas**
-("casos por agente" cuenta confirmaciones como si fueran cambios).
+**Qué:** `overrideVerdict` (SELECT + UPDATE sin transacción) se reemplazó por
+`revisarCaso`, que llama al RPC `SECURITY DEFINER` `revisar_caso()`: una sola
+operación atómica, con el mismo filtro de fila que tenía la política RLS
+(admin, o agente sin caso asignado o asignado a él).
 
-**Cómo:**
-- RPC `SECURITY DEFINER` que lea y escriba en una sola operación.
-- Separar "confirmar" de "sobrescribir": un flag o un campo
-  `confirmado_sin_cambios` para no contarlo como override.
+**Cómo distingue confirmar de sobrescribir:** sin columna nueva — el RPC usa
+`original_ai_verdict = coalesce(original_ai_verdict, ai_verdict)`. Una
+confirmación (mismo veredicto) deja `original_ai_verdict = ai_verdict`; un
+cambio real los deja distintos. `metricas_globales` cuenta "modificado" solo
+cuando son distintos, así que "Confirmar IA" ya no infla `casos_por_agente`.
 
-**Dónde:** SQL en Supabase + `src/lib/agentService.ts` + `CasoRevisionCard.tsx`.
+**De paso:** `fetchColaDeRevision` filtra `overridden_by is null`, así que un
+caso ya confirmado o sobrescrito sale de la cola de revisión.
 
 ---
 
