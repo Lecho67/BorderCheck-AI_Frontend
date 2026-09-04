@@ -80,3 +80,6 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 - `useAuth` movido a `src/hooks/useAuth.ts` y el objeto de contexto + tipo a `src/context/auth.ts`; `AuthContext.tsx` ahora solo exporta `AuthProvider`. `npm run lint` queda 100% limpio (0 warnings). 13 imports actualizados a `@/hooks/useAuth`.
 - `App.tsx`: todas las vistas por ruta con `React.lazy` + `<Suspense>` (Pitch queda eager por ser la home). Bundle inicial de ~1.3 MB (348 kB gz) a ~434 kB (123 kB gz); `powerbi-client`+`recharts` quedan en el chunk de `/reportes`, fuera de la carga inicial.
 - Infra de tests agregada (Vitest + Testing Library). Ver sección "Lint/Tests" en Arquitectura.
+- CI en `.github/workflows/ci.yml`: `lint` + `test:run` + `build` en push a `main` y en PRs.
+- Bug arreglado: `Locker.tsx` mostraba el literal `"Suite BC-{USER_ID}"` (nunca interpolado) como dirección del casillero. Ahora deriva `Suite <profile.locker_code>` con fallback.
+- `docs/PLAN_DE_PRUEBAS.md` (plan de pruebas formal) y `docs/MEJORAS_PENDIENTES.md` (roadmap de mejoras priorizado) creados.
