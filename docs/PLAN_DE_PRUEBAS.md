@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **61 casos en 12 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **67 casos en 13 archivos**.
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -204,6 +204,20 @@ Monta el `AuthProvider` real con Supabase mockeado (sesión, `profiles`, canal R
 
 (AG-01/02 — `revisarCaso` — ya en § 6.8.)
 
+### 6.14 `src/pages/AgentKycPanel.test.tsx` — 6 casos
+
+`KycReviewCard` se mockea (se prueba por separado); el foco es la
+orquestación de carga/refresco de la página.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| KP-01 | Carga inicial | Muestra las verificaciones pendientes |
+| KP-02 | Sin pendientes | Estado vacío |
+| KP-03 | Error de carga | Muestra el mensaje |
+| KP-04 | Botón "Actualizar" | Vuelve a pedir la lista |
+| KP-05 | `onResuelto` de una tarjeta | La saca de la lista |
+| KP-06 | Polling (fake timers, +30s) | Vuelve a pedir la lista automáticamente |
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -241,7 +255,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 61 | ✅ 61/61 |
+| Automatizados (Vitest) | 67 | ✅ 67/67 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.

@@ -184,7 +184,13 @@ preferencias en `Profile.tsx`.
   y devuelve el foco a lo que estaba activo antes al cerrar. De paso:
   `KycModal` y `CasoRevisionCard` ahora cierran con Escape (ya lo tenía
   `Modal`) y el `✕` de `CasoRevisionCard` pasó a `<X>` de lucide.
-- **`AgentKycPanel`:** sin filtros, orden ni paginación (a diferencia de la
-  cola de casos y el panel de documentos). Tampoco se actualiza en vivo
-  cuando entra un KYC nuevo.
+- **`AgentKycPanel`:** ✅ ahora se refresca solo cada 30s y al volver el foco
+  a la pestaña, más un botón "Actualizar" manual. **No usa Realtime a
+  propósito:** la política RLS de SELECT de agente sobre `profiles` solo
+  cubre clientes con un caso (`customs_queries`) asignado o sin asignar; un
+  cliente que recién sube su KYC sin haber hecho ninguna consulta no
+  entraría por ahí, así que una suscripción `postgres_changes` se perdería
+  esos casos en silencio. Polling sobre el RPC (que sí es `SECURITY
+  DEFINER` y los ve a todos) evita ese hueco. Sigue sin filtros, orden ni
+  paginación — bajo valor mientras el volumen sea chico.
 - **Estados vacío/carga/error** poco pulidos en varios paneles.
