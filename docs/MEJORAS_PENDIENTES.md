@@ -83,19 +83,16 @@ override (`overridden_by`, `overridden_at`) y **ensucia las métricas**
 
 ---
 
-## 6. Decidir gating de KYC para `/documentos` ⏳ · requiere SQL
+## 6. Gating de KYC para `/documentos` ✅
 
-**Qué:** el "Centro de Documentación Aduanera" (`/documentos`) permite subir
-facturas y certificados de origen. Cae bajo la cláusula 3 de los Términos
-("trámites aduaneros") pero hoy **no** está detrás de `RequireCompliance` y
-la política `insert_own_documents` solo chequea `auth.uid() = user_id`.
+**Qué:** el "Centro de Documentación Aduanera" (`/documentos`) ahora tiene el
+mismo gate que el casillero: `RequireCompliance` en la ruta + política
+`insert_own_documents` con `AND public.kyc_aprobado()`. En estado `pendiente`,
+`Documents.tsx` entra en modo lectura (banner, sin subir ni eliminar).
 
-**Decisión pendiente:** ¿se le aplica el mismo bloqueo por KYC aprobado que
-al casillero, o el flujo de documentos es independiente de la verificación
-de identidad?
-
-**Si se aplica:** `RequireCompliance` en la ruta + `AND public.kyc_aprobado()`
-en `insert_own_documents` (el helper ya existe).
+**De paso:** `RequireCompliance` ya no aplica a roles internos
+(`agente`/`gestor`/`admin` pasan siempre) — evita bloquear al admin en
+`/casillero` y `/documentos`.
 
 ---
 

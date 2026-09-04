@@ -52,7 +52,7 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
   - No se abrió política RLS de UPDATE de agente sobre `profiles` (se hace todo por RPC). La política de storage `kyc_own_folder_select` ya incluía `agente`/`admin` para el bucket `kyc-documents`.
   - El documento KYC del cliente vive en `profiles.kyc_document_path` (bucket `kyc-documents`), NO en la tabla `documents` ni en el panel `/panel-agente/documentos` (ese es otro flujo, documentos de envíos). KYC no tiene paso de "tomar caso".
   - Verificado con `fetch`/rpc: agente lista/aprueba/rechaza; cliente recibe `400 No autorizado`.
-  - **Gating del Casillero por KYC:** `RequireCompliance` bloquea `/casillero` si falta términos/habeas o si `kyc_status` es `no_iniciado`/`rechazado`. Si es `pendiente`, `Locker.tsx` entra en modo lectura (banner ámbar, sin pre-alertar/editar/eliminar). Refuerzo en backend: helper `kyc_aprobado()` (`SECURITY DEFINER`, `coalesce(..., false)`) y la política `insert_own_pre_alerts` ahora exige `auth.uid() = user_id AND public.kyc_aprobado()`. Verificado: `POST /pre_alerts` da `201` con KYC aprobado y `403` con KYC pendiente. UPDATE/DELETE de `pre_alerts` quedaron permisivos a propósito. **Pendiente decidir:** aplicar el mismo gating a `documents` (Centro de Documentación Aduanera, `/documentos`) — cae bajo la cláusula 3 pero no está detrás de `RequireCompliance`.
+  - **Gating del Casillero y de Documentos por KYC:** `RequireCompliance` (usado en `/casillero` y `/documentos`) bloquea si falta términos/habeas o si `kyc_status` es `no_iniciado`/`rechazado`. Si es `pendiente`, `Locker.tsx` y `Documents.tsx` entran en modo lectura (banner ámbar, sin crear/subir/editar/eliminar). `RequireCompliance` **no aplica a roles internos** (`agente`/`gestor`/`admin` pasan siempre — evita bloquear al admin). Refuerzo en backend: helper `kyc_aprobado()` (`SECURITY DEFINER`, `coalesce(..., false)`); `insert_own_pre_alerts` e `insert_own_documents` exigen `auth.uid() = user_id AND public.kyc_aprobado()`. Verificado: `POST /pre_alerts` da `201` con KYC aprobado y `403` con KYC pendiente. UPDATE/DELETE quedaron permisivos a propósito.
 
 ## Preferencias de trabajo (Simon)
 
@@ -67,8 +67,12 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 
 ## Próximos pasos pendientes
 
-1. Decidir si el Centro de Documentación Aduanera (`/documentos`) también exige KYC aprobado (frontend + política `insert_own_documents`, hoy solo `auth.uid() = user_id`).
-2. Confirmar con el colaborador que el fix de HS code en Ollama produce códigos reales en producción.
+Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
+
+1. Métricas de admin (`fetchMetricasGlobales`) a una vista/RPC de Postgres.
+2. `overrideVerdict` atómico (RPC) + que "Confirmar IA" no cuente como override en métricas.
+3. Confirmar con el colaborador que el fix de HS code en Ollama produce códigos reales en producción.
+4. `git push` de los commits de la sesión.
 
 ## Historial reciente de esta sesión
 

@@ -4,7 +4,8 @@ import type { DocumentRecord } from "@/types/database.types";
 interface DocumentCardProps {
   doc: DocumentRecord;
   onVer: (doc: DocumentRecord) => void;
-  onEliminar: (doc: DocumentRecord) => void;
+  /** Si se omite (p. ej. casillero en modo lectura por KYC) no se muestra el botón de eliminar. */
+  onEliminar?: (doc: DocumentRecord) => void;
 }
 
 export function DocumentCard({ doc, onVer, onEliminar }: DocumentCardProps) {
@@ -29,12 +30,14 @@ export function DocumentCard({ doc, onVer, onEliminar }: DocumentCardProps) {
         >
           <Eye className="w-3.5 h-3.5" /> Ver documento
         </button>
-        <button
-          onClick={() => onEliminar(doc)}
-          className="flex items-center gap-1.5 text-sm text-red-600 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-        >
-          <Trash2 className="w-3.5 h-3.5" /> Eliminar
-        </button>
+        {onEliminar && (
+          <button
+            onClick={() => onEliminar(doc)}
+            className="flex items-center gap-1.5 text-sm text-red-600 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
+          >
+            <Trash2 className="w-3.5 h-3.5" /> Eliminar
+          </button>
+        )}
       </div>
     </div>
   );

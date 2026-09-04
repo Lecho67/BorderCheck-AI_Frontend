@@ -15,6 +15,14 @@ import { useAuth } from "@/hooks/useAuth";
 export function RequireCompliance({ children }: { children: ReactNode }) {
   const { profile } = useAuth();
 
+  // El gate de cumplimiento aplica solo a clientes. Los roles internos
+  // (agente / gestor / admin) no operan un casillero personal ni cargan
+  // documentos de envío propios bajo este régimen, y no deben quedar
+  // bloqueados por no tener términos/KYC.
+  if (profile && profile.role !== "cliente") {
+    return <>{children}</>;
+  }
+
   const terminosOk = Boolean(profile?.terms_accepted_at && profile?.habeas_data_accepted_at);
   const kycStatus = profile?.kyc_status ?? "no_iniciado";
   const kycBloquea = kycStatus === "no_iniciado" || kycStatus === "rechazado";

@@ -85,4 +85,11 @@ describe("RequireCompliance", () => {
     renderWith(fakeProfile({ kyc_status: "pendiente" }));
     expect(screen.getByText("CONTENIDO CASILLERO")).toBeInTheDocument();
   });
+
+  it("no aplica a roles internos: un admin sin términos ni KYC pasa igual", () => {
+    renderWith(
+      fakeProfile({ role: "admin", terms_accepted_at: null, kyc_status: "no_iniciado" })
+    );
+    expect(screen.getByText("CONTENIDO CASILLERO")).toBeInTheDocument();
+  });
 });

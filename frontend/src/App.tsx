@@ -107,11 +107,14 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Documentos: trámites aduaneros — mismo gate de cumplimiento que el casillero */}
               <Route
                 path="/documentos"
                 element={
                   <ProtectedRoute>
-                    <Documents />
+                    <RequireCompliance>
+                      <Documents />
+                    </RequireCompliance>
                   </ProtectedRoute>
                 }
               />
