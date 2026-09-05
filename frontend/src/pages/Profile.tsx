@@ -11,6 +11,7 @@ import {
   solicitarCambioContrasena,
 } from "@/lib/profileService";
 import { subirDocumentoIdentidad, aceptarTerminos, aceptarHabeasData } from "@/lib/kycService";
+import { NotificationPreferencesCard } from "@/components/profile/NotificationPreferencesCard";
 import type { DocumentType, KycStatus, UserRole } from "@/types/database.types";
 
 const TIPOS_DOCUMENTO: DocumentType[] = ["CC", "CE", "Pasaporte", "NIT"];
@@ -420,6 +421,8 @@ export function Profile() {
           </p>
         </div>
       </section>
+
+      <NotificationPreferencesCard />
 
       {/* --- Estado del casillero --- */}
       <section

@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import type { DocumentType, Profile } from "@/types/database.types";
+import type { DocumentType, NotificationPreferences, Profile } from "@/types/database.types";
 
 export interface DatosInformacionPersonal {
   full_name: string;
@@ -46,6 +46,21 @@ export async function actualizarDireccion(userId: string, direccion: DatosDirecc
       address_postal_code: direccion.address_postal_code.trim(),
       address_country: direccion.address_country.trim(),
     })
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data as Profile;
+}
+
+export async function actualizarPreferenciasNotificaciones(
+  userId: string,
+  preferencias: NotificationPreferences
+): Promise<Profile> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ notification_preferences: preferencias })
     .eq("id", userId)
     .select()
     .single();

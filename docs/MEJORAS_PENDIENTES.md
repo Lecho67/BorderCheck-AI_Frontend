@@ -172,8 +172,9 @@ al llegar una nueva). Se agregó `notifications` a la publicación
   nada) pero conviene avisar al colaborador.
 - `canal_whatsapp_sms` (entrega por SMS/WhatsApp) sigue fuera de alcance —
   requiere un proveedor externo.
-- Sin UI para editar `notification_preferences` (los triggers ya las
-  respetan con `coalesce(..., true)`).
+- ~~Sin UI para editar `notification_preferences`~~ ✅ — `NotificationPreferencesCard`
+  en `/perfil` con toggles para los 3 tipos in-app. `canal_whatsapp_sms` queda
+  fuera de la UI hasta que exista la entrega por SMS/WhatsApp.
 
 ---
 

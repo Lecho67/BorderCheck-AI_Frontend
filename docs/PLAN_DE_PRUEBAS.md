@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **78 casos en 15 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **82 casos en 16 archivos**.
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -241,6 +241,15 @@ orquestación de carga/refresco de la página.
 | NB-05 | "Marcar todas como leídas" | `marcarTodasComoLeidas`, el badge desaparece |
 | NB-06 | Sin notificaciones | Estado vacío |
 
+### 6.17 `src/components/profile/NotificationPreferencesCard.test.tsx` — 4 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| NP-01 | Sin perfil | No renderiza nada |
+| NP-02 | Con preferencias guardadas | Los checkboxes reflejan los valores |
+| NP-03 | Sin preferencias (`null`) | Usa defaults (todo activo) |
+| NP-04 | Destildar una opción | Guarda el valor invertido y llama a `refreshProfile` |
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -278,7 +287,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 78 | ✅ 78/78 |
+| Automatizados (Vitest) | 82 | ✅ 82/82 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.
