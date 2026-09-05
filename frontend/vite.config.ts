@@ -12,6 +12,8 @@ export default defineConfig({
   },
   server: { port: 5173 },
   test: {
+    // Solo unit/component en src/. Los .spec.ts de e2e/ los corre Playwright.
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     css: false,
