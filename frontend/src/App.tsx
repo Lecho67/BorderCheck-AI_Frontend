@@ -35,7 +35,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-1">{children}</div>
+      <main className="flex-1">{children}</main>
       <Footer />
       <ToastContainer />
     </div>
