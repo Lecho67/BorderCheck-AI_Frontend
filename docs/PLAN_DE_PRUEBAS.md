@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **111 casos en 23 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **112 casos en 23 archivos**.
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -278,7 +278,7 @@ orquestación de carga/refresco de la página.
 | NQ-02 | Envío con error | Banner de error; no navega |
 | NQ-03 | Mientras evalúa | Muestra el esqueleto de carga |
 
-### 6.21 `src/pages/ResultView.test.tsx` — 4 casos
+### 6.21 `src/pages/ResultView.test.tsx` — 5 casos
 
 Las tarjetas de veredicto se mockean.
 
@@ -288,6 +288,7 @@ Las tarjetas de veredicto se mockean.
 | RV-02 | No cacheada, existe | La busca por id, `addConsulta`, la renderiza |
 | RV-03 | No cacheada, no existe | "No encontramos esta consulta" |
 | RV-04 | Botones de acción | Navegan a `/dashboard/historial` y `/consulta/nueva` |
+| RV-05 | Botón "Exportar PDF" | Está `disabled` (feature no implementada) |
 
 ### 6.22 `src/components/admin/AdminUserTable.test.tsx` — 5 casos
 
@@ -385,7 +386,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 111 | ✅ 111/111 |
+| Automatizados (Vitest) | 112 | ✅ 112/112 |
 | E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
@@ -404,7 +405,7 @@ Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 cd frontend
 npm install
 npm run lint        # 0 errores, 0 warnings
-npm run test:run    # 111/111 (unit + componente)
+npm run test:run    # 112/112 (unit + componente)
 npm run build       # compila sin warnings de tamaño
 
 # E2E (una vez): descargar el navegador

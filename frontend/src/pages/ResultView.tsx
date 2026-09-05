@@ -88,8 +88,13 @@ export function ResultView() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Button variant="secondary" className="flex items-center gap-2">
-          <Download className="w-4 h-4" /> Exportar PDF
+        <Button
+          variant="secondary"
+          disabled
+          title="Próximamente"
+          className="flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" /> Exportar PDF (próximamente)
         </Button>
         <Button
           variant="secondary"
