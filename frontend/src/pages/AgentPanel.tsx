@@ -96,8 +96,11 @@ export function AgentPanel() {
       {/* Filtros */}
       <div className="flex flex-wrap items-end gap-4 mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">País destino</label>
+          <label htmlFor="filtro-pais" className="block text-xs font-medium text-slate-600 mb-1">
+            País destino
+          </label>
           <select
+            id="filtro-pais"
             value={filtroPais}
             onChange={(e) => setFiltroPais(e.target.value)}
             className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white"
@@ -111,8 +114,11 @@ export function AgentPanel() {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">Desde</label>
+          <label htmlFor="filtro-desde" className="block text-xs font-medium text-slate-600 mb-1">
+            Desde
+          </label>
           <input
+            id="filtro-desde"
             type="date"
             value={fechaDesde}
             onChange={(e) => setFechaDesde(e.target.value)}
@@ -120,8 +126,11 @@ export function AgentPanel() {
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">Hasta</label>
+          <label htmlFor="filtro-hasta" className="block text-xs font-medium text-slate-600 mb-1">
+            Hasta
+          </label>
           <input
+            id="filtro-hasta"
             type="date"
             value={fechaHasta}
             onChange={(e) => setFechaHasta(e.target.value)}

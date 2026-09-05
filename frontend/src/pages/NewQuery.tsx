@@ -1,6 +1,7 @@
 // src/pages/NewQuery.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AlertTriangle } from "lucide-react";
 import { useQueryStore } from "@/store/useQueryStore";
 import { evaluarEnvio } from "@/lib/api";
 import type { WizardFormData } from "@/lib/types";
@@ -43,8 +44,11 @@ export function NewQuery() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       {error && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          <strong>⚠ Error:</strong> {error}
+        <div className="mb-6 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>
+            <strong>Error:</strong> {error}
+          </span>
         </div>
       )}
 
