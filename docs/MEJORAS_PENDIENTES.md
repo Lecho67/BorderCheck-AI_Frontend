@@ -148,18 +148,32 @@ Ver `docs/PLAN_DE_PRUEBAS.md` § 10 para el detalle.
 
 ---
 
-## 9. Centro de notificaciones 🔷
+## 9. Centro de notificaciones ✅ (frontend) · parcial (backend)
 
-**Qué:** `profiles.notification_preferences` es un campo muerto — sin UI para
-configurarlo y sin entrega de notificaciones.
+**Hallazgo:** la tabla `notifications` **ya existía** en Supabase (la armó el
+colaborador de backend) con `id, user_id, tipo, titulo, mensaje, leida,
+created_at`, RLS correcta (`user_id = auth.uid()`), y **dos triggers ya
+funcionando**: `trg_paquete_recibido` → `notify_paquete_recibido()` y
+`trg_veredicto_aduana` → `notify_veredicto_aduana()`. El `CHECK` limita
+`tipo` a `paquete_recibido` / `aprobado_aduana` / `impuesto_pendiente`.
+Nunca se conectó al frontend.
 
-**Oportunidad:** el canal Realtime ya está montado en `AuthContext`. Se puede
-construir un panel de notificaciones in-app: paquete recibido en bodega,
-KYC resuelto, veredicto de un caso cambiado por un agente.
+**Hecho:** `src/lib/notificationService.ts` + `NotificationBell` en el
+`Navbar` (campanita con contador de no leídas, dropdown, marcar
+leída/todas, Realtime sobre `notifications` filtrado por `user_id`, toast
+al llegar una nueva). Se agregó `notifications` a la publicación
+`supabase_realtime`. Tests: `notificationService.test.ts`,
+`NotificationBell.test.tsx`.
 
-**Dónde:** tabla `notifications` en Supabase (o reutilizar Realtime sobre
-`pre_alerts`/`customs_queries`) + componente de campana en `Navbar` + UI de
-preferencias en `Profile.tsx`.
+**Pendiente (necesita coordinar con el backend):**
+- No hay trigger para `impuesto_pendiente` todavía.
+- No hay tipo para "KYC resuelto" — el `CHECK` no lo permite; agregarlo es
+  seguro (`alter ... drop constraint` + re-add ampliado, 0 filas, no rompe
+  nada) pero conviene avisar al colaborador.
+- `canal_whatsapp_sms` (entrega por SMS/WhatsApp) sigue fuera de alcance —
+  requiere un proveedor externo.
+- Sin UI para editar `notification_preferences` (los triggers ya las
+  respetan con `coalesce(..., true)`).
 
 ---
 

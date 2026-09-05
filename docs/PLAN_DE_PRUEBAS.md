@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **67 casos en 13 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **78 casos en 15 archivos**.
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -218,6 +218,29 @@ orquestación de carga/refresco de la página.
 | KP-05 | `onResuelto` de una tarjeta | La saca de la lista |
 | KP-06 | Polling (fake timers, +30s) | Vuelve a pedir la lista automáticamente |
 
+### 6.15 `src/lib/notificationService.test.ts` — 5 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| NS-01 | `fetchNotificaciones` | `order('created_at', desc)` + `limit(50)`; devuelve las filas |
+| NS-02 | `fetchNotificaciones` sin datos | Devuelve `[]` |
+| NS-03 | `fetchNotificaciones` con error | Lanza el mensaje |
+| NS-04 | `marcarComoLeida` | `update({ leida: true })` + `eq('id', ...)` |
+| NS-05 | `marcarTodasComoLeidas` | `update({ leida: true })` + `eq('leida', false)` |
+
+### 6.16 `src/components/layout/NotificationBell.test.tsx` — 6 casos
+
+`notificationService` y el canal de `supabase` se mockean.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| NB-01 | Sin sesión | No renderiza nada |
+| NB-02 | Con notificaciones | Badge con la cantidad de no leídas |
+| NB-03 | Clic en la campana | Abre el panel y lista las notificaciones |
+| NB-04 | Clic en una notificación | `marcarComoLeida`, el badge baja |
+| NB-05 | "Marcar todas como leídas" | `marcarTodasComoLeidas`, el badge desaparece |
+| NB-06 | Sin notificaciones | Estado vacío |
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -255,7 +278,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 67 | ✅ 67/67 |
+| Automatizados (Vitest) | 78 | ✅ 78/78 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comando: `cd frontend && npm run test:run`.

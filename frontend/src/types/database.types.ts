@@ -76,3 +76,15 @@ export interface DocumentRecord {
   reviewed_at: string | null;
   assigned_agent_id: string | null;
 }
+
+export type NotificationType = 'paquete_recibido' | 'aprobado_aduana' | 'impuesto_pendiente';
+
+export interface NotificationRecord {
+  id: string;
+  user_id: string;
+  tipo: NotificationType;
+  titulo: string;
+  mensaje: string | null;
+  leida: boolean;
+  created_at: string;
+}

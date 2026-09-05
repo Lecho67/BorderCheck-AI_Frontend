@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -139,6 +140,8 @@ export function Navbar() {
           <Link to="/herramientas" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
             Herramientas
           </Link>
+
+          {user && <NotificationBell />}
 
           {/* Perfil (dropdown) - solo escritorio/tablet, en mobile vive dentro del drawer */}
           {user ? (

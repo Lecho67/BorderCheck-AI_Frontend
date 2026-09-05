@@ -14,6 +14,7 @@ export function createQueryBuilderMock(result: { data: unknown; error: unknown }
     in: ReturnType<typeof vi.fn>;
     is: ReturnType<typeof vi.fn>;
     order: ReturnType<typeof vi.fn>;
+    limit: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
     insert: ReturnType<typeof vi.fn>;
     delete: ReturnType<typeof vi.fn>;
@@ -28,6 +29,7 @@ export function createQueryBuilderMock(result: { data: unknown; error: unknown }
     in: vi.fn(() => builder),
     is: vi.fn(() => builder),
     order: vi.fn(() => builder),
+    limit: vi.fn(() => builder),
     update: vi.fn(() => builder),
     insert: vi.fn(() => builder),
     delete: vi.fn(() => builder),
