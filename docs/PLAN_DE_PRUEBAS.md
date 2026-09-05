@@ -45,7 +45,7 @@
 | Componente | Componentes React con dependencias mockeadas (`useAuth`). | Vitest + Testing Library | Automatizado |
 | Servicios | Servicios de datos con el cliente Supabase mockeado. | Vitest | Automatizado |
 | Integración / seguridad (RLS) | Peticiones REST reales contra la API de Supabase con distintas cuentas. | `fetch` desde consola del navegador | Manual, registrado |
-| Extremo a extremo (E2E) | Flujos completos en navegador real. | Playwright / Cypress | **Pendiente** |
+| Extremo a extremo (E2E) | Páginas públicas en navegador real (carga, navegación, validación de formularios). | Playwright | Automatizado (solo sin login) |
 
 ## 4. Entorno y herramientas
 
@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **82 casos en 16 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **111 casos en 23 archivos**.
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -250,6 +250,104 @@ orquestación de carga/refresco de la página.
 | NP-03 | Sin preferencias (`null`) | Usa defaults (todo activo) |
 | NP-04 | Destildar una opción | Guarda el valor invertido y llama a `refreshProfile` |
 
+### 6.18 `src/pages/Locker.test.tsx` — 5 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| LK-01 | Perfil con `locker_code` | Muestra "Suite &lt;código&gt;" |
+| LK-02 | Sin `locker_code` | Muestra "Suite pendiente de asignación" |
+| LK-03 | KYC `pendiente` | Banner, botón de pre-alertar deshabilitado, sin editar/eliminar |
+| LK-04 | KYC `aprobado` | Botón habilitado, acciones visibles, sin banner |
+| LK-05 | Sin pre-alertas | Estado vacío |
+
+### 6.19 `src/pages/Documents.test.tsx` — 3 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| DC-01 | KYC `pendiente` | Banner, `<label>` de subida con `aria-disabled`, sin botón de eliminar |
+| DC-02 | KYC `aprobado` | Sin banner, subida activa (`for="upload-doc"`), botón de eliminar visible |
+| DC-03 | Sin documentos | Estado vacío |
+
+### 6.20 `src/pages/NewQuery.test.tsx` — 3 casos
+
+`ShipmentForm`, `evaluarEnvio`, el store y `useNavigate` se mockean.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| NQ-01 | Envío con éxito | `addConsulta(diagnostico)` + `navigate('/consulta/:id')` |
+| NQ-02 | Envío con error | Banner de error; no navega |
+| NQ-03 | Mientras evalúa | Muestra el esqueleto de carga |
+
+### 6.21 `src/pages/ResultView.test.tsx` — 4 casos
+
+Las tarjetas de veredicto se mockean.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| RV-01 | Consulta cacheada en el store | Renderiza sin llamar a `fetchConsultaById` |
+| RV-02 | No cacheada, existe | La busca por id, `addConsulta`, la renderiza |
+| RV-03 | No cacheada, no existe | "No encontramos esta consulta" |
+| RV-04 | Botones de acción | Navegan a `/dashboard/historial` y `/consulta/nueva` |
+
+### 6.22 `src/components/admin/AdminUserTable.test.tsx` — 5 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AU-01 | Carga | Renderiza las filas de usuarios |
+| AU-02 | Cambiar el `<select>` de rol | Abre el modal "Confirmar cambio"; **no** llama a `actualizarRol` |
+| AU-03 | Rol nuevo = `admin` | El modal muestra la advertencia de control total |
+| AU-04 | "Cancelar" | Cierra el modal sin llamar al servicio |
+| AU-05 | "Confirmar" | `actualizarRol(userId, rol)` y cierra el modal |
+
+### 6.23 `src/pages/AgentPanel.test.tsx` — 5 casos
+
+`useAuth`, `fetchColaDeRevision` y `CasoRevisionCard` se mockean.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| AP-01 | Carga | Renderiza los casos y el contador "X de Y" |
+| AP-02 | Cola vacía | Estado vacío |
+| AP-03 | Filtro por país | Reduce la tabla y actualiza el contador |
+| AP-04 | "Limpiar filtros" | Restaura la lista completa |
+| AP-05 | "Auditar caso" | Abre el drawer de revisión |
+
+### 6.24 `src/components/ShipmentForm.test.tsx` — 4 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| SF-01 | Enviar con campos obligatorios vacíos | No llama a `onSubmit`; muestra los errores de validación |
+| SF-02 | `isSubmitting` | Botón deshabilitado + "Evaluando envío..." |
+| SF-03 | Clic en un chip de categoría | Rellena el campo Categoría |
+| SF-04 | Marcar "Contiene batería de litio" | Despliega los sub-campos |
+
+## 6.bis. E2E — páginas públicas (Playwright)
+
+`frontend/e2e/`, ejecutar con `npm run test:e2e` (requiere `npx playwright
+install chromium` una vez). Playwright levanta el dev server solo. **12
+casos, solo rutas sin login** — se descartó pegarle a Supabase real con las
+cuentas QA para no ensuciar datos de producción.
+
+### `e2e/public-pages.spec.ts` — 8 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| E-PP-01..06 | `/`, `/pitch`, `/herramientas`, `/soporte`, `/login`, `/registro` | Cargan y muestran su `<h1>`; sin errores de runtime (`pageerror`) |
+| E-PP-07 | `/landing` | Renderiza un `<h1>` |
+| E-PP-08 | Navegación por el navbar | Va a `/herramientas` y vuelve a `/` sin recargar |
+
+### `e2e/login.spec.ts` — 4 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| E-LG-01 | Enviar el form vacío | No navega; el `<input>` de correo queda `:invalid` |
+| E-LG-02 | "¿Olvidaste tu contraseña?" | Cambia a "Recuperar contraseña" y vuelve |
+| E-LG-03 | Pestaña "Crear cuenta" | Aparece el campo "Nombre completo" |
+| E-LG-04 | Link desde `/registro` | Vuelve a `/login` |
+
+**Pendiente:** los flujos con sesión (login real, KYC, wizard→veredicto,
+revisión de agente, notificaciones) necesitan decidir el entorno — ver
+`docs/MEJORAS_PENDIENTES.md` § 7.
+
 ## 7. Casos de prueba manuales (seguridad / integración)
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
@@ -287,15 +385,16 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 82 | ✅ 82/82 |
+| Automatizados (Vitest) | 111 | ✅ 111/111 |
+| E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
-Comando: `cd frontend && npm run test:run`.
+Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 
 ## 10. Riesgos y deuda de pruebas
 
-- **Sin E2E.** Ningún flujo se prueba de punta a punta en un navegador real (login → consulta → veredicto → historial; carga de KYC → aprobación → casillero). Prioridad alta si el proyecto sigue creciendo.
-- **Cobertura de páginas y wizard.** `NewQuery`, `ResultView`, `Locker`, `Documents`, los paneles de agente/admin y los pasos del wizard no tienen tests de componente.
+- **E2E sin flujos autenticados.** El E2E cubre solo páginas públicas. Login → consulta → veredicto, carga de KYC → aprobación → casillero, etc., necesitan decidir el entorno de pruebas (ver `docs/MEJORAS_PENDIENTES.md` § 7).
+- **Cobertura de componentes.** Todas las páginas y componentes con lógica están cubiertos. Sin cubrir (bajo valor): wrappers finos (`AdminPanel`, `GestorPanel`), componentes de solo presentación (`ui/`, tarjetas de veredicto), y los `Step*` del wizard (superados por `ShipmentForm`).
 - **RLS sin automatizar.** Las pruebas de seguridad son manuales; un cambio de política podría regresionar sin que la suite lo note. Automatizarlas requiere un runner que autentique cada cuenta QA contra la API REST.
 - **`buildShipmentEvaluationRequest`:** la validación `!wizardData.paisOrigen` es inalcanzable porque `getCountryInfo("")` lanza antes con otro mensaje. No es un defecto funcional pero conviene limpiarlo.
 
@@ -305,8 +404,12 @@ Comando: `cd frontend && npm run test:run`.
 cd frontend
 npm install
 npm run lint        # 0 errores, 0 warnings
-npm run test:run    # 32/32
-npm run build       # compila; el warning de tamaño es el chunk aislado de /reportes
+npm run test:run    # 111/111 (unit + componente)
+npm run build       # compila sin warnings de tamaño
+
+# E2E (una vez): descargar el navegador
+npx playwright install chromium
+npm run test:e2e    # 12/12 (páginas públicas)
 ```
 
 Pruebas manuales de RLS: ver `CLAUDE.md` → "Preferencias de trabajo (Simon)" y "Bugs y decisiones ya resueltas" para el detalle de cuentas y helpers de consola.

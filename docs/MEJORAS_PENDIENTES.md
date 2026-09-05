@@ -114,18 +114,27 @@ mismo gate que el casillero: `RequireCompliance` en la ruta + política
 
 ---
 
-## 7. Pruebas extremo a extremo (E2E) 🔷
+## 7. Pruebas extremo a extremo (E2E) 🔷 · parcial
 
-**Qué:** ningún flujo se prueba de punta a punta en un navegador real.
+**Hecho:** Playwright en `frontend/e2e/` (`@playwright/test`,
+`playwright.config.ts`, scripts `test:e2e` / `test:e2e:ui`). 12 casos que
+cubren **solo páginas públicas** (carga, `<h1>`, sin errores de runtime,
+navegación del navbar, validación del formulario de login). No pega a
+Supabase — se descartó usar las cuentas QA contra producción para no
+ensuciar datos.
 
-**Candidatos (Playwright):**
-- Registro → login → aceptar términos → subir KYC.
-- Agente aprueba KYC → el cliente entra al casillero.
-- Wizard de consulta → veredicto → aparece en el historial.
-- Agente audita un caso y sobrescribe el veredicto.
+**Pendiente — flujos con sesión.** Necesitan decidir el entorno:
+- Supabase real + cuentas QA con tests auto-limpiantes (riesgo: pisan el
+  estado que se toquetea a mano, disparan triggers de notificación).
+- Proyecto Supabase de pruebas aparte (aislado, pero hay que replicar todo
+  el esquema: tablas, RLS, ~10 RPCs, triggers, Realtime, Storage).
 
-**Dónde:** nuevo `frontend/e2e/` + `@playwright/test`. Requiere cuentas QA y
-un entorno de Supabase de pruebas.
+**Candidatos** cuando se resuelva el entorno: registro → login → términos →
+KYC; agente aprueba KYC → cliente entra al casillero; wizard → veredicto →
+historial; agente audita y sobrescribe un veredicto.
+
+**CI:** el E2E **no corre en CI** todavía (requiere guardar credenciales QA
+como secretos). El `ci.yml` sigue siendo solo `lint` + `test:run` + `build`.
 
 ---
 
