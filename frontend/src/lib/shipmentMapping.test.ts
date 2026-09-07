@@ -36,6 +36,15 @@ describe("buildShipmentEvaluationRequest", () => {
     expect(() => buildShipmentEvaluationRequest(baseWizard({ pesoKg: 0 }), null)).toThrow(/peso/i);
   });
 
+  it("da un error amigable si falta el país (no el error técnico de getCountryInfo)", () => {
+    expect(() =>
+      buildShipmentEvaluationRequest(baseWizard({ paisDestino: "" }), null)
+    ).toThrow("El país de destino es obligatorio.");
+    expect(() =>
+      buildShipmentEvaluationRequest(baseWizard({ paisOrigen: "" }), null)
+    ).toThrow("El país de origen es obligatorio.");
+  });
+
   it("exige valor declarado", () => {
     expect(() =>
       buildShipmentEvaluationRequest(baseWizard({ valorDeclaradoUsd: undefined }), null)

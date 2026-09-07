@@ -29,11 +29,17 @@ export function PreAlertForm({ onClose, onSaved, preAlertaExistente }: PreAlertF
     setSubmitting(true);
     setError(null);
     try {
+      const declaredValue = Number(value);
+      if (!Number.isFinite(declaredValue) || declaredValue < 0) {
+        setError("El valor declarado debe ser un número válido.");
+        setSubmitting(false);
+        return;
+      }
       const payload = {
         carrier,
         tracking_number: tracking,
         description,
-        declared_value: parseFloat(value),
+        declared_value: declaredValue,
       };
       if (esEdicion && preAlertaExistente) {
         await actualizarPreAlerta(preAlertaExistente.id, payload);
@@ -77,10 +83,11 @@ export function PreAlertForm({ onClose, onSaved, preAlertaExistente }: PreAlertF
         />
 
         <div>
-          <label className="text-xs font-medium text-slate-500 mb-1 block">
+          <label htmlFor="pre-alert-descripcion" className="text-xs font-medium text-slate-500 mb-1 block">
             Descripción del contenido
           </label>
           <textarea
+            id="pre-alert-descripcion"
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}

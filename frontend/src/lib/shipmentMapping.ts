@@ -117,11 +117,11 @@ export function buildShipmentEvaluationRequest(
   wizardData: WizardFormData,
   userId: string | null
 ): ShipmentEvaluationRequest {
-  const { alpha2: destinationCountry } = getCountryInfo(wizardData.paisDestino);
-  const { alpha2: originCountry } = getCountryInfo(wizardData.paisOrigen);
-  const now = new Date().toISOString();
-  const decl = wizardData.declaracionesEspeciales;
-
+  // Validaciones primero: `getCountryInfo` lanza con un mensaje técnico si
+  // el país viene vacío, así que estos chequeos amigables van antes.
+  if (!wizardData.paisDestino) {
+    throw new Error("El país de destino es obligatorio.");
+  }
   if (!wizardData.paisOrigen) {
     throw new Error("El país de origen es obligatorio.");
   }
@@ -137,6 +137,11 @@ export function buildShipmentEvaluationRequest(
   if (wizardData.valorDeclaradoUsd == null || wizardData.valorDeclaradoUsd < 0) {
     throw new Error("El valor declarado (USD) es obligatorio.");
   }
+
+  const { alpha2: destinationCountry } = getCountryInfo(wizardData.paisDestino);
+  const { alpha2: originCountry } = getCountryInfo(wizardData.paisOrigen);
+  const now = new Date().toISOString();
+  const decl = wizardData.declaracionesEspeciales;
 
   const hasHazmat =
     !!decl?.contieneBateriaLitio ||
