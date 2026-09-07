@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, ChevronDown } from "lucide-react";
 import { FAQ_ITEMS, CATEGORIAS, type FaqItem } from "@/lib/faqData";
-import { AiSupportChat } from "@/components/support/AiSupportChat";
 
 export function SupportCenter() {
   const [busqueda, setBusqueda] = useState("");
@@ -31,8 +31,12 @@ export function SupportCenter() {
     <div className="max-w-3xl mx-auto mt-16 p-6">
       <h1 className="text-2xl font-bold mb-2">Centro de Ayuda</h1>
       <p className="text-slate-600 mb-6">
-        Buscá respuestas sobre aduanas, tu casillero y el pago de tributos. Si no encontrás lo que
-        necesitás, abrí el asistente en la esquina inferior derecha.
+        Buscá respuestas sobre aduanas, tu casillero y el pago de tributos. Para una evaluación
+        puntual de tu envío, iniciá una{" "}
+        <Link to="/consulta/nueva" className="font-medium text-brand-blue hover:underline">
+          nueva consulta
+        </Link>
+        .
       </p>
 
       <div className="relative mb-4">
@@ -69,8 +73,8 @@ export function SupportCenter() {
       </div>
 
       {resultados.length === 0 ? (
-        <div className="border rounded-xl p-6 bg-slate-50 text-sm text-slate-500 text-center">
-          No encontramos preguntas para "{busqueda}". Probá con otros términos o consultá al asistente.
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+          No encontramos preguntas para "{busqueda}". Probá con otros términos.
         </div>
       ) : (
         <div className="space-y-8">
@@ -104,8 +108,6 @@ export function SupportCenter() {
           ))}
         </div>
       )}
-
-      <AiSupportChat />
     </div>
   );
 }
