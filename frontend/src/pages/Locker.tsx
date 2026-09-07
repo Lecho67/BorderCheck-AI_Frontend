@@ -11,20 +11,12 @@ import { Button } from "@/components/ui/Button";
 interface LockerAddress {
   id: string;
   country: string;
-  city: string;
-  code: string;
-  addressLine: string;
+  /** Dirección física de la bodega. Vacía hasta que se configure una real. */
+  addressLine?: string;
+  city?: string;
 }
 
-const ADDRESSES: LockerAddress[] = [
-  {
-    id: "us-miami",
-    country: "Estados Unidos",
-    city: "Miami, FL",
-    code: "US",
-    addressLine: "8548 NW 72nd St",
-  },
-];
+const ADDRESSES: LockerAddress[] = [{ id: "us", country: "Estados Unidos" }];
 
 const STATUS_LABEL: Record<PreAlert["status"], string> = {
   pendiente: "Pendiente",
@@ -68,7 +60,7 @@ export default function Locker() {
   }, []);
 
   function handleCopy(addr: LockerAddress) {
-    navigator.clipboard.writeText(`${suite}, ${addr.addressLine}, ${addr.city}`);
+    navigator.clipboard.writeText([suite, addr.addressLine, addr.city].filter(Boolean).join(", "));
     setCopiedId(addr.id);
     setTimeout(() => setCopiedId((current) => (current === addr.id ? null : current)), 2000);
   }
@@ -95,7 +87,7 @@ export default function Locker() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Mi Casillero</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Direcciones asignadas y pre-alertas de paquetes en tránsito.
+            Tu código de casillero y las pre-alertas de paquetes en tránsito.
           </p>
         </div>
         <button
@@ -125,31 +117,37 @@ export default function Locker() {
 
       <section className="grid sm:grid-cols-2 gap-4">
         {ADDRESSES.map((addr) => (
-          <div key={addr.id} className="border border-slate-200 rounded-xl p-5 bg-white shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wide bg-ai-accent/10 text-ai-accent px-2 py-1 rounded-full">
+          <div key={addr.id} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="rounded-full bg-ai-accent/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-ai-accent">
                 {addr.country}
               </span>
             </div>
+            <p className="text-xs text-slate-400">Código de casillero</p>
             <p className="font-medium text-slate-900">{suite}</p>
-            <p className="text-sm text-slate-600 mt-1">{addr.addressLine}</p>
-            <p className="text-sm text-slate-600">{addr.city}</p>
-            <button
-              className={`flex items-center gap-1.5 text-sm font-medium mt-3 focus:outline-none focus:ring-2 focus:ring-brand-blue rounded transition-colors ${
-                copiedId === addr.id ? "text-verdict-green-text" : "text-brand-blue hover:underline"
-              }`}
-              onClick={() => handleCopy(addr)}
-            >
-              {copiedId === addr.id ? (
-                <>
-                  <Check className="w-3.5 h-3.5" /> Copiado
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" /> Copiar dirección
-                </>
-              )}
-            </button>
+
+            {addr.addressLine ? (
+              <>
+                <p className="mt-2 text-sm text-slate-600">{addr.addressLine}</p>
+                <p className="text-sm text-slate-600">{addr.city}</p>
+                <button
+                  className={`mt-3 flex items-center gap-1.5 rounded text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-blue ${
+                    copiedId === addr.id ? "text-verdict-green-text" : "text-brand-blue hover:underline"
+                  }`}
+                  onClick={() => handleCopy(addr)}
+                >
+                  {copiedId === addr.id ? (
+                    <><Check className="h-3.5 w-3.5" /> Copiado</>
+                  ) : (
+                    <><Copy className="h-3.5 w-3.5" /> Copiar dirección</>
+                  )}
+                </button>
+              </>
+            ) : (
+              <p className="mt-3 text-sm text-slate-500">
+                Recibirás la dirección completa de la bodega cuando se habilite tu casillero.
+              </p>
+            )}
           </div>
         ))}
       </section>
