@@ -1,26 +1,17 @@
 import { create } from "zustand";
-import type { DiagnosticoEnvio, WizardFormData } from "@/lib/types";
+import type { DiagnosticoEnvio } from "@/lib/types";
 
 interface QueryState {
-  wizardStep: number;
-  wizardData: Partial<WizardFormData>;
-  setWizardStep: (step: number) => void;
-  updateWizardData: (data: Partial<WizardFormData>) => void;
-  resetWizard: () => void;
-
+  /** Cache en memoria de los diagnósticos vistos en esta sesión.
+   *  El historial persistente vive en `customs_queries` (ver
+   *  `queryHistoryService`); esto solo evita un fetch al volver a
+   *  `/consulta/:id` justo después de crear la consulta. */
   consultas: DiagnosticoEnvio[];
   addConsulta: (consulta: DiagnosticoEnvio) => void;
   getConsultaById: (id: string) => DiagnosticoEnvio | undefined;
 }
 
 export const useQueryStore = create<QueryState>((set, get) => ({
-  wizardStep: 0,
-  wizardData: {},
-  setWizardStep: (step) => set({ wizardStep: step }),
-  updateWizardData: (data) =>
-    set((state) => ({ wizardData: { ...state.wizardData, ...data } })),
-  resetWizard: () => set({ wizardStep: 0, wizardData: {} }),
-
   consultas: [],
   addConsulta: (consulta) =>
     set((state) => ({ consultas: [consulta, ...state.consultas] })),
