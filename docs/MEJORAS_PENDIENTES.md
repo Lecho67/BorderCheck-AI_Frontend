@@ -187,6 +187,34 @@ al llegar una nueva). Se agregó `notifications` a la publicación
 
 ---
 
+## 9b. Backfill de `customs_queries.ai_verdict` ⏳ · requiere SQL
+
+**Qué:** hasta ahora `api.ts` guardaba el `nivel` de color
+(`verde`/`amarillo`/`rojo`) en `ai_verdict` en vez del veredicto del motor
+(`APROBADO`/`PRECAUCION`/`BLOQUEO`). Ya está arreglado en el código, pero
+las filas viejas creadas por la app tienen el valor mal — y eso rompe la
+cola de revisión de agentes, las métricas de admin y los reportes para
+esas filas.
+
+**Backfill:** derivar de `raw_response` (que sí guarda el `DiagnosticoEnvio`
+completo con el `titulo`/`nivel` correctos):
+
+```sql
+update public.customs_queries
+set ai_verdict = case
+  when ai_verdict in ('verde')   then 'APROBADO'
+  when ai_verdict in ('rojo')    then 'BLOQUEO'
+  when ai_verdict in ('amarillo') then 'PRECAUCION'
+  else ai_verdict
+end
+where ai_verdict in ('verde', 'amarillo', 'rojo');
+```
+
+(`amarillo` puede haber sido `PRECAUCION` o `REQUIERE_DOCUMENTACION`; sin
+más señal se asume `PRECAUCION`. Si `raw_response->>'titulo'` distingue,
+usarlo.) **Verificar además** el trigger `notify_veredicto_aduana` del
+backend, que probablemente compara contra `ai_verdict`.
+
 ## 10. Deuda técnica
 
 | Ítem | Detalle |

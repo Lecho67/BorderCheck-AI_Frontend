@@ -68,7 +68,8 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **112 casos en 23 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **115 casos en 24 archivos**.
+El entorno de tests toma sus variables de `frontend/.env.test` (valores dummy, commiteado).
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -89,7 +90,7 @@ a `.single()`).
 | VB-01 | Veredictos conocidos (APROBADO/BLOQUEO/PRECAUCION/REQUIERE_DOCUMENTACION) | Cada uno mapea a su paleta |
 | VB-02 | Valor desconocido | Usa `slate` como fallback |
 
-### 6.3 `src/lib/shipmentMapping.test.ts` — 11 casos
+### 6.3 `src/lib/shipmentMapping.test.ts` — 12 casos
 
 | ID | Descripción | Resultado esperado |
 |---|---|---|
@@ -104,6 +105,7 @@ a `.single()`).
 | SM-09 | Impuestos con porcentaje estimado (valor 100, 10 %) | `arancel=10`, `flete=8`, `total=18` |
 | SM-10 | Valor declarado 0 | `desgloseImpuestos = null` |
 | SM-11 | Alerta con texto "certificado fitosanitario" | `documentosRequeridos` incluye "Certificado fitosanitario" |
+| SM-12 | Falta `paisDestino` / `paisOrigen` | Error amigable ("El país de destino es obligatorio."), no el error técnico de `getCountryInfo` |
 
 ### 6.4 `src/lib/kycReviewService.test.ts` — 6 casos
 
@@ -115,6 +117,15 @@ a `.single()`).
 | KS-04 | `revisarKyc` aprobar | Llama `revisar_kyc` con `p_motivo: null` |
 | KS-05 | `revisarKyc` rechazar con motivo | Llama `revisar_kyc` con el motivo |
 | KS-06 | `revisarKyc` con error | Propaga el mensaje del RPC |
+
+### 6.4b `src/lib/api.test.ts` — 2 casos
+
+Backend real mockeado (`fetch`, sesión, `insert`). El `.env.test` fuerza el camino "backend real" (no el mock).
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| API-01 | Consulta con éxito | Guarda en `customs_queries` con `ai_verdict = final_status` del motor (no el `nivel` de color) |
+| API-02 | El motor responde error | Propaga el mensaje; **no** guarda nada |
 
 ### 6.5 `src/components/RequireCompliance.test.tsx` — 5 casos
 
@@ -386,7 +397,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 112 | ✅ 112/112 |
+| Automatizados (Vitest) | 115 | ✅ 115/115 |
 | E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
@@ -405,7 +416,7 @@ Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 cd frontend
 npm install
 npm run lint        # 0 errores, 0 warnings
-npm run test:run    # 112/112 (unit + componente)
+npm run test:run    # 115/115 (unit + componente)
 npm run build       # compila sin warnings de tamaño
 
 # E2E (una vez): descargar el navegador
