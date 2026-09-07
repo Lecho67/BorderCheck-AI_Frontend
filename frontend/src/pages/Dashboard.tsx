@@ -1,12 +1,22 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VerdictBadge } from "@/components/verdict/VerdictBadge";
 import { Button } from "@/components/ui/Button";
-import { useQueryStore } from "@/store/useQueryStore";
+import { fetchConsultas } from "@/lib/queryHistoryService";
 import { useAuth } from "@/hooks/useAuth";
+import type { DiagnosticoEnvio } from "@/lib/types";
 
 export function Dashboard() {
-  const consultas = useQueryStore((s) => s.consultas);
   const { user, profile } = useAuth();
+  const [consultas, setConsultas] = useState<DiagnosticoEnvio[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchConsultas()
+      .then(setConsultas)
+      .finally(() => setLoading(false));
+  }, []);
+
   const recientes = consultas.slice(0, 5);
 
   const displayName =
@@ -15,7 +25,9 @@ export function Dashboard() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-10">
       <h1 className="text-2xl font-semibold text-slate-900 mb-1">Hola, {displayName}</h1>
-      <p className="text-slate-500 mb-8">Tienes {consultas.length} consultas registradas.</p>
+      <p className="text-slate-500 mb-8">
+        {loading ? "Cargando tus consultas..." : `Tienes ${consultas.length} consultas registradas.`}
+      </p>
 
       <div className="rounded-xl border-2 border-brand-blue bg-brand-blue/5 p-6 mb-8 flex items-center justify-between">
         <div>
@@ -28,7 +40,9 @@ export function Dashboard() {
       </div>
 
       <h2 className="font-semibold text-slate-900 mb-3">Consultas recientes</h2>
-      {recientes.length === 0 ? (
+      {loading ? (
+        <p className="text-sm text-slate-400">Cargando...</p>
+      ) : recientes.length === 0 ? (
         <p className="text-sm text-slate-400">Aún no tienes consultas.</p>
       ) : (
         <div className="space-y-2">
