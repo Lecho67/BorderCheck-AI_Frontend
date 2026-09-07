@@ -22,10 +22,10 @@ const getSessionMock = vi.mocked(supabase.auth.getSession);
 
 function wizard(): WizardFormData {
   return {
-    paisOrigen: "🇺🇸 Estados Unidos",
+    paisOrigen: "Estados Unidos",
     transportType: "air",
     shipmentModality: "personal_shipment_gift",
-    paisDestino: "🇨🇴 Colombia",
+    paisDestino: "Colombia",
     descripcionItem: "auriculares",
     pesoKg: 1,
     valorDeclaradoUsd: 50,

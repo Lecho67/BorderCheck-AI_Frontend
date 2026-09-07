@@ -8,10 +8,10 @@ import { declaracionesEspecialesVacias, type WizardFormData } from "./types";
 
 function baseWizard(over: Partial<WizardFormData> = {}): WizardFormData {
   return {
-    paisOrigen: "🇺🇸 Estados Unidos",
+    paisOrigen: "Estados Unidos",
     transportType: "air",
     shipmentModality: "personal_shipment_gift",
-    paisDestino: "🇨🇴 Colombia",
+    paisDestino: "Colombia",
     categoria: "Electrónica",
     descripcionItem: "Auriculares inalámbricos",
     pesoKg: 0.5,

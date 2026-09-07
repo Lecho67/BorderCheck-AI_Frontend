@@ -21,10 +21,9 @@ function calcularDesglose(valorUsd: number | undefined, tasaArancel: number): De
 }
 
 /**
- * Motor de clasificación simulado (mock).
- * Reemplazar por una llamada real a `api.ts` -> backend -> Gemini
- * cuando el backend esté disponible. La forma del objeto devuelto
- * NO debe cambiar: es el contrato compartido con el backend.
+ * Motor de clasificación simulado. Se usa cuando `VITE_API_BASE_URL` no
+ * está definida (ver `api.ts`). La forma del objeto devuelto es el contrato
+ * compartido con el backend real y no debe cambiar.
  */
 export function evaluarEnvioMock(data: WizardFormData): DiagnosticoEnvio {
   const texto = data.descripcionItem.toLowerCase();
@@ -95,14 +94,14 @@ export function evaluarEnvioMock(data: WizardFormData): DiagnosticoEnvio {
 }
 
 export const paisesDisponibles = [
-  "🇺🇸 Estados Unidos",
-  "🇲🇽 México",
-  "🇨🇴 Colombia",
-  "🇪🇸 España",
-  "🇦🇷 Argentina",
-  "🇨🇱 Chile",
-  "🇧🇷 Brasil",
-  "🇵🇪 Perú",
+  "Estados Unidos",
+  "México",
+  "Colombia",
+  "España",
+  "Argentina",
+  "Chile",
+  "Brasil",
+  "Perú",
 ];
 
 export const chipsSugeridos = ["Electrónica", "Cosméticos", "Baterías", "Ropa", "Documentos"];
