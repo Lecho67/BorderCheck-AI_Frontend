@@ -121,7 +121,7 @@ export function AdminUserTable() {
 
       <div className="border rounded overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-left">
+          <thead className="bg-slate-50 text-left">
             <tr>
               <th className="p-3">Usuario</th>
               <th className="p-3">Rol</th>
@@ -133,7 +133,7 @@ export function AdminUserTable() {
               <tr key={u.id} className="border-t">
                 <td className="p-3">
                   <p className="font-medium">{u.full_name || "(sin nombre)"}</p>
-                  <p className="text-gray-500 text-xs">{u.email}</p>
+                  <p className="text-slate-500 text-xs">{u.email}</p>
                 </td>
                 <td className="p-3">
                   <select
@@ -165,7 +165,7 @@ export function AdminUserTable() {
                       ))}
                     </select>
                   ) : (
-                    <span className="text-gray-400 text-xs">N/A</span>
+                    <span className="text-slate-400 text-xs">N/A</span>
                   )}
                 </td>
               </tr>
@@ -181,7 +181,7 @@ export function AdminUserTable() {
             <h2 className="font-semibold text-lg mb-3">Confirmar cambio</h2>
 
             {accionPendiente.tipo === "rol" ? (
-              <p className="text-sm text-gray-700 mb-5">
+              <p className="text-sm text-slate-700 mb-5">
                 Vas a cambiar el rol de <span className="font-medium">{accionPendiente.nombre}</span>{" "}
                 de <span className="font-medium">{accionPendiente.rolAnterior}</span> a{" "}
                 <span className="font-medium">{accionPendiente.rolNuevo}</span>.
@@ -193,7 +193,7 @@ export function AdminUserTable() {
                 )}
               </p>
             ) : (
-              <p className="text-sm text-gray-700 mb-5">
+              <p className="text-sm text-slate-700 mb-5">
                 Vas a cambiar el gestor de <span className="font-medium">{accionPendiente.nombre}</span>{" "}
                 de <span className="font-medium">{accionPendiente.gestorAnteriorNombre}</span> a{" "}
                 <span className="font-medium">{accionPendiente.gestorNuevoNombre}</span>.
@@ -203,7 +203,7 @@ export function AdminUserTable() {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setAccionPendiente(null)}
-                className="text-sm text-gray-500 px-3 py-1.5"
+                className="text-sm text-slate-500 px-3 py-1.5"
               >
                 Cancelar
               </button>

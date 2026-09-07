@@ -70,7 +70,7 @@ export function AgentKycPanel() {
           Actualizar
         </button>
       </div>
-      <p className="text-gray-600 mb-6">
+      <p className="text-slate-600 mb-6">
         {perfiles.length} verificación{perfiles.length !== 1 && "es"} pendiente
         {perfiles.length !== 1 && "s"} de revisión — se actualiza solo cada 30 s
       </p>
@@ -78,7 +78,7 @@ export function AgentKycPanel() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       {perfiles.length === 0 ? (
-        <div className="border rounded p-4 bg-gray-50 text-sm text-gray-500">
+        <div className="border rounded p-4 bg-slate-50 text-sm text-slate-500">
           No hay verificaciones de identidad pendientes.
         </div>
       ) : (

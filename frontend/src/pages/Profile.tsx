@@ -177,7 +177,7 @@ export function Profile() {
   return (
     <div className="max-w-2xl mx-auto mt-16 mb-16 p-6">
       <h1 className="text-2xl font-bold mb-1">Mi Perfil</h1>
-      <p className="text-gray-600 mb-8">
+      <p className="text-slate-600 mb-8">
         Gestioná tus datos personales, tu dirección y el estado de verificación de tu cuenta.
       </p>
 

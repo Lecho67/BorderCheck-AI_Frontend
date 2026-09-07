@@ -156,7 +156,7 @@ export function Navbar() {
               </button>
 
               {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 shadow-lg rounded-xl bg-white border border-gray-100 py-2 text-sm z-20">
+                <div className="absolute right-0 mt-2 w-64 shadow-lg rounded-xl bg-white border border-slate-100 py-2 text-sm z-20">
                   <div className="px-3 pb-1 pt-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Mi cuenta
                   </div>

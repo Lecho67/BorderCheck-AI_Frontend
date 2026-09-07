@@ -17,7 +17,7 @@ const MENSAJE_BIENVENIDA: Mensaje = {
   id: "bienvenida",
   autor: "bot",
   texto:
-    "Hola 👋 Soy el asistente de BorderCheck AI. Puedo orientarte sobre restricciones de envío, tiempos de liberación y tributos. Doy información general — para un dictamen oficial de tu envío usá 'Nueva consulta'.",
+    "Hola, soy el asistente de BorderCheck AI. Puedo orientarte sobre restricciones de envío, tiempos de liberación y tributos. Doy información general — para un dictamen oficial de tu envío usá 'Nueva consulta'.",
 };
 
 const RESPUESTAS_SIMULADAS: { keywords: string[]; respuesta: string }[] = [

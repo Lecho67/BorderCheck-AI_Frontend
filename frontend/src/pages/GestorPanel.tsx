@@ -61,12 +61,12 @@ export function GestorPanel() {
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
       <h1 className="text-2xl font-bold mb-2">Panel de Asesor</h1>
-      <p className="text-gray-600 mb-6">
+      <p className="text-slate-600 mb-6">
         Bienvenido, {profile?.full_name || profile?.email}
       </p>
 
       {clientes.length === 0 ? (
-        <div className="border rounded p-4 bg-gray-50 text-sm text-gray-500">
+        <div className="border rounded p-4 bg-slate-50 text-sm text-slate-500">
           Aún no tienes clientes asignados.
         </div>
       ) : (
@@ -86,7 +86,7 @@ export function GestorPanel() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-400">Sin consultas todavía.</p>
+                <p className="text-sm text-slate-400">Sin consultas todavía.</p>
               )}
             </div>
           ))}

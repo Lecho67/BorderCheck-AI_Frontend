@@ -30,7 +30,7 @@ export function SupportCenter() {
   return (
     <div className="max-w-3xl mx-auto mt-16 p-6">
       <h1 className="text-2xl font-bold mb-2">Centro de Ayuda</h1>
-      <p className="text-gray-600 mb-6">
+      <p className="text-slate-600 mb-6">
         Buscá respuestas sobre aduanas, tu casillero y el pago de tributos. Si no encontrás lo que
         necesitás, abrí el asistente en la esquina inferior derecha.
       </p>

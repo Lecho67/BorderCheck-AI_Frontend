@@ -86,7 +86,7 @@ export function AgentPanel() {
   return (
     <div className="max-w-6xl mx-auto mt-16 p-6">
       <h1 className="text-2xl font-bold mb-2">Cola de Revisión</h1>
-      <p className="text-gray-600 mb-6">
+      <p className="text-slate-600 mb-6">
         {casosFiltrados.length} de {casos.length} caso{casos.length !== 1 && "s"} pendiente
         {casos.length !== 1 && "s"} de auditoría
       </p>
@@ -145,7 +145,7 @@ export function AgentPanel() {
       </div>
 
       {casosFiltrados.length === 0 ? (
-        <div className="border rounded p-4 bg-gray-50 text-sm text-gray-500">
+        <div className="border rounded p-4 bg-slate-50 text-sm text-slate-500">
           {casos.length === 0
             ? "No hay casos pendientes en este momento."
             : "Ningún caso coincide con los filtros aplicados."}

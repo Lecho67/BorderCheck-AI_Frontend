@@ -62,7 +62,7 @@ export function DocumentReviewCard({ doc, onResuelto }: Props) {
       <div className="flex justify-between items-start mb-2">
         <div>
           <p className="font-semibold">{doc.cliente?.full_name || doc.cliente?.email || doc.user_id}</p>
-          <p className="text-sm text-gray-500">{doc.file_name}</p>
+          <p className="text-sm text-slate-500">{doc.file_name}</p>
         </div>
         <button
           onClick={handleVer}

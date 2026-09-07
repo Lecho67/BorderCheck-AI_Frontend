@@ -39,14 +39,14 @@ export function AgentDocumentsPanel() {
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
       <h1 className="text-2xl font-bold mb-2">Revisión de Documentos</h1>
-      <p className="text-gray-600 mb-6">
+      <p className="text-slate-600 mb-6">
         {docs.length} documento{docs.length !== 1 && "s"} pendiente{docs.length !== 1 && "s"} de revisión
       </p>
 
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       {docs.length === 0 ? (
-        <div className="border rounded p-4 bg-gray-50 text-sm text-gray-500">
+        <div className="border rounded p-4 bg-slate-50 text-sm text-slate-500">
           No hay documentos pendientes de revisión.
         </div>
       ) : (
