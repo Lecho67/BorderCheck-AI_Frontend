@@ -108,39 +108,38 @@ export function AdminUserTable() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <p className="text-sm text-slate-400">Cargando usuarios...</p>;
   }
+
+  const selectClass =
+    "rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50";
 
   return (
     <div>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-      <div className="border rounded overflow-hidden">
+      <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left">
+          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="p-3">Usuario</th>
-              <th className="p-3">Rol</th>
-              <th className="p-3">Gestor asignado</th>
+              <th className="px-4 py-3 font-medium">Usuario</th>
+              <th className="px-4 py-3 font-medium">Rol</th>
+              <th className="px-4 py-3 font-medium">Gestor asignado</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {usuarios.map((u) => (
-              <tr key={u.id} className="border-t">
-                <td className="p-3">
-                  <p className="font-medium">{u.full_name || "(sin nombre)"}</p>
-                  <p className="text-slate-500 text-xs">{u.email}</p>
+              <tr key={u.id} className="hover:bg-slate-50">
+                <td className="px-4 py-3">
+                  <p className="font-medium text-slate-800">{u.full_name || "(sin nombre)"}</p>
+                  <p className="text-xs text-slate-500">{u.email}</p>
                 </td>
-                <td className="p-3">
+                <td className="px-4 py-3">
                   <select
                     value={u.role}
                     disabled={guardandoId === u.id}
                     onChange={(e) => solicitarCambioRol(u, e.target.value as Profile["role"])}
-                    className="border rounded px-2 py-1 text-sm"
+                    className={selectClass}
                   >
                     {ROLES.map((r) => (
                       <option key={r} value={r}>
@@ -149,13 +148,13 @@ export function AdminUserTable() {
                     ))}
                   </select>
                 </td>
-                <td className="p-3">
+                <td className="px-4 py-3">
                   {u.role === "cliente" ? (
                     <select
                       value={u.gestor_id ?? ""}
                       disabled={guardandoId === u.id}
                       onChange={(e) => solicitarCambioGestor(u, e.target.value)}
-                      className="border rounded px-2 py-1 text-sm"
+                      className={selectClass}
                     >
                       <option value="">Sin asignar</option>
                       {gestores.map((g) => (
@@ -165,7 +164,7 @@ export function AdminUserTable() {
                       ))}
                     </select>
                   ) : (
-                    <span className="text-slate-400 text-xs">N/A</span>
+                    <span className="text-xs text-slate-400">N/A</span>
                   )}
                 </td>
               </tr>
@@ -176,15 +175,15 @@ export function AdminUserTable() {
 
       {/* Modal de confirmación */}
       {accionPendiente && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg">
-            <h2 className="font-semibold text-lg mb-3">Confirmar cambio</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+            <h2 className="mb-3 text-lg font-semibold text-slate-900">Confirmar cambio</h2>
 
             {accionPendiente.tipo === "rol" ? (
-              <p className="text-sm text-slate-700 mb-5">
-                Vas a cambiar el rol de <span className="font-medium">{accionPendiente.nombre}</span>{" "}
-                de <span className="font-medium">{accionPendiente.rolAnterior}</span> a{" "}
-                <span className="font-medium">{accionPendiente.rolNuevo}</span>.
+              <p className="mb-5 text-sm text-slate-600">
+                Vas a cambiar el rol de <span className="font-medium text-slate-900">{accionPendiente.nombre}</span>{" "}
+                de <span className="font-medium text-slate-900">{accionPendiente.rolAnterior}</span> a{" "}
+                <span className="font-medium text-slate-900">{accionPendiente.rolNuevo}</span>.
                 {accionPendiente.rolNuevo === "admin" && (
                   <span className="mt-2 flex items-start gap-1.5 text-orange-600">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
@@ -193,24 +192,24 @@ export function AdminUserTable() {
                 )}
               </p>
             ) : (
-              <p className="text-sm text-slate-700 mb-5">
-                Vas a cambiar el gestor de <span className="font-medium">{accionPendiente.nombre}</span>{" "}
-                de <span className="font-medium">{accionPendiente.gestorAnteriorNombre}</span> a{" "}
-                <span className="font-medium">{accionPendiente.gestorNuevoNombre}</span>.
+              <p className="mb-5 text-sm text-slate-600">
+                Vas a cambiar el gestor de <span className="font-medium text-slate-900">{accionPendiente.nombre}</span>{" "}
+                de <span className="font-medium text-slate-900">{accionPendiente.gestorAnteriorNombre}</span> a{" "}
+                <span className="font-medium text-slate-900">{accionPendiente.gestorNuevoNombre}</span>.
               </p>
             )}
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setAccionPendiente(null)}
-                className="text-sm text-slate-500 px-3 py-1.5"
+                className="rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:text-slate-700"
               >
                 Cancelar
               </button>
               <button
                 onClick={confirmarAccion}
                 disabled={guardandoId !== null}
-                className="text-sm bg-brand-blue text-white px-4 py-1.5 rounded"
+                className="rounded-lg bg-brand-blue px-4 py-1.5 text-sm font-medium text-white hover:bg-brand-blue/90 disabled:opacity-50"
               >
                 {guardandoId ? "Aplicando..." : "Confirmar"}
               </button>

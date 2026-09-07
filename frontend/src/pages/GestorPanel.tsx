@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
+import { badgeVerdictoClasses } from "@/lib/verdictBadge";
 import type { Profile, CustomsQuery } from "@/types/database.types";
 
 export function GestorPanel() {
@@ -8,18 +9,19 @@ export function GestorPanel() {
   const [clientes, setClientes] = useState<Profile[]>([]);
   const [consultasPorCliente, setConsultasPorCliente] = useState<Record<string, CustomsQuery[]>>({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!profile) return;
 
-    const cargarClientes = async () => {
+    const cargar = async () => {
       const { data: clientesData, error: errClientes } = await supabase
         .from("profiles")
         .select("*")
         .eq("gestor_id", profile.id);
 
       if (errClientes) {
-        console.error("Error al cargar clientes:", errClientes.message);
+        setError(errClientes.message);
         setLoading(false);
         return;
       }
@@ -34,12 +36,11 @@ export function GestorPanel() {
           .order("created_at", { ascending: false });
 
         if (errConsultas) {
-          console.error("Error al cargar consultas:", errConsultas.message);
+          setError(errConsultas.message);
         } else {
           const agrupadas: Record<string, CustomsQuery[]> = {};
           (consultasData as CustomsQuery[]).forEach((q) => {
-            if (!agrupadas[q.user_id]) agrupadas[q.user_id] = [];
-            agrupadas[q.user_id].push(q);
+            (agrupadas[q.user_id] ??= []).push(q);
           });
           setConsultasPorCliente(agrupadas);
         }
@@ -47,49 +48,52 @@ export function GestorPanel() {
       setLoading(false);
     };
 
-    cargarClientes();
+    cargar();
   }, [profile]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold mb-2">Panel de Asesor</h1>
-      <p className="text-slate-600 mb-6">
-        Bienvenido, {profile?.full_name || profile?.email}
+      <h1 className="text-2xl font-bold text-slate-900 mb-1">Mis clientes</h1>
+      <p className="text-sm text-slate-500 mb-6">
+        {clientes.length} cliente{clientes.length !== 1 && "s"} en tu cartera.
       </p>
 
-      {clientes.length === 0 ? (
-        <div className="border rounded p-4 bg-slate-50 text-sm text-slate-500">
-          Aún no tienes clientes asignados.
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+      {loading ? (
+        <p className="text-sm text-slate-400">Cargando...</p>
+      ) : clientes.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+          Todavía no tenés clientes asignados.
         </div>
       ) : (
-        <div className="space-y-6">
-          {clientes.map((cliente) => (
-            <div key={cliente.id} className="border rounded p-4">
-              <h2 className="font-semibold mb-2">
-                {cliente.full_name || cliente.email}
-              </h2>
-              {consultasPorCliente[cliente.id]?.length > 0 ? (
-                <ul className="space-y-1 text-sm">
-                  {consultasPorCliente[cliente.id].map((q) => (
-                    <li key={q.id} className="flex justify-between border-b py-1">
-                      <span>{q.product_description}</span>
-                      <span className="font-medium">{q.ai_verdict}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-slate-400">Sin consultas todavía.</p>
-              )}
-            </div>
-          ))}
+        <div className="space-y-4">
+          {clientes.map((cliente) => {
+            const consultas = consultasPorCliente[cliente.id] ?? [];
+            return (
+              <section key={cliente.id} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 className="font-semibold text-slate-900">{cliente.full_name || cliente.email}</h2>
+                {cliente.full_name && <p className="text-xs text-slate-400">{cliente.email}</p>}
+
+                {consultas.length === 0 ? (
+                  <p className="mt-3 text-sm text-slate-400">Sin consultas todavía.</p>
+                ) : (
+                  <ul className="mt-3 divide-y divide-slate-100">
+                    {consultas.map((q) => (
+                      <li key={q.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                        <span className="min-w-0 truncate text-slate-700">{q.product_description}</span>
+                        <span
+                          className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${badgeVerdictoClasses(q.ai_verdict)}`}
+                        >
+                          {q.ai_verdict}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

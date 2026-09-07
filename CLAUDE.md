@@ -110,8 +110,15 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 - No había ruta 404 — cualquier URL basura mostraba una página en blanco. Agregada `NotFound` + `<Route path="*">`.
 - `useQueryStore` tenía estado muerto del wizard multi-paso (`wizardStep`/`wizardData`/`resetWizard`) — `ShipmentForm` es de una sola página. Eliminado; el store solo cachea `consultas`.
 - `gray-*` → `slate-*` en 11 archivos (la convención dice `slate-*`).
-- `AiSupportChat.tsx`: emoji `👋` en el copy → sacado.
+- `AiSupportChat.tsx`: emoji `👋` en el copy → sacado (y en la ronda de limpieza, el componente entero se eliminó).
 - `buildShipmentEvaluationRequest`: las validaciones amigables ahora corren antes de `getCountryInfo` (que lanzaba un error técnico si el país venía vacío).
 - `PreAlertForm`: guard `Number()` en el valor declarado + `<label>` del textarea asociado.
 - `.env.test` agregado (valores dummy, commiteado) para que el entorno de tests sea determinístico.
 - Tests nuevos: `api.test.ts` (guarda `final_status`, propaga error del motor), SM-12 en `shipmentMapping`. **115 tests en 24 archivos** — toda página/componente con lógica está cubierto.
+
+## Limpieza de "vibecode" visible en la UI
+
+- **Emojis de bandera** en el selector de país (`countryCodes.ts` `COUNTRY_INFO_BY_LABEL`, `mockData.paisesDisponibles`) → nombres limpios. La clave del mapa ahora es el nombre sin emoji.
+- **Chatbot simulado** (`AiSupportChat.tsx` con respuestas por keywords) → **eliminado**. `SupportCenter` conserva las FAQ reales (`faqData.ts`, búsqueda + acordeón); el copy que apuntaba "al asistente" ahora apunta a "nueva consulta".
+- **Dirección de casillero falsa** (`8548 NW 72nd St, Miami` hardcodeado) → sacada. La tarjeta muestra el código de casillero y "Recibirás la dirección completa cuando se habilite tu casillero". `LockerAddress.addressLine` es opcional; si algún día hay una bodega real, se completa ahí.
+- **Paneles sin diseñar** (`GestorPanel`, `AgentDocumentsPanel`, `AgentKycPanel`, `AdminUserTable`) llevados al sistema de diseño: contenedores `rounded-xl border-slate-200`, empty states con borde punteado, tablas con `thead` en `bg-slate-50` y filas con hover, loading inline en vez de spinner a pantalla completa. `GestorPanel` pasó de "Panel de Asesor / Bienvenido X" a "Mis clientes / N en tu cartera" y muestra el veredicto con `badgeVerdictoClasses`.
