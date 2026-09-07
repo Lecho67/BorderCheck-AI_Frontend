@@ -68,6 +68,14 @@ describe("ProtectedRoute", () => {
     expect(screen.queryByText("LOGIN")).not.toBeInTheDocument();
   });
 
+  it("con allowedRoles y el perfil todavía cargando (sin error): espera, no redirige", () => {
+    const { container } = renderRoute({ user, profile: null, profileError: null }, ["admin"]);
+    expect(container.querySelector(".animate-spin")).toBeTruthy();
+    expect(screen.queryByText("HOME CLIENTE")).not.toBeInTheDocument();
+    expect(screen.queryByText("LOGIN")).not.toBeInTheDocument();
+    expect(screen.queryByText("PRIVADO")).not.toBeInTheDocument();
+  });
+
   it("redirige a la home del rol si el rol no está permitido", () => {
     renderRoute(
       { user, profile: { role: "cliente" } as AuthValue["profile"] },

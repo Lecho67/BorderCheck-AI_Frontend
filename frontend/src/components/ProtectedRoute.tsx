@@ -51,9 +51,24 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     );
   }
 
-  if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {
-    const destino = profile ? RUTA_POR_DEFECTO[profile.role] : "/login";
-    return <Navigate to={destino} replace />;
+  if (allowedRoles) {
+    // El perfil todavía está en vuelo (sin error): esperar, no redirigir.
+    // `AuthContext` puede dejar `loading` en false un instante antes de que
+    // `profile` se asiente — descarta un fetchProfile obsoleto pero su
+    // `.finally(setLoading(false))` igual corre. Sin esta guarda, ese hueco
+    // dispara un `<Navigate>` irreversible a la home equivocada (visto en E2E:
+    // un admin entrando a `/panel-agente` terminaba atrapado en `/dashboard`).
+    if (!profile) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+        </div>
+      );
+    }
+
+    if (!allowedRoles.includes(profile.role)) {
+      return <Navigate to={RUTA_POR_DEFECTO[profile.role]} replace />;
+    }
   }
 
   return <>{children}</>;

@@ -45,7 +45,7 @@
 | Componente | Componentes React con dependencias mockeadas (`useAuth`). | Vitest + Testing Library | Automatizado |
 | Servicios | Servicios de datos con el cliente Supabase mockeado. | Vitest | Automatizado |
 | Integración / seguridad (RLS) | Peticiones REST reales contra la API de Supabase con distintas cuentas. | `fetch` desde consola del navegador | Manual, registrado |
-| Extremo a extremo (E2E) | Páginas públicas en navegador real (carga, navegación, validación de formularios). | Playwright | Automatizado (solo sin login) |
+| Extremo a extremo (E2E) | Páginas públicas + guardas de ruta por rol y vistas con sesión (cuentas `e2e.*` dedicadas). | Playwright | Automatizado (autenticadas requieren `.env.e2e`) |
 
 ## 4. Entorno y herramientas
 
@@ -68,8 +68,12 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **115 casos en 24 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **137 casos en 27 archivos**.
 El entorno de tests toma sus variables de `frontend/.env.test` (valores dummy, commiteado).
+El detalle por archivo de abajo cubre los primeros 24; los 3 más nuevos son
+`hooks/usePagination.test.ts` (4), `components/ui/Pagination.test.tsx` (4) y
+`pages/AgentDocumentsPanel.test.tsx` (8), más los casos que se sumaron a
+`AgentKycPanel.test.tsx` (filtros/orden/paginación) y `ProtectedRoute.test.tsx` (PR-07).
 Los tests que mockean el query builder de `supabase.from(...)` usan el
 helper compartido `src/test/supabaseQueryMock.ts` (un stub encadenable:
 `select`/`eq`/`in`/`is`/`order`/`update`/`insert`/`delete`/`single`, y
@@ -137,7 +141,7 @@ Backend real mockeado (`fetch`, sesión, `insert`). El `.env.test` fuerza el cam
 | RC-04 | KYC `rechazado` | Bloquea con encabezado "fue rechazada" |
 | RC-05 | KYC `pendiente` | Deja pasar (el modo lectura lo aplica `Locker`) |
 
-### 6.6 `src/components/ProtectedRoute.test.tsx` — 6 casos
+### 6.6 `src/components/ProtectedRoute.test.tsx` — 7 casos
 
 | ID | Descripción | Resultado esperado |
 |---|---|---|
@@ -147,6 +151,7 @@ Backend real mockeado (`fetch`, sesión, `insert`). El `.env.test` fuerza el cam
 | PR-04 | Usuario sin perfil + `profileError` | Muestra pantalla "Reintentar", **no** redirige a login |
 | PR-05 | Rol no permitido | Redirige a la home del rol |
 | PR-06 | Rol permitido | Renderiza el contenido protegido |
+| PR-07 | `allowedRoles` + perfil aún cargando (sin error) | Muestra spinner y **espera** — no hace `<Navigate>` (evita el rebote irreversible por la carrera `loading=false / profile=null` de `AuthContext`) |
 
 ### 6.7 `src/lib/adminService.test.ts` — 3 casos
 
@@ -356,11 +361,62 @@ cuentas QA para no ensuciar datos de producción.
 | E-LG-03 | Pestaña "Crear cuenta" | Aparece el campo "Nombre completo" |
 | E-LG-04 | Link desde `/registro` | Vuelve a `/login` |
 
-**Pendiente:** los flujos con sesión (login real, KYC, wizard→veredicto,
-revisión de agente, notificaciones) necesitan decidir el entorno — ver
-`docs/MEJORAS_PENDIENTES.md` § 7.
+## 6.ter. E2E — flujos autenticados (Playwright)
+
+`frontend/e2e/authenticated/`. Se agregan a la corrida **solo si están las 6
+variables `E2E_*`** (ver `frontend/.env.e2e.example`); sin ellas `npm run
+test:e2e` corre nada más la suite pública. El proyecto `setup`
+(`e2e/auth.setup.ts`) inicia sesión una vez por rol contra las cuentas
+dedicadas `e2e.*@bordercheck.test` y guarda el `storageState` en
+`e2e/.auth/<rol>.json` (git-ignored); cada spec lo reusa con
+`test.use({ storageState })`.
+
+**Cuentas dedicadas, no las QA:** las `e2e.*` son descartables — los tests
+pueden pisar su estado. Setup en § 7.1.
+
+### `e2e/authenticated/rbac.spec.ts` — 9 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| E-RB-01 | cliente → `/dashboard` | Entra; ve "Hola, …" |
+| E-RB-02..04 | cliente → `/admin`, `/panel-agente`, `/gestor` | Redirige a `/dashboard` (nunca ve el contenido) |
+| E-RB-05..06 | agente → `/panel-agente`, `/panel-agente/kyc` | Entra |
+| E-RB-07 | agente → `/admin` | Redirige a `/panel-agente` |
+| E-RB-08 | admin → `/admin` | Entra; ve "Panel de Administración" |
+| E-RB-09 | admin → `/panel-agente` | Entra (`admin` está en `allowedRoles`) |
+
+### `e2e/authenticated/vistas-cliente.spec.ts` — 5 casos
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| E-VC-01..03 | cliente en `/dashboard`, `/dashboard/historial`, `/perfil` | Cargan con sesión, sin `pageerror`, no rebota a `/login` |
+| E-VC-04 | cliente en `/consulta/nueva` | Muestra el `<form>` de envío |
+| E-VC-05 | cliente en `/casillero` (KYC aprobado) | `RequireCompliance` lo deja pasar; ve "Mi Casillero" |
+
+Solo lectura — el flujo wizard → veredicto → historial (escribe en
+`customs_queries`) queda para una segunda tanda con limpieza propia.
 
 ## 7. Casos de prueba manuales (seguridad / integración)
+
+### 7.1. Setup de las cuentas `e2e.*` (una vez)
+
+1. Supabase → **Authentication → Users → Add user** (con contraseña, "Auto
+   Confirm"): `e2e.cliente@`, `e2e.agente@`, `e2e.admin@bordercheck.test`.
+2. SQL Editor:
+   ```sql
+   update public.profiles set role = 'agente' where email = 'e2e.agente@bordercheck.test';
+   update public.profiles set role = 'admin'  where email = 'e2e.admin@bordercheck.test';
+
+   update public.profiles
+   set kyc_status = 'aprobado',
+       terms_accepted_at = now(),
+       habeas_data_accepted_at = now()
+   where email = 'e2e.cliente@bordercheck.test';
+   ```
+3. `cp frontend/.env.e2e.example frontend/.env.e2e` y completar las 3 contraseñas.
+4. `cd frontend && npm run test:e2e` — ahora corre pública + `setup` + autenticadas.
+
+### 7.2. Casos manuales
 
 Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` desde consola.
 
@@ -397,15 +453,16 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 115 | ✅ 115/115 |
+| Automatizados (Vitest) | 137 | ✅ 137/137 |
 | E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
+| E2E — flujos autenticados (Playwright) | 14 (+3 `setup`) | ✅ 14/14 con `.env.e2e` (§ 7.1) |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 
 ## 10. Riesgos y deuda de pruebas
 
-- **E2E sin flujos autenticados.** El E2E cubre solo páginas públicas. Login → consulta → veredicto, carga de KYC → aprobación → casillero, etc., necesitan decidir el entorno de pruebas (ver `docs/MEJORAS_PENDIENTES.md` § 7).
+- **E2E autenticado: guardas de ruta y vistas de solo lectura ✅ (29/29 con `.env.e2e`); flujos con escritura pendientes.** `e2e/authenticated/` cubre RBAC (`ProtectedRoute`) y la carga con sesión de las vistas del cliente contra cuentas dedicadas `e2e.*` (§ 7.1). Encontró y verificó el fix de la carrera de `ProtectedRoute` (rebote irreversible con `loading=false / profile=null`). Falta lo que escribe en Supabase: wizard → veredicto → historial, carga de KYC → aprobación de agente → casillero, revisión/override de un caso — necesitan setup/teardown de filas descartables por corrida.
 - **Cobertura de componentes.** Todas las páginas y componentes con lógica están cubiertos. Sin cubrir (bajo valor): wrappers finos (`AdminPanel`, `GestorPanel`), componentes de solo presentación (`ui/`, tarjetas de veredicto), y los `Step*` del wizard (superados por `ShipmentForm`).
 - **RLS sin automatizar.** Las pruebas de seguridad son manuales; un cambio de política podría regresionar sin que la suite lo note. Automatizarlas requiere un runner que autentique cada cuenta QA contra la API REST.
 - **`buildShipmentEvaluationRequest`:** la validación `!wizardData.paisOrigen` es inalcanzable porque `getCountryInfo("")` lanza antes con otro mensaje. No es un defecto funcional pero conviene limpiarlo.
@@ -416,12 +473,12 @@ Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 cd frontend
 npm install
 npm run lint        # 0 errores, 0 warnings
-npm run test:run    # 115/115 (unit + componente)
+npm run test:run    # 137/137 (unit + componente)
 npm run build       # compila sin warnings de tamaño
 
 # E2E (una vez): descargar el navegador
 npx playwright install chromium
-npm run test:e2e    # 12/12 (páginas públicas)
+npm run test:e2e    # 12/12 (públicas); + 14 autenticadas si existe .env.e2e (§ 7.1)
 ```
 
 Pruebas manuales de RLS: ver `CLAUDE.md` → "Preferencias de trabajo (Simon)" y "Bugs y decisiones ya resueltas" para el detalle de cuentas y helpers de consola.

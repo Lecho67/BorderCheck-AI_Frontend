@@ -2,6 +2,8 @@ node_modules
 dist
 .env
 .env.local
+.env.e2e
+.env.e2e.local
 *.log
 *.tsbuildinfo
 
@@ -10,3 +12,4 @@ dist
 /playwright-report
 /blob-report
 /playwright/.cache
+/e2e/.auth
