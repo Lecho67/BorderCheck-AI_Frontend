@@ -72,7 +72,7 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
     data
   );
 
-  await guardarConsultaEnHistorial(diagnostico, user?.id);
+  await guardarConsultaEnHistorial(diagnostico, decisionResult.final_status, user?.id);
 
   return diagnostico;
 }
@@ -83,9 +83,15 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
  * flujo del usuario — el veredicto igual se muestra en `/consulta/:id` a
  * partir del store local — pero SÍ lo notificamos con un toast, ya que antes
  * este fallo era completamente silencioso (solo console.error).
+ *
+ * `ai_verdict` guarda el veredicto del motor (`APROBADO` / `PRECAUCION` /
+ * `BLOQUEO`), NO el `nivel` de color — la cola de revisión de agentes, las
+ * métricas de admin, los reportes y los triggers de notificación filtran
+ * por ese valor.
  */
 async function guardarConsultaEnHistorial(
   diagnostico: DiagnosticoEnvio,
+  aiVerdict: DecisionEngineResult["final_status"],
   userId: string | undefined
 ): Promise<void> {
   if (!userId) return;
@@ -98,7 +104,7 @@ async function guardarConsultaEnHistorial(
       diagnostico.partidaArancelariaTentativa === "Sin partida tentativa declarada"
         ? null
         : diagnostico.partidaArancelariaTentativa,
-    ai_verdict: diagnostico.nivel,
+    ai_verdict: aiVerdict,
     ai_confidence: null,
     // Guardamos el DiagnosticoEnvio completo (no solo la respuesta cruda del
     // motor) para poder reconstruir /consulta/:id y /dashboard/historial
