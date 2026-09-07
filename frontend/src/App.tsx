@@ -30,6 +30,7 @@ const AgentDocumentsPanel = lazy(() => import("@/pages/AgentDocumentsPanel").the
 const AgentKycPanel = lazy(() => import("@/pages/AgentKycPanel").then((m) => ({ default: m.AgentKycPanel })));
 // Reports arrastra powerbi-client + recharts: mantenerlo fuera del bundle inicial es clave.
 const Reports = lazy(() => import("@/pages/Reports").then((m) => ({ default: m.Reports })));
+const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -179,6 +180,8 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </Layout>
