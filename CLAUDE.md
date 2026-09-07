@@ -122,3 +122,11 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 - **Chatbot simulado** (`AiSupportChat.tsx` con respuestas por keywords) → **eliminado**. `SupportCenter` conserva las FAQ reales (`faqData.ts`, búsqueda + acordeón); el copy que apuntaba "al asistente" ahora apunta a "nueva consulta".
 - **Dirección de casillero falsa** (`8548 NW 72nd St, Miami` hardcodeado) → sacada. La tarjeta muestra el código de casillero y "Recibirás la dirección completa cuando se habilite tu casillero". `LockerAddress.addressLine` es opcional; si algún día hay una bodega real, se completa ahí.
 - **Paneles sin diseñar** (`GestorPanel`, `AgentDocumentsPanel`, `AgentKycPanel`, `AdminUserTable`) llevados al sistema de diseño: contenedores `rounded-xl border-slate-200`, empty states con borde punteado, tablas con `thead` en `bg-slate-50` y filas con hover, loading inline en vez de spinner a pantalla completa. `GestorPanel` pasó de "Panel de Asesor / Bienvenido X" a "Mis clientes / N en tu cartera" y muestra el veredicto con `badgeVerdictoClasses`.
+
+## Filtros / orden / paginación en las colas de agente
+
+- Hook compartido `src/hooks/usePagination.ts` (paginación en cliente, recorta la página al rango válido en cada render — no hace falta resetear a la 1 al cambiar de filtro) + componente `src/components/ui/Pagination.tsx` (Anterior / Página X de Y / Siguiente; no renderiza nada con una sola página).
+- `AgentKycPanel`: búsqueda (nombre/correo/documento), filtro por `document_type`, orden por `updated_at` (proxy de "fecha de envío del KYC"). La barra de filtros solo aparece con `perfiles.length > 0`.
+- `AgentDocumentsPanel`: búsqueda (cliente/archivo), filtro por asignación (`todas` / `sin_asignar` / `mias`, esta última contra `user.id` de `useAuth`), orden por `created_at`.
+- Ambas: página de 8, empty state propio "Ningún … coincide con los filtros", botón "Limpiar filtros" cuando hay alguno activo. Patrón visual copiado de `AgentPanel` (`flex flex-wrap items-end gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4`).
+- Tests: `usePagination.test.ts`, `Pagination.test.tsx`, ampliados `AgentKycPanel.test.tsx` y nuevo `AgentDocumentsPanel.test.tsx`. **136 tests en 27 archivos.**

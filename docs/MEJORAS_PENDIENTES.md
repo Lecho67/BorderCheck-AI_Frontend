@@ -243,6 +243,12 @@ backend, que probablemente compara contra `ai_verdict`.
   cliente que recién sube su KYC sin haber hecho ninguna consulta no
   entraría por ahí, así que una suscripción `postgres_changes` se perdería
   esos casos en silencio. Polling sobre el RPC (que sí es `SECURITY
-  DEFINER` y los ve a todos) evita ese hueco. Sigue sin filtros, orden ni
-  paginación — bajo valor mientras el volumen sea chico.
+  DEFINER` y los ve a todos) evita ese hueco.
+- **Filtros / orden / paginación en las colas de agente ✅.**
+  `AgentKycPanel` (búsqueda por nombre/correo/documento, filtro por tipo de
+  documento, orden por antigüedad) y `AgentDocumentsPanel` (búsqueda por
+  cliente/archivo, filtro por asignación —sin asignar / asignadas a mí—,
+  orden por fecha). Ambas paginan en cliente de a 8 con el hook compartido
+  `usePagination` + el componente `ui/Pagination`. La barra de filtros
+  reusa el patrón visual de `AgentPanel` (`rounded-xl border bg-slate-50`).
 - **Estados vacío/carga/error** poco pulidos en varios paneles.
