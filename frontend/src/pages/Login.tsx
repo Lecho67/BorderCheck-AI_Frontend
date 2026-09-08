@@ -86,7 +86,7 @@ export function Login() {
           <ArrowLeft className="h-4 w-4" /> Volver a iniciar sesión
         </button>
 
-        <h1 className="mb-2 text-2xl font-bold text-slate-900">Recuperar contraseña</h1>
+        <h1 className="mb-2 text-2xl font-bold text-cobalt">Recuperar contraseña</h1>
 
         {recuperacionEnviada ? (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
@@ -120,7 +120,7 @@ export function Login() {
 
   return (
     <div className="max-w-md mx-auto mt-16 p-6">
-      <h1 className="mb-1 text-2xl font-bold text-slate-900">
+      <h1 className="mb-1 text-2xl font-bold text-cobalt">
         {mode === 'signIn' ? 'Iniciar sesión' : 'Crear cuenta'}
       </h1>
       <p className="mb-6 text-sm text-slate-500">

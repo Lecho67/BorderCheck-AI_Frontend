@@ -1,10 +1,10 @@
-# CLAUDE.md — BorderCheck AI
+# CLAUDE.md — Easy CUSTOMS
 
 Contexto persistente del proyecto para Claude Code. Leer este archivo antes de tocar cualquier código.
 
 ## Qué es el proyecto
 
-BorderCheck AI es una plataforma B2C de asesoría aduanera y evaluación de envíos internacionales. Permite a usuarios importar mercancía, calcular impuestos de aduana y hacer seguimiento de envíos con asistencia de IA (inferencia de códigos HS vía Ollama).
+Easy CUSTOMS es una plataforma B2C de asesoría aduanera y evaluación de envíos internacionales. Permite a usuarios importar mercancía, calcular impuestos de aduana y hacer seguimiento de envíos con asistencia de IA (inferencia de códigos HS vía Ollama).
 
 Este repo es el **frontend**. El backend (Node/Express + Docker + integración Ollama) lo mantiene un colaborador en un repo separado.
 
@@ -24,7 +24,7 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 - 4 roles RBAC: `cliente`, `gestor`, `agente`, `admin`.
 - `ProtectedRoute.tsx` vive en `src/components/ProtectedRoute.tsx` (NO bajo `auth/`).
 - `allowedRoles` debe incluir `admin` en casi todas las rutas protegidas — verificar siempre en rutas nuevas para evitar bloquear al admin.
-- **Identidad de marca: Easy CUSTOMS** (ver `docs/BRANDING.md` y el brief original). El producto ya NO se llama "BorderCheck AI" en la UI (los comentarios de código que citan `BorderCheck-AI_Backend` sí — es el nombre real del repo del backend).
+- **Identidad de marca: Easy CUSTOMS** (ver `docs/BRANDING.md` y el brief original). El producto ya NO se llama "Easy CUSTOMS" en la UI (los comentarios de código que citan `BorderCheck-AI_Backend` sí — es el nombre real del repo del backend).
   - Tokens en `tailwind.config.ts`: `cobalt` (`#0F2C59`, dominante — fondos oscuros, encabezados sobre claro, botones primarios, estructura; **es color de texto válido**), `cian` (`#00A8E8` / `cian.light` `#4FCBF2` — **solo** acento: highlights, líneas de movimiento, indicadores, degradados; **REGLA DURA: nunca en texto de cuerpo/descriptivo**), `papel` (`#F8F9FA` / `papel.tint` `#E8F9FA` — fondos claros, tarjetas, texto claro sobre cobalto).
   - `brand-blue` y `ai-accent` quedan como **alias de compatibilidad** apuntando a cobalto (había ~50 archivos usándolos; `ai-accent` va a cobalto y no a cian a propósito, para que `text-ai-accent` nunca sea cian). Migrar a `cobalt`/`cian` de a poco.
   - `verdict-green` / `verdict-amber` / `verdict-red` sin cambios (exclusivos para estados de diagnóstico/veredicto).

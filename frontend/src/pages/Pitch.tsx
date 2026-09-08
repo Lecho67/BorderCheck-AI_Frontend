@@ -96,11 +96,11 @@ export function Pitch() {
     <main>
       {/* Hero */}
       <header className="max-w-2xl mx-auto px-6 pt-24 pb-16 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ai-accent/10 text-ai-accent text-xs font-medium mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 text-cobalt text-xs font-medium mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-cian"></span>
           Validación de IA aplicada a reglas de negocio críticas
         </span>
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-slate-900 mb-5 leading-tight">
+        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-cobalt mb-5 leading-tight">
           Sabe si tu envío pasará la aduana, antes de despacharlo.
         </h1>
         <p className="text-lg text-slate-600 mb-9">
@@ -127,12 +127,12 @@ export function Pitch() {
         </div>
       </header>
       {/* CTA hacia Herramientas Interactivas */}
-<section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-blue/5 via-white to-ai-accent/5">
+<section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cobalt/5 via-papel to-cian/10">
   <div className="max-w-4xl mx-auto text-center">
-    <span className="inline-block mb-4 px-4 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-semibold tracking-wide">
+    <span className="inline-block mb-4 px-4 py-1 rounded-full bg-cian/10 text-cobalt text-sm font-semibold tracking-wide">
       Impulsado por IA
     </span>
-    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cobalt mb-4">
       Rastrea tus envíos y calcula tus impuestos en segundos
     </h2>
     <p className="text-slate-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
@@ -141,7 +141,7 @@ export function Pitch() {
     </p>
     <Link
       to="/herramientas"
-      className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg shadow-brand-blue/20 transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
+      className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
     >
       Probar herramientas interactivas
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -170,7 +170,7 @@ export function Pitch() {
           <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
             Cómo funciona
           </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
             De la recepción del paquete al despacho, sin sorpresas en aduana
           </h2>
           <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
@@ -204,7 +204,7 @@ export function Pitch() {
         <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
           Beneficios para paquetería y e-commerce
         </p>
-        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
           Pensado para operaciones logísticas reales
         </h2>
         <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
@@ -217,10 +217,10 @@ export function Pitch() {
             const Icon = b.icon;
             return (
               <div key={b.titulo} className="rounded-xl border border-slate-200 bg-white p-6">
-                <div className="w-10 h-10 rounded-lg bg-ai-accent/10 text-ai-accent flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-lg bg-cian/10 text-cian flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-2">{b.titulo}</h3>
+                <h3 className="font-semibold text-cobalt mb-2">{b.titulo}</h3>
                 <p className="text-sm text-slate-600">{b.texto}</p>
               </div>
             );
@@ -232,7 +232,7 @@ export function Pitch() {
   <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
     Casillero e importación/exportación directa
   </p>
-  <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 text-center mb-4">
+  <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
     La misma logística, con cero sorpresas en aduana
   </h2>
   <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
@@ -255,7 +255,7 @@ export function Pitch() {
         <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
           Preguntas frecuentes
         </p>
-        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 text-center mb-12">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-12">
           Dudas comunes sobre la integración y el motor de IA
         </h2>
 

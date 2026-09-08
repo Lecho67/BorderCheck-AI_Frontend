@@ -70,7 +70,7 @@ sin cambios (JetBrains Mono / fallback del sistema).
 
 - ✅ **Base:** tokens, tipografía, `BrandLogo`, favicon, `Navbar`, `Footer`,
   `ui/Button` (focus ring cian), `index.html` (título/theme-color/OG), copy
-  "BorderCheck AI" → "Easy CUSTOMS" en las páginas públicas.
+  "Easy CUSTOMS" → "Easy CUSTOMS" en las páginas públicas.
 - 🔷 **Pendiente (barrido fino):** revisar página por página los `shadow-lg/xl`,
   los degradados `from-brand-blue/... to-ai-accent/...` (un extremo debería ser
   cian), las píldoras `bg-ai-accent/10` que ganarían con fondo cian, encabezados

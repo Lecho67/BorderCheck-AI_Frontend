@@ -53,7 +53,7 @@ export function KycModal({ tipo, onClose }: Props) {
     >
       <div
         ref={dialogRef}
-        className="flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
+        className="flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow"
       >
         <div className="flex items-center justify-between border-b border-slate-100 p-4">
           <h2 className="text-sm font-semibold text-slate-900">{contenido.titulo}</h2>

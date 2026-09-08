@@ -155,7 +155,7 @@ export function Navbar() {
               </button>
 
               {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 shadow-lg rounded-xl bg-white border border-slate-100 py-2 text-sm z-20">
+                <div className="absolute right-0 mt-2 w-64 shadow rounded-xl bg-white border border-slate-100 py-2 text-sm z-20">
                   <div className="px-3 pb-1 pt-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Mi cuenta
                   </div>
@@ -249,7 +249,7 @@ export function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Menú"
-          className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-xl flex flex-col transition-transform duration-200 ease-out ${
+          className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white border-l border-slate-200 flex flex-col transition-transform duration-200 ease-out ${
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
