@@ -113,7 +113,7 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 
 ## Auditoría — hallazgos y arreglos
 
-- **`api.ts` guardaba `nivel` (`verde`/`amarillo`/`rojo`) en `customs_queries.ai_verdict`** en vez del veredicto del motor (`APROBADO`/`PRECAUCION`/`BLOQUEO`). Rompía en silencio: la cola de revisión de agentes (`fetchColaDeRevision` filtra `.in("ai_verdict", ["REQUIERE_DOCUMENTACION","PRECAUCION"])`), las métricas de admin (`metricas_globales` cuenta `= 'APROBADO'`), los reportes (`fetchVolumenMensual`), el `GestorPanel`, y probablemente el trigger `notify_veredicto_aduana`. Arreglado: ahora guarda `decisionResult.final_status`. **Pendiente: backfill de las filas viejas** (`update customs_queries set ai_verdict = ...` derivando de `raw_response->>'nivel'` o `titulo`) y verificar el trigger del backend.
+- **`api.ts` guardaba `nivel` (`verde`/`amarillo`/`rojo`) en `customs_queries.ai_verdict`** en vez del veredicto del motor (`APROBADO`/`PRECAUCION`/`BLOQUEO`). Rompía en silencio: la cola de revisión de agentes (`fetchColaDeRevision` filtra `.in("ai_verdict", ["REQUIERE_DOCUMENTACION","PRECAUCION"])`), las métricas de admin (`metricas_globales` cuenta `= 'APROBADO'`), los reportes (`fetchVolumenMensual`), el `GestorPanel`, y probablemente el trigger `notify_veredicto_aduana`. Arreglado: ahora guarda `decisionResult.final_status`. **Backfill aplicado** en producción (49 filas viejas, con `trg_veredicto_aduana` desactivado durante el `update` → 0 notificaciones; `amarillo` → REQUIERE_DOCUMENTACION o PRECAUCION según `raw_response->>'titulo'`). Ver `docs/MEJORAS_PENDIENTES.md §9b`.
 - `Dashboard.tsx` leía las consultas del store en memoria (vacío en cada recarga) → "Tienes 0 consultas" para cualquiera. Ahora usa `fetchConsultas()` de Supabase, como `History.tsx`.
 - No había ruta 404 — cualquier URL basura mostraba una página en blanco. Agregada `NotFound` + `<Route path="*">`.
 - `useQueryStore` tenía estado muerto del wizard multi-paso (`wizardStep`/`wizardData`/`resetWizard`) — `ShipmentForm` es de una sola página. Eliminado; el store solo cachea `consultas`.
@@ -130,6 +130,9 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 - **Chatbot simulado** (`AiSupportChat.tsx` con respuestas por keywords) → **eliminado**. `SupportCenter` conserva las FAQ reales (`faqData.ts`, búsqueda + acordeón); el copy que apuntaba "al asistente" ahora apunta a "nueva consulta".
 - **Dirección de casillero falsa** (`8548 NW 72nd St, Miami` hardcodeado) → sacada. La tarjeta muestra el código de casillero y "Recibirás la dirección completa cuando se habilite tu casillero". `LockerAddress.addressLine` es opcional; si algún día hay una bodega real, se completa ahí.
 - **Paneles sin diseñar** (`GestorPanel`, `AgentDocumentsPanel`, `AgentKycPanel`, `AdminUserTable`) llevados al sistema de diseño: contenedores `rounded-xl border-slate-200`, empty states con borde punteado, tablas con `thead` en `bg-slate-50` y filas con hover, loading inline en vez de spinner a pantalla completa. `GestorPanel` pasó de "Panel de Asesor / Bienvenido X" a "Mis clientes / N en tu cartera" y muestra el veredicto con `badgeVerdictoClasses`.
+- **Copy de "fase de prueba / roadmap" en el landing** (`Pitch.tsx`): sacado "MVP funcional — Fase 1 del roadmap" del hero; el CTA "Ver el proyecto en acción" → "Evaluar un envío ahora"; el diferenciador 03 "Arquitectura escalable / MVP web independiente de la Fase 2" → "Revisión humana sobre la IA"; borrada la FAQ "¿Cuándo estará disponible la auditoría visual por cámara? / Fase 2 / YOLO/Cloud Vision".
+- **Botón "Exportar PDF (próximamente)"** de `ResultView.tsx` (estaba `disabled`, jsPDF no instalado) → **eliminado** junto con su test. Si se quiere el export es una feature aparte.
+- **Componentes muertos del wizard** (`StepCountrySelect`, `StepItemDescription`, `StepDetails` —tenía "Preparado para auditoría visual — Fase 2"—, `StepSpecialDeclarations`) → **borrados**. Los reemplazó `ShipmentForm` (una sola página) hace tiempo; solo seguía vivo `wizard/LoadingSkeleton`. **136 tests en 27 archivos.**
 
 ## Filtros / orden / paginación en las colas de agente
 
@@ -137,7 +140,7 @@ Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:
 - `AgentKycPanel`: búsqueda (nombre/correo/documento), filtro por `document_type`, orden por `updated_at` (proxy de "fecha de envío del KYC"). La barra de filtros solo aparece con `perfiles.length > 0`.
 - `AgentDocumentsPanel`: búsqueda (cliente/archivo), filtro por asignación (`todas` / `sin_asignar` / `mias`, esta última contra `user.id` de `useAuth`), orden por `created_at`.
 - Ambas: página de 8, empty state propio "Ningún … coincide con los filtros", botón "Limpiar filtros" cuando hay alguno activo. Patrón visual copiado de `AgentPanel` (`flex flex-wrap items-end gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4`).
-- Tests: `usePagination.test.ts`, `Pagination.test.tsx`, ampliados `AgentKycPanel.test.tsx` y nuevo `AgentDocumentsPanel.test.tsx`. **137 tests en 27 archivos** (137 incluye el PR-07 de `ProtectedRoute` del fix de abajo).
+- Tests: `usePagination.test.ts`, `Pagination.test.tsx`, ampliados `AgentKycPanel.test.tsx` y nuevo `AgentDocumentsPanel.test.tsx`. **136 tests en 27 archivos** (incluye el PR-07 de `ProtectedRoute`; se quitó el test del botón "Exportar PDF").
 
 ## E2E — flujos autenticados (Playwright)
 

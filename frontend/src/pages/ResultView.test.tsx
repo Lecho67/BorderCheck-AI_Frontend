@@ -77,10 +77,4 @@ describe("ResultView", () => {
     await user.click(screen.getByRole("button", { name: /nueva consulta/i }));
     expect(navigate).toHaveBeenCalledWith("/consulta/nueva");
   });
-
-  it("el botón de exportar PDF está deshabilitado (feature no implementada)", () => {
-    getConsultaById.mockReturnValue(diag);
-    render(<ResultView />);
-    expect(screen.getByRole("button", { name: /exportar pdf/i })).toBeDisabled();
-  });
 });

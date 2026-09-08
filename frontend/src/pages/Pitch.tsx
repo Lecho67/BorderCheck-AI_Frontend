@@ -27,8 +27,8 @@ const valores = [
   },
   {
     numero: "03",
-    titulo: "Arquitectura escalable",
-    texto: "MVP web independiente de la futura visión por computadora (Fase 2), sin bloquear el desarrollo actual.",
+    titulo: "Revisión humana sobre la IA",
+    texto: "Un agente puede auditar y corregir cualquier veredicto. Cada consulta queda trazada con su justificación y su historial.",
   },
 ];
 
@@ -89,11 +89,6 @@ const faqs = [
     respuesta:
       "El sistema está diseñado para no forzar un veredicto \"verde\" por defecto ante la duda. Si falta información, se marca para revisión manual en vez de arriesgar una clasificación incorrecta.",
   },
-  {
-    pregunta: "¿Cuándo estará disponible la auditoría visual por cámara?",
-    respuesta:
-      "Es parte de la Fase 2 del roadmap (visión por computadora con YOLO/Cloud Vision). El MVP actual ya deja el punto de integración preparado en el formulario de consulta.",
-  },
 ];
 
 export function Pitch() {
@@ -116,9 +111,8 @@ export function Pitch() {
           to="/consulta/nueva"
           className="inline-block bg-brand-blue text-white px-8 py-4 rounded-xl font-medium hover:bg-brand-blue-hover transition-colors"
         >
-          Ver el proyecto en acción
+          Evaluar un envío ahora
         </Link>
-        <p className="text-xs text-slate-400 mt-4">MVP funcional — Fase 1 del roadmap</p>
 
         <div className="flex justify-center gap-3 max-w-sm mx-auto mt-12">
           <div className="flex-1 py-3 rounded-xl bg-verdict-green-bg text-verdict-green-text text-xs font-medium flex flex-col items-center gap-1">

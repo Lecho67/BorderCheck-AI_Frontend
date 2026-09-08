@@ -68,7 +68,7 @@
 
 ## 6. Casos de prueba automatizados
 
-Ejecutar con `npm run test:run` desde `frontend/`. Total: **137 casos en 27 archivos**.
+Ejecutar con `npm run test:run` desde `frontend/`. Total: **136 casos en 27 archivos**.
 El entorno de tests toma sus variables de `frontend/.env.test` (valores dummy, commiteado).
 El detalle por archivo de abajo cubre los primeros 24; los 3 más nuevos son
 `hooks/usePagination.test.ts` (4), `components/ui/Pagination.test.tsx` (4) y
@@ -475,7 +475,7 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 
 | Suite | Casos | Estado |
 |---|---|---|
-| Automatizados (Vitest) | 137 | ✅ 137/137 |
+| Automatizados (Vitest) | 136 | ✅ 136/136 |
 | E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
 | E2E — flujos autenticados (Playwright) | 17 (+3 `setup`) | ✅ 17/17 con `.env.e2e` (§ 7.1) |
 | Manuales de seguridad | 17 | ✅ 17/17 |
@@ -495,7 +495,7 @@ Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 cd frontend
 npm install
 npm run lint        # 0 errores, 0 warnings
-npm run test:run    # 137/137 (unit + componente)
+npm run test:run    # 136/136 (unit + componente)
 npm run build       # compila sin warnings de tamaño
 
 # E2E (una vez): descargar el navegador

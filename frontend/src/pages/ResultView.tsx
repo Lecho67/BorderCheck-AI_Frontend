@@ -1,7 +1,7 @@
 // src/pages/ResultView.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Download, History as HistoryIcon, Plus, CheckCircle2 } from "lucide-react";
+import { History as HistoryIcon, Plus, CheckCircle2 } from "lucide-react";
 import { useQueryStore } from "@/store/useQueryStore";
 import { fetchConsultaById } from "@/lib/queryHistoryService";
 import { VerdictCard } from "@/components/verdict/VerdictCard";
@@ -88,14 +88,6 @@ export function ResultView() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Button
-          variant="secondary"
-          disabled
-          title="Próximamente"
-          className="flex items-center gap-2"
-        >
-          <Download className="w-4 h-4" /> Exportar PDF (próximamente)
-        </Button>
         <Button
           variant="secondary"
           onClick={() => navigate("/dashboard/historial")}

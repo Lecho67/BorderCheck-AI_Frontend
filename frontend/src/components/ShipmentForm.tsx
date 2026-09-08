@@ -1,8 +1,7 @@
 // src/components/ShipmentForm.tsx
 //
-// Formulario de una sola página para /consulta/nueva. Reemplaza los 4 pasos
-// del wizard (StepCountrySelect, StepItemDescription, StepDetails,
-// StepSpecialDeclarations) por un único formulario con secciones en tarjetas.
+// Formulario de una sola página para /consulta/nueva: un solo formulario con
+// secciones en tarjetas (antes era un wizard multi-paso).
 //
 // IMPORTANTE — por qué está tipado así:
 // Este componente produce exactamente un `WizardFormData` (src/lib/types.ts),

@@ -43,7 +43,7 @@ de la base y su configuración viven en el proyecto Supabase.
 | B1 | No había build de producción (el `Dockerfile` corría el dev server). | ✅ Resuelto por Vercel: buildea `npm ci && vite build` y sirve `dist/` como estáticos. El `Dockerfile`/`compose` quedan solo para dev local. |
 | B2 | Sin fallback SPA → deep-links daban 404. | ✅ `frontend/vercel.json` con `rewrites: /(.*) → /index.html`. |
 | B3 | **El esquema de la DB no tiene fuente de verdad.** Cero migraciones; tablas, RLS, ~10 RPCs `SECURITY DEFINER`, triggers solo en el proyecto Supabase vivo. Sin recrear, revisar en PR ni rollback. | ❌ Abierto — Simon / DB. Exportar a `supabase/migrations/*.sql`. |
-| B4 | **Backfill de `customs_queries.ai_verdict` sin aplicar** (`MEJORAS_PENDIENTES.md §9b`). Filas viejas con `verde/amarillo/rojo` rompen cola de agentes, métricas y reportes. | ❌ Abierto — Simon / DB. |
+| B4 | Backfill de `customs_queries.ai_verdict` (`MEJORAS_PENDIENTES.md §9b`). | ✅ Aplicado en producción con el trigger de notificaciones desactivado (0 notificaciones creadas). 55 filas con veredicto válido. |
 | B5 | `.dockerignore` no excluía `.env.e2e` ni artefactos de test. | ✅ Corregido: ignora `.env*`, `e2e/.auth`, `test-results/`, etc. |
 
 ---
@@ -143,10 +143,10 @@ Sanitización de inputs: React escapa JSX por defecto; no hay `dangerouslySetInn
 
 **Base de datos (SQL Editor, con verificación):**
 - [ ] Esquema versionado en `supabase/migrations/`
-- [ ] Backfill de `ai_verdict` (`MEJORAS_PENDIENTES.md §9b`) + verificar trigger `notify_veredicto_aduana`
+- [x] Backfill de `ai_verdict` (`MEJORAS_PENDIENTES.md §9b`) — aplicado, trigger OK, 0 notificaciones
 - [ ] Revisar índices de columnas de filtro RLS
 - [ ] Confirmar plan/backups
-- [ ] Agregar el dominio de prod **y** `*.vercel.app` a Auth → URL Configuration
+- [x] Agregar el dominio de prod **y** `*.vercel.app` a Auth → URL Configuration
 
 **Cross-equipo (backend):**
 - [ ] CORS del motor de reglas allowlistea el origen de prod y de preview
