@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-50 text-slate-900 font-sans;
+  @apply bg-papel text-slate-900 font-sans;
 }
 
 .font-mono-data {

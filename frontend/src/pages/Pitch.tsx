@@ -75,7 +75,7 @@ const beneficios = [
 
 const faqs = [
   {
-    pregunta: "¿Cómo se integra BorderCheck AI con mi operación de paquetería o e-commerce actual?",
+    pregunta: "¿Cómo se integra Easy CUSTOMS con mi operación de paquetería o e-commerce actual?",
     respuesta:
       "A través de una API REST: envías el destino y la descripción del ítem, y recibes el diagnóstico clasificado. No requiere cambiar tu sistema de gestión de envíos, solo consumir el endpoint antes del despacho.",
   },
@@ -104,7 +104,7 @@ export function Pitch() {
           Sabe si tu envío pasará la aduana, antes de despacharlo.
         </h1>
         <p className="text-lg text-slate-600 mb-9">
-          BorderCheck AI analiza cualquier envío internacional y determina, en segundos, si puede
+          Easy CUSTOMS analiza cualquier envío internacional y determina, en segundos, si puede
           transportarse por vía aérea — evitando retenciones, devoluciones o destrucciones en aduana.
         </p>
         <Link
@@ -136,7 +136,7 @@ export function Pitch() {
       Rastrea tus envíos y calcula tus impuestos en segundos
     </h2>
     <p className="text-slate-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
-      Prueba el Rastreador Inteligente y la Calculadora de Envíos e Impuestos Aduaneros de BorderCheck,
+      Prueba el Rastreador Inteligente y la Calculadora de Envíos e Impuestos Aduaneros de Easy CUSTOMS,
       diseñados con IA para darte resultados precisos al instante.
     </p>
     <Link
@@ -237,7 +237,7 @@ export function Pitch() {
   </h2>
   <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
     Así se compara la experiencia de un casillero virtual tradicional frente a un despacho
-    pre-validado por BorderCheck AI.
+    pre-validado por Easy CUSTOMS.
   </p>
   <ComparisonTable />
 </section>

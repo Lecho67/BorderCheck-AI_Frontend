@@ -8,7 +8,7 @@ export function Landing() {
         Sabe si tu envío pasará la aduana, antes de despacharlo.
       </h1>
       <p className="text-lg text-slate-600 mb-10">
-        BorderCheck AI analiza tu envío internacional y te dice en segundos si puede transportarse por vía aérea.
+        Easy CUSTOMS analiza tu envío internacional y te dice en segundos si puede transportarse por vía aérea.
       </p>
       <Link to="/consulta/nueva">
         <Button className="px-8 py-4 text-base">Verificar mi envío ahora</Button>

@@ -125,8 +125,8 @@ export function Login() {
       </h1>
       <p className="mb-6 text-sm text-slate-500">
         {mode === 'signIn'
-          ? 'Ingresá a tu cuenta de BorderCheck AI.'
-          : 'Creá tu cuenta para empezar a importar con BorderCheck AI.'}
+          ? 'Ingresá a tu cuenta de Easy CUSTOMS.'
+          : 'Creá tu cuenta para empezar a importar con Easy CUSTOMS.'}
       </p>
 
       <div className="mb-6 flex overflow-hidden rounded-xl border border-slate-200">

@@ -44,7 +44,7 @@ export function Register() {
     <div className="max-w-md mx-auto mt-16 p-6">
       <h1 className="mb-1 text-2xl font-bold text-slate-900">Crear cuenta</h1>
       <p className="mb-6 text-sm text-slate-500">
-        Creá tu cuenta para empezar a importar con BorderCheck AI.
+        Creá tu cuenta para empezar a importar con Easy CUSTOMS.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">

@@ -24,7 +24,13 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 - 4 roles RBAC: `cliente`, `gestor`, `agente`, `admin`.
 - `ProtectedRoute.tsx` vive en `src/components/ProtectedRoute.tsx` (NO bajo `auth/`).
 - `allowedRoles` debe incluir `admin` en casi todas las rutas protegidas — verificar siempre en rutas nuevas para evitar bloquear al admin.
-- Colores de marca: `brand-blue` (CTAs), `ai-accent` (contenido generado por IA), `verdict-green` / `verdict-yellow` (exclusivos para estados de diagnóstico/veredicto — no usar para otra cosa).
+- **Identidad de marca: Easy CUSTOMS** (ver `docs/BRANDING.md` y el brief original). El producto ya NO se llama "BorderCheck AI" en la UI (los comentarios de código que citan `BorderCheck-AI_Backend` sí — es el nombre real del repo del backend).
+  - Tokens en `tailwind.config.ts`: `cobalt` (`#0F2C59`, dominante — fondos oscuros, encabezados sobre claro, botones primarios, estructura; **es color de texto válido**), `cian` (`#00A8E8` / `cian.light` `#4FCBF2` — **solo** acento: highlights, líneas de movimiento, indicadores, degradados; **REGLA DURA: nunca en texto de cuerpo/descriptivo**), `papel` (`#F8F9FA` / `papel.tint` `#E8F9FA` — fondos claros, tarjetas, texto claro sobre cobalto).
+  - `brand-blue` y `ai-accent` quedan como **alias de compatibilidad** apuntando a cobalto (había ~50 archivos usándolos; `ai-accent` va a cobalto y no a cian a propósito, para que `text-ai-accent` nunca sea cian). Migrar a `cobalt`/`cian` de a poco.
+  - `verdict-green` / `verdict-amber` / `verdict-red` sin cambios (exclusivos para estados de diagnóstico/veredicto).
+  - Tipografía: **Jost** (`@fontsource/jost`, pesos 300/300-italic/400/500/700, importados en `main.tsx`). `font-sans` = Jost. El logotipo: "Easy" en Jost 300 itálica, "CUSTOMS" en Jost 700 mayúsculas con `tracking` amplio.
+  - Logo: `src/components/BrandLogo.tsx` (`variant="full" | "isotype"`, `tone="light" | "dark"`). El isotipo es un avión de papel **a 45° fijo — nunca rotar**. Assets estáticos: `public/favicon.svg` (isotipo sobre cuadrado cobalto) y `public/easy-customs-logo.svg` (lockup).
+  - Prohibido: rotar el logo / cambiar el ángulo del avión; cian en texto; sombras externas realistas (`drop-shadow`, `shadow-lg/xl`) — el volumen se logra con tonos papel/gris y cortes rectos; encerrar la marca en cajas no cuadradas.
 - Neutrales: usar `slate-*`, nunca `gray-*`.
 - Iconos: solo `lucide-react`, nunca emojis.
 - Notificaciones: bus de toast propio (`src/lib/toast.ts`) con `toast.success` / `toast.error` — no usar librerías externas de toast.

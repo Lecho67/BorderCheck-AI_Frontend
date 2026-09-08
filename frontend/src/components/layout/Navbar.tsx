@@ -21,6 +21,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -71,11 +72,9 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-30 bg-white border-b border-slate-200">
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center">
-            <ShieldCheck className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-semibold text-slate-900 tracking-tight">BorderCheck AI</span>
+        <Link to="/" aria-label="Easy CUSTOMS — inicio" className="shrink-0">
+          <BrandLogo variant="full" className="hidden sm:inline-flex" />
+          <BrandLogo variant="isotype" className="sm:hidden" />
         </Link>
 
         <div className="flex items-center gap-4 text-sm">

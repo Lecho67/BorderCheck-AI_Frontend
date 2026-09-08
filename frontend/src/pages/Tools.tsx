@@ -14,7 +14,7 @@ export default function Tools() {
         <div className="mb-8 text-center sm:text-left">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Herramientas Interactivas</h1>
           <p className="text-slate-600 mt-2 max-w-2xl">
-            Rastrea tus paquetes y calcula tus impuestos aduaneros con la asistencia de la IA de BorderCheck.
+            Rastrea tus paquetes y calcula tus impuestos aduaneros con la asistencia de la IA de Easy CUSTOMS.
           </p>
         </div>
 
