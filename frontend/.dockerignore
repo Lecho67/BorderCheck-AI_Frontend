@@ -4,5 +4,13 @@ dist
 .gitignore
 Dockerfile
 docker-compose.yml
+
+# Nunca meter secretos ni artefactos de test en la imagen
 .env
-.env.local
+.env.*
+e2e/.auth
+test-results
+playwright-report
+blob-report
+coverage
+.vscode

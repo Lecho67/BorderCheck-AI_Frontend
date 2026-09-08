@@ -65,6 +65,14 @@ Este repo es el **frontend**. El backend (Node/Express + Docker + integración O
 - Cambios de SQL: ejecutar y verificar en el SQL Editor de Supabase antes de tocar el frontend.
 - Testing de RLS: pruebas `fetch` desde consola contra la API REST de Supabase. El cliente `supabase` no está expuesto en `window`; usar `fetch` con `apikey` (anon key de `frontend/.env`) y `Authorization: Bearer <access_token>` sacado de `localStorage['sb-jdngmlwutcltdfmkwsag-auth-token']`. Existen 4 cuentas QA permanentes (una por rol, dos de agente para pruebas de aislamiento); la de cliente es `cliente.prueba@bordercheck.test`.
 
+## Despliegue
+
+- **Host decidido: Vercel** (cuenta gratuita, proyecto independiente). Config en `frontend/vercel.json`: rewrite SPA (`/(.*)` → `/index.html`), CSP + `HSTS`/`X-Frame-Options`/`Referrer-Policy`/`Permissions-Policy`, `Cache-Control` inmutable para `/assets`. En Vercel hay que poner **Root Directory = `frontend`** y cargar `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (y `VITE_API_BASE_URL` cuando el backend exista) en Environment Variables.
+- El `Dockerfile` y `docker-compose.yml` quedan **solo para desarrollo local** (el `Dockerfile` corre el dev server, no es imagen de producción).
+- **CSP:** `script-src 'self'` (el build de Vite no genera scripts inline), `style-src 'self' 'unsafe-inline'` (Recharts/framer-motion), `connect-src` con Supabase REST + `wss://` de Realtime, `frame-src` de Power BI. Cuando se defina `VITE_API_BASE_URL`, **sumar ese origen al `connect-src`** y pedir al backend que allowlistee el origen de Vercel en su CORS.
+- Auditoría completa de readiness (migraciones de DB sin versionar, backfill de `ai_verdict`, Sentry, etc.): **`docs/DEPLOYMENT_READINESS.md`**.
+- `index.html` ya tiene meta description + favicon (`public/favicon.svg`) + OG/Twitter + `theme-color`; falta `public/og-image.png` (1200×630).
+
 ## Próximos pasos pendientes
 
 Ver `docs/MEJORAS_PENDIENTES.md` para el roadmap completo. En corto:

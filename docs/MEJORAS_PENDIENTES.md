@@ -4,6 +4,9 @@ Registro vivo de mejoras identificadas, priorizadas. Cada entrada indica **qué 
 **por qué importa**, **dónde toca** y si **necesita SQL** en Supabase.
 
 > Convención de estado: ✅ hecho · 🔷 listo para tomar · ⏳ requiere decisión previa
+>
+> Para el estado de despliegue (host, CSP, migraciones, backfill) ver
+> **`docs/DEPLOYMENT_READINESS.md`**.
 
 ---
 

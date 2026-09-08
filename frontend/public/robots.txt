@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /panel-agente
+Disallow: /admin
+Disallow: /gestor
+Disallow: /perfil
+Disallow: /casillero
+Disallow: /documentos
+Disallow: /consulta
