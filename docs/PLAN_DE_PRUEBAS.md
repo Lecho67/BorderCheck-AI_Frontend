@@ -404,9 +404,19 @@ en `playwright.config.ts`) para que el veredicto sea determinístico. El mock
 | E-FC-01 | Wizard completo, descripción de ropa ("Camiseta de algodón…") | Navega a `/consulta/:id`; ve "Apto para envío" + "Guardado en tu historial" |
 | E-FC-02 | Wizard completo, descripción con batería de litio ("Power bank…") | Ve "Requiere documentación adicional" (veredicto ámbar) |
 
-Pendiente (necesita teardown por corrida): veredicto → historial con
-persistencia real, KYC upload → aprobación de agente → casillero, override de
-un caso.
+### `e2e/authenticated/flujo-casillero.spec.ts` — 1 caso
+
+Escritura real, **self-cleaning** (la política DELETE de `pre_alerts` es
+permisiva para el dueño, no hace falta service-role key). `afterEach` barre
+las filas de prueba que hayan quedado de una corrida interrumpida.
+
+| ID | Descripción | Resultado esperado |
+|---|---|---|
+| E-CA-01 | cliente (KYC aprobado) crea una pre-alerta desde `/casillero`, la ve en la lista y la borra | La fila aparece con `carrier — tracking`; tras confirmar el borrado desaparece |
+
+Pendiente (necesita teardown más pesado — service-role key): veredicto →
+historial con persistencia real, KYC upload → aprobación de agente →
+casillero, override de un caso.
 
 ## 7. Casos de prueba manuales (seguridad / integración)
 
@@ -467,14 +477,14 @@ Registrados durante el desarrollo. Reproducibles con las cuentas QA y `fetch` de
 |---|---|---|
 | Automatizados (Vitest) | 137 | ✅ 137/137 |
 | E2E — páginas públicas (Playwright) | 12 | ✅ 12/12 |
-| E2E — flujos autenticados (Playwright) | 16 (+3 `setup`) | ✅ 16/16 con `.env.e2e` (§ 7.1) |
+| E2E — flujos autenticados (Playwright) | 17 (+3 `setup`) | ✅ 17/17 con `.env.e2e` (§ 7.1) |
 | Manuales de seguridad | 17 | ✅ 17/17 |
 
 Comandos: `cd frontend && npm run test:run` (unit) · `npm run test:e2e` (E2E).
 
 ## 10. Riesgos y deuda de pruebas
 
-- **E2E autenticado: guardas de ruta, vistas de solo lectura y wizard→veredicto (mock) ✅ (31/31 con `.env.e2e`); flujos con persistencia real pendientes.** `e2e/authenticated/` cubre RBAC (`ProtectedRoute`), la carga con sesión de las vistas del cliente, y el wizard de envío hasta el veredicto con el motor de reglas forzado al mock. Encontró y verificó el fix de la carrera de `ProtectedRoute` (rebote irreversible con `loading=false / profile=null`). Falta lo que escribe en Supabase: veredicto → historial persistido, carga de KYC → aprobación de agente → casillero, revisión/override de un caso — necesitan setup/teardown de filas descartables por corrida (service-role key).
+- **E2E autenticado: guardas de ruta, vistas de solo lectura, wizard→veredicto (mock) y crear/borrar pre-alerta ✅ (32/32 con `.env.e2e`); flujos con persistencia más pesada pendientes.** `e2e/authenticated/` cubre RBAC (`ProtectedRoute`), la carga con sesión de las vistas del cliente, el wizard de envío hasta el veredicto (motor de reglas forzado al mock), y el alta+baja de una pre-alerta en el casillero (escritura real self-cleaning). Encontró y verificó el fix de la carrera de `ProtectedRoute` (rebote irreversible con `loading=false / profile=null`). Falta lo que necesita teardown más pesado: veredicto → historial persistido, carga de KYC → aprobación de agente → casillero, revisión/override de un caso — necesitan una service-role key en `.env.e2e`.
 - **Cobertura de componentes.** Todas las páginas y componentes con lógica están cubiertos. Sin cubrir (bajo valor): wrappers finos (`AdminPanel`, `GestorPanel`), componentes de solo presentación (`ui/`, tarjetas de veredicto), y los `Step*` del wizard (superados por `ShipmentForm`).
 - **RLS sin automatizar.** Las pruebas de seguridad son manuales; un cambio de política podría regresionar sin que la suite lo note. Automatizarlas requiere un runner que autentique cada cuenta QA contra la API REST.
 - **`buildShipmentEvaluationRequest`:** la validación `!wizardData.paisOrigen` es inalcanzable porque `getCountryInfo("")` lanza antes con otro mensaje. No es un defecto funcional pero conviene limpiarlo.
@@ -490,7 +500,7 @@ npm run build       # compila sin warnings de tamaño
 
 # E2E (una vez): descargar el navegador
 npx playwright install chromium
-npm run test:e2e    # 12/12 (públicas); + 16 autenticadas si existe .env.e2e (§ 7.1)
+npm run test:e2e    # 12/12 (públicas); + 17 autenticadas si existe .env.e2e (§ 7.1)
 ```
 
 Pruebas manuales de RLS: ver `CLAUDE.md` → "Preferencias de trabajo (Simon)" y "Bugs y decisiones ya resueltas" para el detalle de cuentas y helpers de consola.

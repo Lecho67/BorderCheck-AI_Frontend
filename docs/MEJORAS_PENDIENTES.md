@@ -127,15 +127,17 @@ Entorno decidido: **Supabase real + cuentas dedicadas `e2e.*@bordercheck.test`**
 `setup` (`e2e/auth.setup.ts`) loguea una vez por rol y cachea el
 `storageState` en `e2e/.auth/<rol>.json`. Se agregan a la corrida solo si
 está `frontend/.env.e2e` (ver `.env.e2e.example`; setup en
-`docs/PLAN_DE_PRUEBAS.md` § 7.1). 16 casos: RBAC de `ProtectedRoute` por rol
+`docs/PLAN_DE_PRUEBAS.md` § 7.1). 17 casos: RBAC de `ProtectedRoute` por rol
 + carga con sesión de `/dashboard`, `/historial`, `/perfil`,
 `/consulta/nueva`, `/casillero` + wizard de envío → veredicto (motor de
-reglas forzado al mock vía `webServer.env`, veredicto verde y ámbar).
+reglas forzado al mock vía `webServer.env`, veredicto verde y ámbar) + alta y
+baja de una pre-alerta en el casillero (escritura real; se limpia sola porque
+la política DELETE de `pre_alerts` es permisiva para el dueño).
 
-**Pendiente — flujos con persistencia real.** veredicto → historial guardado
+**Pendiente — flujos con teardown más pesado.** veredicto → historial guardado
 en `customs_queries`, carga de KYC → aprobación de agente → casillero,
-revisión/override de un caso. Necesitan setup/teardown de filas descartables
-por corrida (service-role key en `.env.e2e`, o limpieza vía la cuenta admin).
+revisión/override de un caso. Necesitan una service-role key en `.env.e2e`
+para borrar filas / resetear estado por corrida.
 
 **CI:** el E2E **no corre en CI** todavía (requiere guardar las credenciales
 `e2e.*` como secretos). El `ci.yml` sigue siendo solo `lint` + `test:run` + `build`.
