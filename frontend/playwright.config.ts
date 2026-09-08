@@ -40,7 +40,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
   use: {
-    baseURL: "http://localhost:5173",
+    // Puerto propio del E2E (5173 lo usa el `npm run dev` manual): así el
+    // servidor de pruebas siempre arranca fresco con el mock forzado y no
+    // pisa ni reusa la sesión de desarrollo.
+    baseURL: "http://localhost:5174",
     trace: "on-first-retry",
   },
   projects: [
@@ -66,9 +69,14 @@ export default defineConfig({
       : []),
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:5173",
+    command: "npm run dev -- --port 5174 --strictPort",
+    url: "http://localhost:5174",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Fuerza el motor de reglas mock (`evaluarEnvioMock`) aunque el `.env`
+    // local apunte a un backend: el E2E no debe depender de que el servicio
+    // de reglas esté corriendo. `api.ts` usa el mock cuando `VITE_API_BASE_URL`
+    // es vacío.
+    env: { VITE_API_BASE_URL: "" },
   },
 });
