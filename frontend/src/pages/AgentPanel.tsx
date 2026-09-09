@@ -15,7 +15,7 @@ function paisDeCaso(caso: CasoEnCola): string {
 function estadoDeCaso(caso: CasoEnCola, currentUserId?: string): { label: string; classes: string } {
   if (!caso.assigned_agent_id) return { label: "Sin asignar", classes: "bg-slate-100 text-slate-600" };
   if (caso.assigned_agent_id === currentUserId)
-    return { label: "Asignado a mí", classes: "bg-brand-blue/10 text-brand-blue" };
+    return { label: "Asignado a mí", classes: "bg-cobalt/10 text-cobalt" };
   return { label: "Asignado a otro agente", classes: "bg-slate-100 text-slate-500" };
 }
 
@@ -78,14 +78,14 @@ export function AgentPanel() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-cobalt border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
     <div className="max-w-6xl mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold mb-2">Cola de Revisión</h1>
+      <h1 className="text-2xl font-bold text-cobalt mb-2">Cola de Revisión</h1>
       <p className="text-slate-600 mb-6">
         {casosFiltrados.length} de {casos.length} caso{casos.length !== 1 && "s"} pendiente
         {casos.length !== 1 && "s"} de auditoría
@@ -138,7 +138,7 @@ export function AgentPanel() {
           />
         </div>
         {(filtroPais !== "todos" || fechaDesde || fechaHasta) && (
-          <button onClick={limpiarFiltros} className="text-sm text-brand-blue hover:underline">
+          <button onClick={limpiarFiltros} className="text-sm text-cobalt hover:underline">
             Limpiar filtros
           </button>
         )}
@@ -200,7 +200,7 @@ export function AgentPanel() {
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => setCasoSeleccionadoId(caso.id)}
-                        className="text-sm font-medium text-brand-blue hover:underline"
+                        className="text-sm font-medium text-cobalt hover:underline"
                       >
                         Auditar caso
                       </button>

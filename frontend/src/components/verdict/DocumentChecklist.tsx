@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileText } from "lucide-react";
+import { Check, FileText } from "lucide-react";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Button } from "@/components/ui/Button";
 import type { NivelVeredicto } from "@/lib/types";
@@ -31,10 +31,10 @@ export function DocumentChecklist({ documentos, nivel }: DocumentChecklistProps)
       ) : nivel === "verde" ? (
         <ul className="space-y-2 text-sm text-slate-600">
           <li className="flex items-start gap-2">
-            <span className="text-verdict-green-text">✓</span> Empaque resistente acorde al valor declarado
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-verdict-green-text" /> Empaque resistente acorde al valor declarado
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-verdict-green-text">✓</span> Etiqueta con descripción precisa del contenido
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-verdict-green-text" /> Etiqueta con descripción precisa del contenido
           </li>
         </ul>
       ) : (

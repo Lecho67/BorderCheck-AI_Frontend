@@ -112,7 +112,7 @@ export function AdminUserTable() {
   }
 
   const selectClass =
-    "rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50";
+    "rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt disabled:opacity-50";
 
   return (
     <div>
@@ -176,7 +176,7 @@ export function AdminUserTable() {
       {/* Modal de confirmación */}
       {accionPendiente && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow">
             <h2 className="mb-3 text-lg font-semibold text-slate-900">Confirmar cambio</h2>
 
             {accionPendiente.tipo === "rol" ? (
@@ -209,7 +209,7 @@ export function AdminUserTable() {
               <button
                 onClick={confirmarAccion}
                 disabled={guardandoId !== null}
-                className="rounded-lg bg-brand-blue px-4 py-1.5 text-sm font-medium text-white hover:bg-brand-blue/90 disabled:opacity-50"
+                className="rounded-lg bg-cobalt px-4 py-1.5 text-sm font-medium text-white hover:bg-cobalt/90 disabled:opacity-50"
               >
                 {guardandoId ? "Aplicando..." : "Confirmar"}
               </button>

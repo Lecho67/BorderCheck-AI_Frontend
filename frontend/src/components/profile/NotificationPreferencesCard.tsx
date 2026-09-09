@@ -72,7 +72,7 @@ export function NotificationPreferencesCard() {
               checked={prefs[clave]}
               disabled={guardando === clave}
               onChange={() => toggle(clave)}
-              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand-blue focus:ring-brand-blue"
+              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-cobalt focus:ring-cobalt"
             />
             <span className="min-w-0">
               <span className="block text-sm font-medium text-slate-800">{titulo}</span>

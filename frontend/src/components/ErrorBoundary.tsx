@@ -1,5 +1,6 @@
 // src/components/ErrorBoundary.tsx
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { AlertTriangle } from "lucide-react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -33,8 +34,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
           <div className="w-full max-w-md text-center">
-            <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-2xl text-red-500">
-              ⚠
+            <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-500">
+              <AlertTriangle className="h-6 w-6" />
             </div>
             <h1 className="text-xl font-semibold text-slate-900">Algo salió mal</h1>
             <p className="mt-2 text-sm text-slate-600">
@@ -55,7 +56,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </button>
               <button
                 onClick={this.handleReload}
-                className="rounded-xl bg-brand-blue px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-blue-hover"
+                className="rounded-xl bg-cobalt px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-cobalt-600"
               >
                 Recargar página
               </button>

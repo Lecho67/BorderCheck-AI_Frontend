@@ -53,7 +53,7 @@ export function RequireCompliance({ children }: { children: ReactNode }) {
         <p className="text-sm text-slate-500 mb-6">{motivo.detalle}</p>
         <Link
           to="/perfil"
-          className="inline-block rounded-xl bg-brand-blue px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-blue-hover"
+          className="inline-block rounded-xl bg-cobalt px-5 py-2.5 text-sm font-medium text-white hover:bg-cobalt-600"
         >
           Ir a mi perfil
         </Link>

@@ -134,7 +134,7 @@ export function Login() {
           type="button"
           onClick={() => cambiarModo('signIn')}
           className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            mode === 'signIn' ? 'bg-brand-blue text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+            mode === 'signIn' ? 'bg-cobalt text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
           }`}
         >
           Iniciar sesión
@@ -143,7 +143,7 @@ export function Login() {
           type="button"
           onClick={() => cambiarModo('signUp')}
           className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            mode === 'signUp' ? 'bg-brand-blue text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+            mode === 'signUp' ? 'bg-cobalt text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
           }`}
         >
           Crear cuenta
@@ -187,7 +187,7 @@ export function Login() {
             <button
               type="button"
               onClick={() => cambiarModo('forgotPassword')}
-              className="mt-1.5 text-xs font-medium text-brand-blue hover:underline"
+              className="mt-1.5 text-xs font-medium text-cobalt hover:underline"
             >
               ¿Olvidaste tu contraseña?
             </button>

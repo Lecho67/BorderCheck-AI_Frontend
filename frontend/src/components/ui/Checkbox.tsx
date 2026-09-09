@@ -11,7 +11,7 @@ export function Checkbox({ label, checked, onChange }: CheckboxProps) {
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 rounded border-slate-300 text-brand-blue focus:ring-brand-blue"
+        className="w-4 h-4 rounded border-slate-300 text-cobalt focus:ring-cobalt"
       />
       <span className={checked ? "line-through text-slate-400" : ""}>{label}</span>
     </label>

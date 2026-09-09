@@ -53,7 +53,7 @@ export function GestorPanel() {
 
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Mis clientes</h1>
+      <h1 className="text-2xl font-bold text-cobalt mb-1">Mis clientes</h1>
       <p className="text-sm text-slate-500 mb-6">
         {clientes.length} cliente{clientes.length !== 1 && "s"} en tu cartera.
       </p>

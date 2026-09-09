@@ -56,7 +56,7 @@ export function ResultView() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-10 text-center text-slate-500">
         <p className="mb-4">No encontramos esta consulta.</p>
-        <Link to="/consulta/nueva" className="text-brand-blue underline">
+        <Link to="/consulta/nueva" className="text-cobalt underline">
           Iniciar una nueva consulta
         </Link>
       </div>

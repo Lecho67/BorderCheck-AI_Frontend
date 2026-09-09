@@ -54,7 +54,7 @@ export function TrackingWidget() {
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8 max-w-xl mx-auto">
-      <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+      <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
         Rastreador &amp; verificador inteligente
       </p>
       <h3 className="text-lg font-semibold text-slate-900 text-center mb-1">
@@ -69,11 +69,11 @@ export function TrackingWidget() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ej: BC123456789"
-          className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+          className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
         />
         <button
           type="submit"
-          className="px-4 py-3 rounded-xl bg-brand-blue text-white hover:bg-brand-blue-hover transition-colors shrink-0"
+          className="px-4 py-3 rounded-xl bg-cobalt text-white hover:bg-cobalt-600 transition-colors shrink-0"
           aria-label="Rastrear envío"
         >
           <Search className="w-4 h-4" />

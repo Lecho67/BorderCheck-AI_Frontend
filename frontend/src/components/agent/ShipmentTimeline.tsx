@@ -33,8 +33,8 @@ const ICONS: Record<TipoHito, typeof Package> = {
 };
 
 const ICON_BG: Record<TipoHito, string> = {
-  consulta: "bg-brand-blue",
-  veredicto_ia: "bg-brand-blue",
+  consulta: "bg-cobalt",
+  veredicto_ia: "bg-cobalt",
   documento_cargado: "bg-slate-400",
   documento_revisado: "bg-slate-400",
   override: "bg-orange-500",

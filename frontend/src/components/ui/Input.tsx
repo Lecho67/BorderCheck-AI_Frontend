@@ -19,7 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           ref={ref}
-          className={`w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent ${
+          className={`w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent ${
             error ? "border-red-400" : "border-slate-300"
           } ${className}`}
           {...props}

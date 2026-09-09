@@ -42,7 +42,7 @@ export function History() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-10">
       <div className="flex items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-semibold text-slate-900">Historial de consultas</h1>
+        <h1 className="text-2xl font-semibold text-cobalt">Historial de consultas</h1>
         <Link to="/consulta/nueva">
           <Button className="whitespace-nowrap">+ Nueva consulta</Button>
         </Link>
@@ -55,7 +55,7 @@ export function History() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar por ítem o país destino..."
-            className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+            className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
           />
         </div>
       </div>
@@ -75,7 +75,7 @@ export function History() {
           <p className="text-slate-400 mb-4">
             {consultas.length === 0 ? "Aún no tienes consultas." : "No hay resultados con ese filtro o búsqueda."}
           </p>
-          <Link to="/consulta/nueva" className="text-brand-blue font-medium">
+          <Link to="/consulta/nueva" className="text-cobalt font-medium">
             Hacer una nueva consulta →
           </Link>
         </div>
@@ -86,7 +86,7 @@ export function History() {
               key={c.id}
               type="button"
               onClick={() => setSeleccionada(c)}
-              className="w-full flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 hover:border-brand-blue transition-colors text-left"
+              className="w-full flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 hover:border-cobalt transition-colors text-left"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <VerdictBadge nivel={c.nivel} />

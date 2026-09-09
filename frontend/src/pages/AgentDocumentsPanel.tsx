@@ -69,7 +69,7 @@ export function AgentDocumentsPanel() {
 
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold text-slate-900 mb-2">Revisión de Documentos</h1>
+      <h1 className="text-2xl font-bold text-cobalt mb-2">Revisión de Documentos</h1>
       <p className="text-sm text-slate-500 mb-6">
         {filtrados.length} de {docs.length} documento{docs.length !== 1 && "s"} pendiente
         {docs.length !== 1 && "s"} de revisión
@@ -122,7 +122,7 @@ export function AgentDocumentsPanel() {
             </select>
           </div>
           {hayFiltros && (
-            <button onClick={limpiarFiltros} className="text-sm text-brand-blue hover:underline">
+            <button onClick={limpiarFiltros} className="text-sm text-cobalt hover:underline">
               Limpiar filtros
             </button>
           )}

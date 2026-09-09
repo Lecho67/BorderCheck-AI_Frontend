@@ -88,11 +88,11 @@ export function AgentKycPanel() {
   return (
     <div className="max-w-4xl mx-auto mt-16 p-6">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-slate-900">Verificación de Identidad (KYC)</h1>
+        <h1 className="text-2xl font-bold text-cobalt">Verificación de Identidad (KYC)</h1>
         <button
           type="button"
           onClick={() => cargar(true)}
-          className="flex items-center gap-1.5 text-sm font-medium text-brand-blue hover:underline"
+          className="flex items-center gap-1.5 text-sm font-medium text-cobalt hover:underline"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Actualizar
@@ -154,7 +154,7 @@ export function AgentKycPanel() {
             </select>
           </div>
           {hayFiltros && (
-            <button onClick={limpiarFiltros} className="text-sm text-brand-blue hover:underline">
+            <button onClick={limpiarFiltros} className="text-sm text-cobalt hover:underline">
               Limpiar filtros
             </button>
           )}

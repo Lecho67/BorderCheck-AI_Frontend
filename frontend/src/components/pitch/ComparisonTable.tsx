@@ -56,7 +56,7 @@ export function ComparisonTable() {
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
           Paquetería tradicional
         </span>
-        <span className="text-xs font-semibold text-brand-blue uppercase tracking-wide">Easy CUSTOMS</span>
+        <span className="text-xs font-semibold text-cobalt uppercase tracking-wide">Easy CUSTOMS</span>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white overflow-hidden divide-y divide-slate-200">

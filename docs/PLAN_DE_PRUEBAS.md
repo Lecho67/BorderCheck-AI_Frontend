@@ -1,8 +1,8 @@
-# Plan de Pruebas — BorderCheck AI (Frontend)
+# Plan de Pruebas — Easy CUSTOMS (Frontend)
 
 | | |
 |---|---|
-| **Proyecto** | BorderCheck AI — cliente web |
+| **Proyecto** | Easy CUSTOMS — cliente web |
 | **Componente** | `frontend/` (React + TypeScript + Vite) |
 | **Backend bajo prueba** | Supabase (Auth, PostgreSQL con RLS, Storage, Realtime). El motor de reglas aduaneras es un servicio externo y queda fuera de alcance salvo por el contrato de `POST /api/v1/shipments/evaluate`. |
 | **Versión del documento** | 1.0 |

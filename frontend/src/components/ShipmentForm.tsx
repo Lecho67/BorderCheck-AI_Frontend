@@ -205,7 +205,7 @@ const ToggleRow: React.FC<{
   <div className="rounded-xl border border-slate-200 p-4">
     <Checkbox label={label} checked={checked} onChange={onChange} />
     {checked && children && (
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-brand-blue/20">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-cobalt/20">
         {children}
       </div>
     )}
@@ -332,8 +332,8 @@ export function ShipmentForm({ onSubmit, isSubmitting }: ShipmentFormProps) {
                 onClick={() => update({ categoria: chip })}
                 className={`text-xs px-3 py-1 rounded-full border transition-colors ${
                   form.categoria === chip
-                    ? "bg-brand-blue text-white border-brand-blue"
-                    : "border-slate-300 text-slate-600 hover:border-brand-blue"
+                    ? "bg-cobalt text-white border-cobalt"
+                    : "border-slate-300 text-slate-600 hover:border-cobalt"
                 }`}
               >
                 {chip}

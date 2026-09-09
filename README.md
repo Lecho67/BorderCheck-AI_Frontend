@@ -1,8 +1,8 @@
-# 📦 BorderCheck AI — Frontend Client
+# 📦 Easy CUSTOMS — Frontend Client
 
 > **Interfaz web para asesoría aduanera y evaluación de envíos internacionales con asistencia de IA**
 
-BorderCheck AI es una plataforma B2C que ayuda a personas a importar mercancía: evalúa envíos internacionales, estima tributos de aduana, gestiona un casillero virtual y acompaña los trámites, con inferencia de códigos HS asistida por IA y auditoría humana de los veredictos.
+Easy CUSTOMS es una plataforma B2C que ayuda a personas a importar mercancía: evalúa envíos internacionales, estima tributos de aduana, gestiona un casillero virtual y acompaña los trámites, con inferencia de códigos HS asistida por IA y auditoría humana de los veredictos.
 
 Este repositorio contiene **solo el frontend**. El motor de reglas aduaneras y la integración con el modelo de IA viven en un repositorio de backend separado, mantenido por un colaborador.
 
@@ -143,7 +143,7 @@ El servicio expone el puerto `5173`. Notas:
 - Todo el copy de UI y los comentarios de código están en **español**.
 - Alias de imports: `@/` apunta a `frontend/src/`.
 - Iconos solo con `lucide-react` (nunca emojis en la UI).
-- Neutrales con `slate-*` (nunca `gray-*`); colores de marca `brand-blue`, `ai-accent`, `verdict-*`.
+- Neutrales con `slate-*` (nunca `gray-*`); marca `cobalt` (dominante/texto), `cian` (solo acento — nunca en texto), `papel` (fondos), `verdict-*` (solo diagnóstico). Ver `docs/BRANDING.md`.
 - Notificaciones con un bus de toast propio (`src/lib/toast.ts`), no librerías externas.
 - Autorización: `src/components/ProtectedRoute.tsx` con `allowedRoles`; la seguridad real vive en las políticas RLS de Supabase (`get_my_role()` como helper `SECURITY DEFINER` para evitar recursión).
 

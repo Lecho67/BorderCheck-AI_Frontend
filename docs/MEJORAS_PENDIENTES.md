@@ -1,4 +1,4 @@
-# Mejoras pendientes — BorderCheck AI (Frontend)
+# Mejoras pendientes — Easy CUSTOMS (Frontend)
 
 Registro vivo de mejoras identificadas, priorizadas. Cada entrada indica **qué es**,
 **por qué importa**, **dónde toca** y si **necesita SQL** en Supabase.

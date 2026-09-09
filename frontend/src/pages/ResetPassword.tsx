@@ -70,7 +70,7 @@ export function ResetPassword() {
   if (!readyForReset) {
     return (
       <div className="max-w-md mx-auto mt-24 p-6 text-center">
-        <h1 className="text-2xl font-bold mb-2">Enlace inválido o expirado</h1>
+        <h1 className="text-2xl font-bold text-cobalt mb-2">Enlace inválido o expirado</h1>
         <p className="text-slate-600 mb-6">
           Este enlace de restablecimiento de contraseña ya no es válido. Solicitá uno nuevo desde tu perfil
           o desde la pantalla de inicio de sesión.
@@ -83,8 +83,8 @@ export function ResetPassword() {
   return (
     <div className="max-w-md mx-auto mt-24 p-6">
       <div className="mb-2 flex items-center gap-2">
-        <KeyRound className="w-5 h-5 text-brand-blue" />
-        <h1 className="text-2xl font-bold">Restablecer contraseña</h1>
+        <KeyRound className="w-5 h-5 text-cobalt" />
+        <h1 className="text-2xl font-bold text-cobalt">Restablecer contraseña</h1>
       </div>
       <p className="text-slate-600 mb-8">Ingresá tu nueva contraseña para completar el restablecimiento.</p>
 
@@ -98,7 +98,7 @@ export function ResetPassword() {
             placeholder="Mínimo 8 caracteres"
             minLength={8}
             required
-            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
           />
         </div>
         <div>
@@ -110,7 +110,7 @@ export function ResetPassword() {
             placeholder="Repetí la contraseña"
             minLength={8}
             required
-            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
           />
         </div>
 

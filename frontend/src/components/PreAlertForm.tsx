@@ -92,7 +92,7 @@ export function PreAlertForm({ onClose, onSaved, preAlertaExistente }: PreAlertF
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Ej. Zapatos deportivos, 1 par"
-            className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
+            className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt"
             rows={2}
           />
         </div>
@@ -108,8 +108,8 @@ export function PreAlertForm({ onClose, onSaved, preAlertaExistente }: PreAlertF
           placeholder="0.00"
         />
 
-        <div className="flex items-center gap-2 bg-ai-accent/10 text-ai-accent text-xs rounded-lg px-3 py-2">
-          <Sparkles className="w-4 h-4 shrink-0" />
+        <div className="flex items-center gap-2 bg-cian/10 text-cobalt text-xs rounded-lg px-3 py-2">
+          <Sparkles className="w-4 h-4 shrink-0 text-cian" />
           <span>
             La IA escaneará esta pre-alerta y estimará el arancel antes de que el paquete llegue a bodega.
           </span>

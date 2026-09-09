@@ -29,12 +29,12 @@ export function Modal({ open, onClose, children }: ModalProps) {
       <div className="absolute inset-0 bg-slate-900/50" onClick={onClose} />
       <div
         ref={dialogRef}
-        className="relative bg-white rounded-xl border border-slate-200 max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 shadow-xl"
+        className="relative bg-white rounded-xl border border-slate-200 max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 shadow"
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt"
           aria-label="Cerrar"
         >
           <X className="w-5 h-5" />

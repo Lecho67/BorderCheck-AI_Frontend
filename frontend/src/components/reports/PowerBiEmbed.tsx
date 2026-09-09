@@ -106,7 +106,7 @@ export function PowerBiEmbed() {
         <button
           onClick={() => setModo("url")}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-            modo === "url" ? "bg-brand-blue text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            modo === "url" ? "bg-cobalt text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
           }`}
         >
           URL de reporte
@@ -114,7 +114,7 @@ export function PowerBiEmbed() {
         <button
           onClick={() => setModo("token")}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-            modo === "token" ? "bg-brand-blue text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            modo === "token" ? "bg-cobalt text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
           }`}
         >
           Power BI Embedded (token)
@@ -128,11 +128,11 @@ export function PowerBiEmbed() {
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
             placeholder="https://app.powerbi.com/view?r=..."
-            className="min-w-[16rem] flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+            className="min-w-[16rem] flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
           />
           <button
             type="submit"
-            className="rounded-xl bg-brand-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-blue-hover"
+            className="rounded-xl bg-cobalt px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-cobalt-600"
           >
             Cargar reporte
           </button>
@@ -162,7 +162,7 @@ export function PowerBiEmbed() {
           />
           <button
             type="submit"
-            className="rounded-xl bg-brand-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-blue-hover sm:col-span-3"
+            className="rounded-xl bg-cobalt px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-cobalt-600 sm:col-span-3"
           >
             Incrustar reporte
           </button>
@@ -194,7 +194,7 @@ export function PowerBiEmbed() {
             <>
               {cargandoIframe && (
                 <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
-                  <Loader2 className="h-6 w-6 animate-spin text-brand-blue" />
+                  <Loader2 className="h-6 w-6 animate-spin text-cobalt" />
                 </div>
               )}
               <iframe

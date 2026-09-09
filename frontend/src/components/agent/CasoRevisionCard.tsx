@@ -174,7 +174,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-xl"
+        className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow"
       >
         <div className="flex items-start justify-between border-b border-slate-100 p-6">
           <div>
@@ -262,7 +262,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
                     <button
                       onClick={() => handleVerDocumento(doc)}
                       disabled={abriendoDocId === doc.id}
-                      className="shrink-0 text-sm font-medium text-brand-blue hover:underline disabled:opacity-50"
+                      className="shrink-0 text-sm font-medium text-cobalt hover:underline disabled:opacity-50"
                     >
                       {abriendoDocId === doc.id ? "Abriendo…" : "Ver"}
                     </button>
@@ -298,7 +298,7 @@ export function CasoRevisionCard({ caso, currentUserId, onClose, onResuelto }: P
               <button
                 onClick={handleTomarCaso}
                 disabled={loading}
-                className="rounded-lg bg-brand-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-blue-hover disabled:opacity-50"
+                className="rounded-lg bg-cobalt px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-cobalt-600 disabled:opacity-50"
               >
                 {loading ? "Tomando…" : "Tomar caso"}
               </button>

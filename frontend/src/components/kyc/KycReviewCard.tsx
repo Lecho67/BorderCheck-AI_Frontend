@@ -70,7 +70,7 @@ export function KycReviewCard({ perfil, onResuelto }: Props) {
         <button
           onClick={handleVerDocumento}
           disabled={abriendoDoc}
-          className="flex shrink-0 items-center gap-1 text-sm font-medium text-brand-blue hover:underline disabled:opacity-50"
+          className="flex shrink-0 items-center gap-1 text-sm font-medium text-cobalt hover:underline disabled:opacity-50"
         >
           <Eye className="h-3.5 w-3.5" />
           {abriendoDoc ? "Abriendo…" : "Ver documento"}
@@ -95,7 +95,7 @@ export function KycReviewCard({ perfil, onResuelto }: Props) {
         onChange={(e) => setMotivo(e.target.value)}
         placeholder="Motivo del rechazo (obligatorio para rechazar, mínimo 10 caracteres)"
         rows={2}
-        className="mb-3 w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-blue"
+        className="mb-3 w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt"
       />
 
       <div className="flex gap-2">

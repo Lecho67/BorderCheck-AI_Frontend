@@ -22,7 +22,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-cobalt border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -43,7 +43,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
         </p>
         <button
           onClick={() => refreshProfile()}
-          className="inline-block rounded-xl bg-brand-blue px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-blue/90"
+          className="inline-block rounded-xl bg-cobalt px-5 py-2.5 text-sm font-medium text-white hover:bg-cobalt/90"
         >
           Reintentar
         </button>
@@ -61,7 +61,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     if (!profile) {
       return (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-cobalt border-t-transparent rounded-full animate-spin" />
         </div>
       );
     }

@@ -11,8 +11,8 @@ export function Chip({ label, active = false, onClick }: ChipProps) {
       onClick={onClick}
       className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
         active
-          ? "bg-brand-blue text-white"
-          : "bg-slate-100 text-slate-600 hover:bg-brand-blue/10 hover:text-brand-blue"
+          ? "bg-cobalt text-white"
+          : "bg-slate-100 text-slate-600 hover:bg-cobalt/10 hover:text-cobalt"
       }`}
     >
       {label}

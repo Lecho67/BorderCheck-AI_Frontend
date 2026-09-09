@@ -118,20 +118,20 @@ export function NotificationBell() {
       >
         <Bell className="h-5 w-5" />
         {noLeidas > 0 && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-blue px-1 text-[10px] font-semibold text-white">
+          <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-cobalt px-1 text-[10px] font-semibold text-white">
             {noLeidas > 9 ? "9+" : noLeidas}
           </span>
         )}
       </button>
 
       {abierto && (
-        <div className="absolute right-0 z-30 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white shadow-lg">
+        <div className="absolute right-0 z-30 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white shadow">
           <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5">
             <span className="text-sm font-semibold text-slate-900">Notificaciones</span>
             {noLeidas > 0 && (
               <button
                 onClick={handleMarcarTodas}
-                className="text-xs font-medium text-brand-blue hover:underline"
+                className="text-xs font-medium text-cobalt hover:underline"
               >
                 Marcar todas como leídas
               </button>
@@ -151,7 +151,7 @@ export function NotificationBell() {
                     <button
                       onClick={() => handleClickNotificacion(n)}
                       className={`flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-50 ${
-                        n.leida ? "" : "bg-brand-blue/5"
+                        n.leida ? "" : "bg-cobalt/5"
                       }`}
                     >
                       <Icono className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
@@ -163,7 +163,7 @@ export function NotificationBell() {
                         <p className="mt-1 text-[11px] text-slate-400">{tiempoRelativo(n.created_at)}</p>
                       </div>
                       {!n.leida && (
-                        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-blue" />
+                        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-cobalt" />
                       )}
                     </button>
                   </li>

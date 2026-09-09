@@ -18,7 +18,7 @@ export function Select({ options, value, onChange, placeholder = "Selecciona..."
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full text-left rounded-xl border border-slate-300 p-4 bg-white hover:border-brand-blue transition-colors flex items-center justify-between"
+        className="w-full text-left rounded-xl border border-slate-300 p-4 bg-white hover:border-cobalt transition-colors flex items-center justify-between"
       >
         <span className={value ? "text-slate-900 font-medium" : "text-slate-400"}>
           {value || placeholder}
@@ -26,13 +26,13 @@ export function Select({ options, value, onChange, placeholder = "Selecciona..."
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute z-10 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-lg p-2">
+        <div className="absolute z-10 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow p-2">
           <input
             autoFocus
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar..."
-            className="w-full px-3 py-2 mb-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+            className="w-full px-3 py-2 mb-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cobalt"
           />
           <div className="max-h-48 overflow-y-auto">
             {filtered.map((option) => (
@@ -44,7 +44,7 @@ export function Select({ options, value, onChange, placeholder = "Selecciona..."
                   setOpen(false);
                   setSearch("");
                 }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-blue/10 text-sm text-slate-700"
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-cobalt/10 text-sm text-slate-700"
               >
                 {option}
               </button>

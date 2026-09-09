@@ -42,9 +42,8 @@ sugieren aire desplazado y velocidad.
 | `papel` | `#F8F9FA` | Fondo claro de la app, superficies de tarjeta, texto claro sobre cobalto. |
 | `papel.tint` | `#E8F9FA` | Variante con un dejo de cian para superficies. |
 
-`brand-blue` y `ai-accent` son **alias de compatibilidad** → cobalto (había ~50
-archivos usándolos). `ai-accent` apunta a cobalto y **no** a cian a propósito:
-así `text-ai-accent`, que aparece en varios lados, nunca resuelve a cian.
+Los alias viejos `brand-blue` y `ai-accent` **ya no existen** — se renombraron a
+`cobalt` en todo `src/` (`brand-blue-hover` → `cobalt-600`). No reintroducirlos.
 
 `verdict-green` / `verdict-amber` / `verdict-red` no cambian — exclusivos para
 estados de diagnóstico/veredicto.
@@ -68,11 +67,24 @@ sin cambios (JetBrains Mono / fallback del sistema).
 
 ## Estado de la migración
 
-- ✅ **Base:** tokens, tipografía, `BrandLogo`, favicon, `Navbar`, `Footer`,
-  `ui/Button` (focus ring cian), `index.html` (título/theme-color/OG), copy
-  "Easy CUSTOMS" → "Easy CUSTOMS" en las páginas públicas.
-- 🔷 **Pendiente (barrido fino):** revisar página por página los `shadow-lg/xl`,
-  los degradados `from-brand-blue/... to-ai-accent/...` (un extremo debería ser
-  cian), las píldoras `bg-ai-accent/10` que ganarían con fondo cian, encabezados
-  `text-slate-900` que deberían ser `text-cobalt`, y migrar `brand-blue`/`ai-accent`
-  a `cobalt`/`cian`. Docs (`README`, `DEPLOYMENT_READINESS`, `PORTFOLIO_BRIEF`).
+- ✅ **Fase 1 — base:** tokens, tipografía Jost, `BrandLogo`, favicon,
+  `Navbar`/`Footer`, `ui/Button` (focus ring cian), `index.html`
+  (título/theme-color/OG). Copy "BorderCheck AI" → "Easy CUSTOMS" en la UI y
+  en todos los `docs/*.md` (los comentarios que citan `BorderCheck-AI_Backend`
+  quedan — es el repo real del backend).
+- ✅ **Fase 2 — barrido fino:** `shadow-lg`/`shadow-xl` → `shadow` (+ borde en
+  overlays); CTA del pitch sin sombra ni `hover:-translate`; degradado del
+  pitch a `from-cobalt/5 via-papel to-cian/10`; encabezados `<h1>` de página
+  → `text-cobalt`; `ai-accent` eliminado de `src/` — las píldoras/bordes/iconos
+  de "contenido IA" pasaron a `cian` (fondo `bg-cian/10`, borde/icono `cian`,
+  **texto siempre `cobalt`**); `DashboardHistorial.tsx` (prototipo muerto) borrado.
+- ✅ **Fase 3 — cierre de tokens:** los alias `brand-blue`/`ai-accent` se
+  renombraron a `cobalt` en los ~47 archivos que los usaban
+  (`brand-blue-hover` → `cobalt-600`) y se borraron de `tailwind.config.ts`.
+  La paleta queda en `cobalt` / `cian` / `papel` / `verdict-*`.
+- ✅ **Fase 3 — glifos → lucide:** `ErrorBoundary` (`⚠` → `AlertTriangle`),
+  `ToastContainer` (`✓`/`⚠`/`ℹ`/`✕` → `CheckCircle2`/`AlertTriangle`/`Info`/`X`),
+  `DocumentChecklist` (`✓` → `Check`). `ui/ProgressBar.tsx` (código muerto del
+  wizard multi-paso, ya no se importa) borrado. Quedan `→` como afordancia de
+  enlace en `History`/`Dashboard`/`Profile` — glifo tipográfico, no emoji.
+- 🔷 **Pendiente:** `public/og-image.png` (1200×630) con la marca.

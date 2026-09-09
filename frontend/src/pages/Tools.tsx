@@ -24,7 +24,7 @@ export default function Tools() {
             onClick={() => setActiveTab('tracking')}
             className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-colors ${
               activeTab === 'tracking'
-                ? 'bg-brand-blue text-white'
+                ? 'bg-cobalt text-white'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -34,7 +34,7 @@ export default function Tools() {
             onClick={() => setActiveTab('calculator')}
             className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-colors ${
               activeTab === 'calculator'
-                ? 'bg-brand-blue text-white'
+                ? 'bg-cobalt text-white'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >

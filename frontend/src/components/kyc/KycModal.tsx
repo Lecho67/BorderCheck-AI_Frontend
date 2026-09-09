@@ -69,7 +69,7 @@ export function KycModal({ tipo, onClose }: Props) {
         <div className="border-t border-slate-100 p-4">
           <button
             onClick={onClose}
-            className="w-full rounded-xl bg-brand-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-blue-hover"
+            className="w-full rounded-xl bg-cobalt px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-cobalt-600"
           >
             Entendido
           </button>

@@ -85,7 +85,7 @@ export default function Locker() {
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       <header className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Mi Casillero</h1>
+          <h1 className="text-2xl font-bold text-cobalt">Mi Casillero</h1>
           <p className="text-sm text-slate-500 mt-1">
             Tu código de casillero y las pre-alertas de paquetes en tránsito.
           </p>
@@ -96,10 +96,10 @@ export default function Locker() {
             setShowForm(true);
           }}
           disabled={soloLectura}
-          className="bg-brand-blue text-white px-5 py-2.5 rounded-lg font-medium
-                     hover:bg-brand-blue/90 focus:outline-none focus:ring-2
-                     focus:ring-brand-blue focus:ring-offset-2 transition
-                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-blue"
+          className="bg-cobalt text-white px-5 py-2.5 rounded-lg font-medium
+                     hover:bg-cobalt/90 focus:outline-none focus:ring-2
+                     focus:ring-cobalt focus:ring-offset-2 transition
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-cobalt"
         >
           + Pre-alertar paquete
         </button>
@@ -119,7 +119,7 @@ export default function Locker() {
         {ADDRESSES.map((addr) => (
           <div key={addr.id} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-3 flex items-center gap-2">
-              <span className="rounded-full bg-ai-accent/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-ai-accent">
+              <span className="rounded-full bg-cian/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-cobalt">
                 {addr.country}
               </span>
             </div>
@@ -131,8 +131,8 @@ export default function Locker() {
                 <p className="mt-2 text-sm text-slate-600">{addr.addressLine}</p>
                 <p className="text-sm text-slate-600">{addr.city}</p>
                 <button
-                  className={`mt-3 flex items-center gap-1.5 rounded text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-blue ${
-                    copiedId === addr.id ? "text-verdict-green-text" : "text-brand-blue hover:underline"
+                  className={`mt-3 flex items-center gap-1.5 rounded text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-cobalt ${
+                    copiedId === addr.id ? "text-verdict-green-text" : "text-cobalt hover:underline"
                   }`}
                   onClick={() => handleCopy(addr)}
                 >
@@ -182,7 +182,7 @@ export default function Locker() {
                         setEditando(p);
                         setShowForm(true);
                       }}
-                      className="p-2 text-slate-500 hover:text-brand-blue rounded-lg hover:bg-slate-50"
+                      className="p-2 text-slate-500 hover:text-cobalt rounded-lg hover:bg-slate-50"
                       title="Editar"
                     >
                       <Pencil className="w-4 h-4" />

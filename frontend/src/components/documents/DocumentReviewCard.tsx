@@ -66,7 +66,7 @@ export function DocumentReviewCard({ doc, onResuelto }: Props) {
         </div>
         <button
           onClick={handleVer}
-          className="flex items-center gap-1 text-sm text-brand-blue hover:underline"
+          className="flex items-center gap-1 text-sm text-cobalt hover:underline"
         >
           <Eye className="w-3.5 h-3.5" /> Ver
         </button>
@@ -78,7 +78,7 @@ export function DocumentReviewCard({ doc, onResuelto }: Props) {
         <button
           onClick={handleTomar}
           disabled={loading}
-          className="text-sm bg-brand-blue text-white px-3 py-1.5 rounded"
+          className="text-sm bg-cobalt text-white px-3 py-1.5 rounded"
         >
           {loading ? "Tomando..." : "Tomar documento"}
         </button>

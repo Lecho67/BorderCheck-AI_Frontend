@@ -59,8 +59,8 @@ export function ShippingCalculator() {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8 max-w-xl mx-auto">
       <div className="flex items-center gap-2 justify-center mb-1">
-        <Calculator className="w-4 h-4 text-brand-blue" />
-        <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide">
+        <Calculator className="w-4 h-4 text-cobalt" />
+        <p className="text-xs font-semibold text-cobalt uppercase tracking-wide">
           Calculadora de envíos e impuestos
         </p>
       </div>

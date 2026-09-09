@@ -15,7 +15,7 @@ type Tab = "nativa" | "powerbi";
 function TabFallback() {
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-blue border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-cobalt border-t-transparent" />
     </div>
   );
 }
@@ -25,7 +25,7 @@ export function Reports() {
 
   return (
     <div className="max-w-5xl mx-auto mt-16 p-6">
-      <h1 className="text-2xl font-bold mb-2">Reportes</h1>
+      <h1 className="text-2xl font-bold text-cobalt mb-2">Reportes</h1>
       <p className="text-slate-600 mb-6">
         Analítica de tus importaciones: volumen, tasa de aprobación e incidencias.
       </p>
@@ -35,7 +35,7 @@ export function Reports() {
           onClick={() => setTab("nativa")}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
             tab === "nativa"
-              ? "border-brand-blue text-brand-blue"
+              ? "border-cobalt text-cobalt"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >
@@ -45,7 +45,7 @@ export function Reports() {
           onClick={() => setTab("powerbi")}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
             tab === "powerbi"
-              ? "border-brand-blue text-brand-blue"
+              ? "border-cobalt text-cobalt"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >

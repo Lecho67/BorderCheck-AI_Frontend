@@ -25,12 +25,6 @@ export default {
           tint: "#E8F9FA",
         },
 
-        // Alias de compatibilidad — la app usa `brand-blue`/`ai-accent` en ~50
-        // archivos. Ambos apuntan a cobalto: así `text-ai-accent` (usado en
-        // varios lados) nunca resuelve a cian. Migrar a `cobalt`/`cian` de a poco.
-        "brand-blue": { DEFAULT: "#0F2C59", hover: "#1B4488" },
-        "ai-accent": "#0F2C59",
-
         // Veredictos: exclusivos para estados de diagnóstico, sin cambios.
         "verdict-green": { bg: "#ECFDF5", text: "#059669", border: "#059669" },
         "verdict-amber": { bg: "#FFFBEB", text: "#D97706", border: "#D97706" },

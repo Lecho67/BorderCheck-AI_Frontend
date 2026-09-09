@@ -95,7 +95,7 @@ export function Navbar() {
               </Link>
               <Link
                 to="/consulta/nueva"
-                className="bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline"
+                className="bg-cobalt hover:bg-cobalt/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline"
               >
                 + Nueva consulta
               </Link>
@@ -213,7 +213,7 @@ export function Navbar() {
           ) : (
             <Link
               to="/login"
-              className="bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm hidden sm:inline-block"
+              className="bg-cobalt hover:bg-cobalt/90 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm hidden sm:inline-block"
             >
               Iniciar sesión
             </Link>
@@ -266,7 +266,7 @@ export function Navbar() {
                 <Link
                   to="/login"
                   onClick={closeMobileMenu}
-                  className="text-center bg-brand-blue hover:bg-brand-blue/90 text-white font-medium px-4 py-3 rounded-xl transition-colors"
+                  className="text-center bg-cobalt hover:bg-cobalt/90 text-white font-medium px-4 py-3 rounded-xl transition-colors"
                 >
                   Iniciar sesión
                 </Link>
@@ -287,7 +287,7 @@ export function Navbar() {
                   <Link
                     to="/consulta/nueva"
                     onClick={closeMobileMenu}
-                    className="flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold px-4 py-3.5 rounded-xl mb-4 transition-colors"
+                    className="flex items-center justify-center gap-2 bg-cobalt hover:bg-cobalt/90 text-white font-semibold px-4 py-3.5 rounded-xl mb-4 transition-colors"
                   >
                     <PlusCircle className="w-5 h-5" />
                     Nueva consulta

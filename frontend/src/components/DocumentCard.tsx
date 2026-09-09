@@ -26,7 +26,7 @@ export function DocumentCard({ doc, onVer, onEliminar }: DocumentCardProps) {
       <div className="flex items-center gap-3 pt-1">
         <button
           onClick={() => onVer(doc)}
-          className="flex items-center gap-1.5 text-sm text-brand-blue font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-brand-blue rounded"
+          className="flex items-center gap-1.5 text-sm text-cobalt font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-cobalt rounded"
         >
           <Eye className="w-3.5 h-3.5" /> Ver documento
         </button>

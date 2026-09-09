@@ -109,7 +109,7 @@ export function Pitch() {
         </p>
         <Link
           to="/consulta/nueva"
-          className="inline-block bg-brand-blue text-white px-8 py-4 rounded-xl font-medium hover:bg-brand-blue-hover transition-colors"
+          className="inline-block bg-cobalt text-white px-8 py-4 rounded-xl font-medium hover:bg-cobalt-600 transition-colors"
         >
           Evaluar un envío ahora
         </Link>
@@ -141,7 +141,7 @@ export function Pitch() {
     </p>
     <Link
       to="/herramientas"
-      className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
+      className="inline-flex items-center justify-center gap-2 bg-cobalt hover:bg-cobalt-600 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
     >
       Probar herramientas interactivas
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -155,7 +155,7 @@ export function Pitch() {
       <section className="max-w-4xl mx-auto px-6 pb-20 grid sm:grid-cols-3 gap-5">
         {valores.map((v) => (
           <div key={v.numero} className="rounded-xl border border-slate-200 bg-white p-6">
-            <div className="w-9 h-9 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-sm mb-4">
+            <div className="w-9 h-9 rounded-lg bg-cobalt/10 text-cobalt flex items-center justify-center font-bold text-sm mb-4">
               {v.numero}
             </div>
             <h3 className="font-semibold text-slate-900 mb-2">{v.titulo}</h3>
@@ -167,7 +167,7 @@ export function Pitch() {
       {/* Cómo funciona */}
       <section className="bg-white border-y border-slate-200">
         <div className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+          <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
             Cómo funciona
           </p>
           <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
@@ -184,10 +184,10 @@ export function Pitch() {
               return (
                 <div key={paso.titulo} className="rounded-xl border border-slate-200 bg-slate-50 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="w-9 h-9 rounded-full bg-brand-blue text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-cobalt text-white flex items-center justify-center text-sm font-semibold shrink-0">
                       {i + 1}
                     </div>
-                    <Icon className="w-5 h-5 text-brand-blue" />
+                    <Icon className="w-5 h-5 text-cobalt" />
                   </div>
                   <h3 className="font-semibold text-slate-900 mb-2 text-sm">{paso.titulo}</h3>
                   <p className="text-sm text-slate-600">{paso.texto}</p>
@@ -201,7 +201,7 @@ export function Pitch() {
 
       {/* Beneficios / Casos de uso */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+        <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
           Beneficios para paquetería y e-commerce
         </p>
         <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
@@ -229,7 +229,7 @@ export function Pitch() {
       </section>
       {/* Casillero e Importación/Exportación — comparativa */}
 <section className="max-w-4xl mx-auto px-6 py-20">
-  <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+  <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
     Casillero e importación/exportación directa
   </p>
   <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
@@ -252,7 +252,7 @@ export function Pitch() {
 
       {/* FAQ */}
       <section className="max-w-2xl mx-auto px-6 py-20">
-        <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide mb-2 text-center">
+        <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
           Preguntas frecuentes
         </p>
         <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-12">

@@ -1,4 +1,4 @@
-# Auditoría de Readiness para Producción — BorderCheck AI (Frontend)
+# Auditoría de Readiness para Producción — Easy CUSTOMS (Frontend)
 
 > Estado general: **casi listo.** Host decidido (Vercel, plan gratuito, proyecto
 > independiente). Los archivos de despliegue del frontend ya están; faltan la

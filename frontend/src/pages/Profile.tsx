@@ -176,7 +176,7 @@ export function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto mt-16 mb-16 p-6">
-      <h1 className="text-2xl font-bold mb-1">Mi Perfil</h1>
+      <h1 className="text-2xl font-bold text-cobalt mb-1">Mi Perfil</h1>
       <p className="text-slate-600 mb-8">
         Gestioná tus datos personales, tu dirección y el estado de verificación de tu cuenta.
       </p>
@@ -193,7 +193,7 @@ export function Profile() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Ej: Juan Pérez"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div>
@@ -212,7 +212,7 @@ export function Profile() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Ej: +57 300 1234567"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div />
@@ -221,7 +221,7 @@ export function Profile() {
             <select
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value as DocumentType)}
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             >
               {TIPOS_DOCUMENTO.map((t) => (
                 <option key={t} value={t}>
@@ -237,7 +237,7 @@ export function Profile() {
               value={documentNumber}
               onChange={(e) => setDocumentNumber(e.target.value)}
               placeholder="Ej: 1002003004"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
         </div>
@@ -251,7 +251,7 @@ export function Profile() {
             Foto del documento de identidad
           </label>
           <p className="mb-3 text-xs text-slate-400">JPG, PNG o PDF — máximo 5 MB.</p>
-          <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 p-4 text-sm text-slate-500 transition-colors hover:border-brand-blue hover:text-brand-blue">
+          <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 p-4 text-sm text-slate-500 transition-colors hover:border-cobalt hover:text-cobalt">
             <Upload className="h-4 w-4" />
             {subiendoArchivo ? "Subiendo..." : "Subir foto del documento"}
             <input
@@ -289,7 +289,7 @@ export function Profile() {
               value={addressStreet}
               onChange={(e) => setAddressStreet(e.target.value)}
               placeholder="Ej: Calle 5 # 23-10"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div>
@@ -299,7 +299,7 @@ export function Profile() {
               value={addressCity}
               onChange={(e) => setAddressCity(e.target.value)}
               placeholder="Ej: Cali"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div>
@@ -309,7 +309,7 @@ export function Profile() {
               value={addressDepartment}
               onChange={(e) => setAddressDepartment(e.target.value)}
               placeholder="Ej: Valle del Cauca"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div>
@@ -319,7 +319,7 @@ export function Profile() {
               value={addressPostalCode}
               onChange={(e) => setAddressPostalCode(e.target.value)}
               placeholder="Ej: 760001"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
           <div>
@@ -329,7 +329,7 @@ export function Profile() {
               value={addressCountry}
               onChange={(e) => setAddressCountry(e.target.value)}
               placeholder="Ej: Colombia"
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
             />
           </div>
         </div>
@@ -361,14 +361,14 @@ export function Profile() {
               checked={terminosAceptados}
               disabled={terminosAceptados || aceptandoTerminos}
               onChange={(e) => handleAceptarTerminos(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-blue focus:ring-brand-blue"
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-cobalt focus:ring-cobalt"
             />
             <label htmlFor="chk-terminos" className="text-sm text-slate-700">
               Acepto los{" "}
               <button
                 type="button"
                 onClick={() => setModalAbierto("terminos")}
-                className="font-medium text-brand-blue underline underline-offset-2"
+                className="font-medium text-cobalt underline underline-offset-2"
               >
                 Términos y Condiciones
               </button>{" "}
@@ -388,14 +388,14 @@ export function Profile() {
               checked={habeasDataAceptado}
               disabled={habeasDataAceptado || aceptandoHabeasData}
               onChange={(e) => handleAceptarHabeasData(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-blue focus:ring-brand-blue"
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-cobalt focus:ring-cobalt"
             />
             <label htmlFor="chk-habeas" className="text-sm text-slate-700">
               Autorizo el tratamiento de mis datos personales conforme a la{" "}
               <button
                 type="button"
                 onClick={() => setModalAbierto("habeas_data")}
-                className="font-medium text-brand-blue underline underline-offset-2"
+                className="font-medium text-cobalt underline underline-offset-2"
               >
                 Política de Habeas Data (Ley 1581 de 2012)
               </button>
@@ -439,7 +439,7 @@ export function Profile() {
           </p>
         </div>
         {casilleroHabilitado && (
-          <Link to="/casillero" className="mt-3 inline-block text-sm font-medium text-brand-blue">
+          <Link to="/casillero" className="mt-3 inline-block text-sm font-medium text-cobalt">
             Ir a mi casillero →
           </Link>
         )}

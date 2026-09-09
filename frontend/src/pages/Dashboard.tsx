@@ -24,12 +24,12 @@ export function Dashboard() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-2xl font-semibold text-slate-900 mb-1">Hola, {displayName}</h1>
+      <h1 className="text-2xl font-semibold text-cobalt mb-1">Hola, {displayName}</h1>
       <p className="text-slate-500 mb-8">
         {loading ? "Cargando tus consultas..." : `Tienes ${consultas.length} consultas registradas.`}
       </p>
 
-      <div className="rounded-xl border-2 border-brand-blue bg-brand-blue/5 p-6 mb-8 flex items-center justify-between">
+      <div className="rounded-xl border-2 border-cobalt bg-cobalt/5 p-6 mb-8 flex items-center justify-between">
         <div>
           <p className="font-semibold text-slate-900">¿Nuevo envío?</p>
           <p className="text-sm text-slate-600">Obtén tu diagnóstico en menos de 1 minuto.</p>
@@ -50,7 +50,7 @@ export function Dashboard() {
             <Link
               key={c.id}
               to={`/consulta/${c.id}`}
-              className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 hover:border-brand-blue transition-colors"
+              className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 hover:border-cobalt transition-colors"
             >
               <div className="flex items-center gap-3">
                 <VerdictBadge nivel={c.nivel} />
@@ -62,7 +62,7 @@ export function Dashboard() {
         </div>
       )}
 
-      <Link to="/dashboard/historial" className="inline-block mt-6 text-sm text-brand-blue font-medium">
+      <Link to="/dashboard/historial" className="inline-block mt-6 text-sm text-cobalt font-medium">
         Ver todo el historial →
       </Link>
     </main>

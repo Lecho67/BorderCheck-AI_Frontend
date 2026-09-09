@@ -83,7 +83,7 @@ export function Register() {
 
       <p className="mt-6 text-center text-sm text-slate-500">
         ¿Ya tenés cuenta?{' '}
-        <Link to="/login" className="font-medium text-brand-blue hover:underline">
+        <Link to="/login" className="font-medium text-cobalt hover:underline">
           Iniciar sesión
         </Link>
       </p>
