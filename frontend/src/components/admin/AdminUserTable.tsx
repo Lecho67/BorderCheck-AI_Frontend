@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { fetchTodosLosUsuarios, actualizarRol, asignarGestor } from "@/lib/adminService";
 import type { Profile, UserRole } from "@/types/database.types";
 import { toast } from "@/lib/toast";
+import { Pagination } from "@/components/ui/Pagination";
+import { usePagination } from "@/hooks/usePagination";
 
 const ROLES: UserRole[] = ["cliente", "gestor", "agente", "admin"];
 
@@ -23,6 +25,7 @@ export function AdminUserTable() {
   const [error, setError] = useState<string | null>(null);
   const [guardandoId, setGuardandoId] = useState<string | null>(null);
   const [accionPendiente, setAccionPendiente] = useState<AccionPendiente | null>(null);
+  const [busqueda, setBusqueda] = useState("");
 
   const cargar = async () => {
     setLoading(true);
@@ -42,6 +45,17 @@ export function AdminUserTable() {
   }, []);
 
   const gestores = usuarios.filter((u) => u.role === "gestor");
+
+  const filtrados = useMemo(() => {
+    const q = busqueda.trim().toLowerCase();
+    if (!q) return usuarios;
+    return usuarios.filter(
+      (u) =>
+        (u.full_name ?? "").toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
+    );
+  }, [usuarios, busqueda]);
+
+  const { page, setPage, pageCount, pageItems } = usePagination(filtrados);
 
   // --- Paso 1: el usuario elige un cambio en el <select>, no se aplica todavía ---
 
@@ -118,60 +132,92 @@ export function AdminUserTable() {
     <div>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-            <tr>
-              <th className="px-4 py-3 font-medium">Usuario</th>
-              <th className="px-4 py-3 font-medium">Rol</th>
-              <th className="px-4 py-3 font-medium">Gestor asignado</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {usuarios.map((u) => (
-              <tr key={u.id} className="hover:bg-slate-50">
-                <td className="px-4 py-3">
-                  <p className="font-medium text-slate-800">{u.full_name || "(sin nombre)"}</p>
-                  <p className="text-xs text-slate-500">{u.email}</p>
-                </td>
-                <td className="px-4 py-3">
-                  <select
-                    value={u.role}
-                    disabled={guardandoId === u.id}
-                    onChange={(e) => solicitarCambioRol(u, e.target.value as Profile["role"])}
-                    className={selectClass}
-                  >
-                    {ROLES.map((r) => (
-                      <option key={r} value={r}>
-                        {r}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td className="px-4 py-3">
-                  {u.role === "cliente" ? (
-                    <select
-                      value={u.gestor_id ?? ""}
-                      disabled={guardandoId === u.id}
-                      onChange={(e) => solicitarCambioGestor(u, e.target.value)}
-                      className={selectClass}
-                    >
-                      <option value="">Sin asignar</option>
-                      {gestores.map((g) => (
-                        <option key={g.id} value={g.id}>
-                          {g.full_name || g.email}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span className="text-xs text-slate-400">N/A</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {usuarios.length > 8 && (
+        <div className="mb-4 flex flex-wrap items-end gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div>
+            <label htmlFor="admin-busqueda" className="mb-1 block text-xs font-medium text-slate-600">
+              Buscar usuario
+            </label>
+            <input
+              id="admin-busqueda"
+              type="search"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Nombre o correo"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+            />
+          </div>
+          {busqueda && (
+            <button onClick={() => setBusqueda("")} className="text-sm text-cobalt hover:underline">
+              Limpiar
+            </button>
+          )}
+        </div>
+      )}
+
+      {filtrados.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+          Ningún usuario coincide con la búsqueda.
+        </div>
+      ) : (
+        <>
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Usuario</th>
+                  <th className="px-4 py-3 font-medium">Rol</th>
+                  <th className="px-4 py-3 font-medium">Gestor asignado</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {pageItems.map((u) => (
+                  <tr key={u.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-slate-800">{u.full_name || "(sin nombre)"}</p>
+                      <p className="text-xs text-slate-500">{u.email}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={u.role}
+                        disabled={guardandoId === u.id}
+                        onChange={(e) => solicitarCambioRol(u, e.target.value as Profile["role"])}
+                        className={selectClass}
+                      >
+                        {ROLES.map((r) => (
+                          <option key={r} value={r}>
+                            {r}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-4 py-3">
+                      {u.role === "cliente" ? (
+                        <select
+                          value={u.gestor_id ?? ""}
+                          disabled={guardandoId === u.id}
+                          onChange={(e) => solicitarCambioGestor(u, e.target.value)}
+                          className={selectClass}
+                        >
+                          <option value="">Sin asignar</option>
+                          {gestores.map((g) => (
+                            <option key={g.id} value={g.id}>
+                              {g.full_name || g.email}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className="text-xs text-slate-400">N/A</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Pagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
+      )}
 
       {/* Modal de confirmación */}
       {accionPendiente && (

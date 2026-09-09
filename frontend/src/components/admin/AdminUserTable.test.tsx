@@ -105,4 +105,38 @@ describe("AdminUserTable", () => {
     await waitFor(() => expect(actualizarRolMock).toHaveBeenCalledWith("u1", "agente"));
     await waitFor(() => expect(screen.queryByText("Confirmar cambio")).not.toBeInTheDocument());
   });
+
+  it("pagina cuando hay más de 8 usuarios", async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) =>
+        usuario({ id: `u${i + 1}`, full_name: `Usuario ${i + 1}`, email: `u${i + 1}@test.test`, role: "agente" }),
+      ),
+    );
+    render(<AdminUserTable />);
+    await screen.findByText("Usuario 1");
+
+    expect(screen.queryByText("Usuario 9")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /siguiente/i }));
+
+    expect(screen.queryByText("Usuario 1")).not.toBeInTheDocument();
+    expect(screen.getByText("Usuario 9")).toBeInTheDocument();
+  });
+
+  it("filtra por nombre o correo", async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) =>
+        usuario({ id: `u${i + 1}`, full_name: `Usuario ${i + 1}`, email: `u${i + 1}@test.test`, role: "agente" }),
+      ),
+    );
+    render(<AdminUserTable />);
+    await screen.findByText("Usuario 1");
+
+    await user.type(screen.getByLabelText("Buscar usuario"), "Usuario 9");
+
+    expect(screen.getByText("Usuario 9")).toBeInTheDocument();
+    expect(screen.queryByText("Usuario 1")).not.toBeInTheDocument();
+  });
 });
