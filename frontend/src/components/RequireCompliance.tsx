@@ -38,7 +38,7 @@ export function RequireCompliance({ children }: { children: ReactNode }) {
         ? {
             titulo: "Tu verificación de identidad fue rechazada",
             detalle:
-              "Para operar el casillero necesitás una identidad verificada. Revisá el motivo del rechazo en tu perfil, corregí los datos y volvé a subir tu documento.",
+              "Para operar el casillero necesitás una identidad verificada. Revisá el motivo del rechazo, corregí los datos y volvé a subir tu documento.",
           }
         : {
             titulo: "Verificá tu identidad para usar el Casillero",
@@ -52,10 +52,10 @@ export function RequireCompliance({ children }: { children: ReactNode }) {
         <h1 className="text-lg font-semibold text-slate-900 mb-2">{motivo.titulo}</h1>
         <p className="text-sm text-slate-500 mb-6">{motivo.detalle}</p>
         <Link
-          to="/perfil"
+          to="/verificar-identidad"
           className="inline-block rounded-xl bg-cobalt px-5 py-2.5 text-sm font-medium text-white hover:bg-cobalt-600"
         >
-          Ir a mi perfil
+          Ir a verificar identidad
         </Link>
       </div>
     );

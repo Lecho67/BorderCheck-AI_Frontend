@@ -19,6 +19,7 @@ const VISTAS: { ruta: string; encabezado: RegExp | string }[] = [
   { ruta: "/dashboard", encabezado: /^Hola,/ },
   { ruta: "/dashboard/historial", encabezado: "Historial de consultas" },
   { ruta: "/perfil", encabezado: "Mi Perfil" },
+  { ruta: "/verificar-identidad", encabezado: "Verificar identidad" },
 ];
 
 for (const { ruta, encabezado } of VISTAS) {

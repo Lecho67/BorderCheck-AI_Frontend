@@ -1,11 +1,9 @@
 import { supabase } from "./supabase";
-import type { DocumentType, NotificationPreferences, Profile } from "@/types/database.types";
+import type { NotificationPreferences, Profile } from "@/types/database.types";
 
 export interface DatosInformacionPersonal {
   full_name: string;
   phone: string;
-  document_type: DocumentType;
-  document_number: string;
 }
 
 export interface DatosDireccion {
@@ -25,8 +23,6 @@ export async function actualizarInformacionPersonal(
     .update({
       full_name: datos.full_name.trim(),
       phone: datos.phone.trim(),
-      document_type: datos.document_type,
-      document_number: datos.document_number.trim(),
     })
     .eq("id", userId)
     .select()

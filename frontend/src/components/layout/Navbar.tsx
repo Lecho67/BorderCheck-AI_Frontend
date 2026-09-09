@@ -95,7 +95,7 @@ export function Navbar() {
               </Link>
               <Link
                 to="/consulta/nueva"
-                className="bg-cobalt hover:bg-cobalt/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline"
+                className="bg-cobalt hover:bg-cobalt/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cian focus-visible:ring-offset-2"
               >
                 + Nueva consulta
               </Link>
@@ -168,7 +168,7 @@ export function Navbar() {
                     Mi Perfil
                   </Link>
                   <Link
-                    to="/perfil"
+                    to="/verificar-identidad"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-2.5 px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                   >
@@ -411,7 +411,7 @@ export function Navbar() {
                     Mi Perfil{profile?.full_name ? ` · ${profile.full_name}` : ""}
                   </Link>
                   <Link
-                    to="/perfil"
+                    to="/verificar-identidad"
                     onClick={closeMobileMenu}
                     className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
                   >

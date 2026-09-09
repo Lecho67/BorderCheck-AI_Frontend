@@ -23,6 +23,7 @@ const Documents = lazy(() => import("@/pages/Documents"));
 const Tools = lazy(() => import("@/pages/Tools"));
 const SupportCenter = lazy(() => import("@/pages/SupportCenter").then((m) => ({ default: m.SupportCenter })));
 const Profile = lazy(() => import("@/pages/Profile").then((m) => ({ default: m.Profile })));
+const VerifyIdentity = lazy(() => import("@/pages/VerifyIdentity").then((m) => ({ default: m.VerifyIdentity })));
 const AdminPanel = lazy(() => import("@/pages/AdminPanel").then((m) => ({ default: m.AdminPanel })));
 const GestorPanel = lazy(() => import("@/pages/GestorPanel").then((m) => ({ default: m.GestorPanel })));
 const AgentPanel = lazy(() => import("@/pages/AgentPanel").then((m) => ({ default: m.AgentPanel })));
@@ -141,6 +142,16 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Verificación de identidad / KYC — sin RequireCompliance: es
+                  justamente donde el cliente completa los términos y el KYC */}
+              <Route
+                path="/verificar-identidad"
+                element={
+                  <ProtectedRoute>
+                    <VerifyIdentity />
                   </ProtectedRoute>
                 }
               />
