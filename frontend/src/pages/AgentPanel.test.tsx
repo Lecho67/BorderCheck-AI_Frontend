@@ -88,4 +88,20 @@ describe("AgentPanel", () => {
 
     expect(screen.getByText("drawer:c1")).toBeInTheDocument();
   });
+
+  it("pagina cuando hay más de 8 casos", async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) => caso(`c${i + 1}`, "Colombia")),
+    );
+    render(<AgentPanel />);
+    await screen.findByText("Cliente c1");
+
+    expect(screen.queryByText("Cliente c9")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /siguiente/i }));
+
+    expect(screen.queryByText("Cliente c1")).not.toBeInTheDocument();
+    expect(screen.getByText("Cliente c9")).toBeInTheDocument();
+  });
 });

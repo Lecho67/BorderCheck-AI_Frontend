@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { fetchColaDeRevision, type CasoEnCola } from "@/lib/agentService";
 import { CasoRevisionCard } from "@/components/agent/CasoRevisionCard";
+import { Pagination } from "@/components/ui/Pagination";
+import { usePagination } from "@/hooks/usePagination";
 import type { DiagnosticoEnvio } from "@/lib/types";
 import { badgeVerdictoClasses } from "@/lib/verdictBadge";
 
@@ -61,6 +63,8 @@ export function AgentPanel() {
       return true;
     });
   }, [casos, filtroPais, fechaDesde, fechaHasta]);
+
+  const { page, setPage, pageCount, pageItems } = usePagination(casosFiltrados);
 
   const casoSeleccionado = casos.find((c) => c.id === casoSeleccionadoId) ?? null;
 
@@ -151,66 +155,69 @@ export function AgentPanel() {
             : "Ningún caso coincide con los filtros aplicados."}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-              <tr>
-                <th className="px-4 py-3 font-medium">Cliente</th>
-                <th className="px-4 py-3 font-medium">Descripción</th>
-                <th className="px-4 py-3 font-medium">País</th>
-                <th className="px-4 py-3 font-medium">Veredicto IA</th>
-                <th className="px-4 py-3 font-medium">Fecha</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {casosFiltrados.map((caso) => {
-                const estado = estadoDeCaso(caso, user?.id);
-                return (
-                  <tr key={caso.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-slate-800">
-                        {caso.cliente?.full_name || caso.cliente?.email || caso.user_id}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3 max-w-xs truncate text-slate-600">
-                      {caso.product_description}
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{paisDeCaso(caso)}</td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`text-xs font-medium px-2 py-1 rounded ${badgeVerdictoClasses(caso.ai_verdict)}`}
-                      >
-                        {caso.ai_verdict}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-500">
-                      {new Date(caso.created_at).toLocaleDateString("es-CO", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`text-xs font-medium px-2 py-1 rounded ${estado.classes}`}>
-                        {estado.label}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => setCasoSeleccionadoId(caso.id)}
-                        className="text-sm font-medium text-cobalt hover:underline"
-                      >
-                        Auditar caso
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Cliente</th>
+                  <th className="px-4 py-3 font-medium">Descripción</th>
+                  <th className="px-4 py-3 font-medium">País</th>
+                  <th className="px-4 py-3 font-medium">Veredicto IA</th>
+                  <th className="px-4 py-3 font-medium">Fecha</th>
+                  <th className="px-4 py-3 font-medium">Estado</th>
+                  <th className="px-4 py-3 font-medium" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {pageItems.map((caso) => {
+                  const estado = estadoDeCaso(caso, user?.id);
+                  return (
+                    <tr key={caso.id} className="hover:bg-slate-50">
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-slate-800">
+                          {caso.cliente?.full_name || caso.cliente?.email || caso.user_id}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3 max-w-xs truncate text-slate-600">
+                        {caso.product_description}
+                      </td>
+                      <td className="px-4 py-3 text-slate-600">{paisDeCaso(caso)}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`text-xs font-medium px-2 py-1 rounded ${badgeVerdictoClasses(caso.ai_verdict)}`}
+                        >
+                          {caso.ai_verdict}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-500">
+                        {new Date(caso.created_at).toLocaleDateString("es-CO", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`text-xs font-medium px-2 py-1 rounded ${estado.classes}`}>
+                          {estado.label}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={() => setCasoSeleccionadoId(caso.id)}
+                          className="text-sm font-medium text-cobalt hover:underline"
+                        >
+                          Auditar caso
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <Pagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
       )}
 
       {casoSeleccionado && (
