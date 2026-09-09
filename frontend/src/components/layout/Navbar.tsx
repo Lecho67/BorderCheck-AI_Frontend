@@ -93,11 +93,8 @@ export function Navbar() {
               <Link to="/casillero" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
                 Casillero
               </Link>
-              <Link
-                to="/consulta/nueva"
-                className="bg-cobalt hover:bg-cobalt/90 text-white font-medium px-3 py-1.5 rounded-lg transition-colors hidden sm:inline focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cian focus-visible:ring-offset-2"
-              >
-                + Nueva consulta
+              <Link to="/consulta/nueva" className="text-slate-500 hover:text-slate-900 transition-colors hidden sm:inline">
+                Nueva consulta
               </Link>
             </>
           )}
