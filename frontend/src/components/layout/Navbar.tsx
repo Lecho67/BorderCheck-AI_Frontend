@@ -279,23 +279,19 @@ export function Navbar() {
 
             {user && (
               <>
-                {/* CTA principal destacado, arriba del todo para el pulgar */}
-                {(role === "cliente" || role === "admin") && (
-                  <Link
-                    to="/consulta/nueva"
-                    onClick={closeMobileMenu}
-                    className="flex items-center justify-center gap-2 bg-cobalt hover:bg-cobalt/90 text-white font-semibold px-4 py-3.5 rounded-xl mb-4 transition-colors"
-                  >
-                    <PlusCircle className="w-5 h-5" />
-                    Nueva consulta
-                  </Link>
-                )}
-
                 {(role === "cliente" || role === "admin") && (
                   <div className="mb-4">
                     <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                       Mi actividad
                     </p>
+                    <Link
+                      to="/consulta/nueva"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 px-2 py-3 rounded-lg text-slate-700 hover:bg-slate-50"
+                    >
+                      <PlusCircle className="w-4 h-4 text-slate-400" />
+                      Nueva consulta
+                    </Link>
                     <Link
                       to="/dashboard/historial"
                       onClick={closeMobileMenu}
