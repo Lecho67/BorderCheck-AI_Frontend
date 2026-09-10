@@ -95,34 +95,50 @@ export function Pitch() {
   return (
     <main>
       {/* Hero */}
-      <header className="max-w-2xl mx-auto px-6 pt-24 pb-16 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 text-cobalt text-xs font-medium mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-cian"></span>
-          Validación de IA aplicada a reglas de negocio críticas
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-cobalt mb-5 leading-tight">
-          Sabe si tu envío pasará la aduana, antes de despacharlo.
-        </h1>
-        <p className="text-lg text-slate-600 mb-9">
-          Easy CUSTOMS analiza cualquier envío internacional y determina, en segundos, si puede
-          transportarse por vía aérea — evitando retenciones, devoluciones o destrucciones en aduana.
-        </p>
-        <Link
-          to="/consulta/nueva"
-          className="inline-block bg-cobalt text-white px-8 py-4 rounded-xl font-medium hover:bg-cobalt-600 transition-colors"
-        >
-          Evaluar un envío ahora
-        </Link>
+      <header className="relative isolate overflow-hidden">
+        {/* Imagen de fondo: avión en ascenso sobre las nubes */}
+        <img
+          src="/images/hero.webp"
+          alt="Avión comercial en ascenso sobre las nubes"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[58%_14%]"
+        />
+        {/* Velo cobalto: el avión (más visible arriba, donde el velo es tenue)
+            da presencia de marca; el velo se refuerza hacia el centro/abajo
+            para la legibilidad del texto claro. */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/45 via-cobalt/62 to-cobalt/85" />
+        <div className="absolute inset-0 -z-10 bg-cobalt/20" />
 
-        <div className="flex justify-center gap-3 max-w-sm mx-auto mt-12">
-          <div className="flex-1 py-3 rounded-xl bg-verdict-green-bg text-verdict-green-text text-xs font-medium flex flex-col items-center gap-1">
-            <CheckCircle2 className="w-4 h-4" /> Apto
-          </div>
-          <div className="flex-1 py-3 rounded-xl bg-verdict-amber-bg text-verdict-amber-text text-xs font-medium flex flex-col items-center gap-1">
-            <AlertTriangle className="w-4 h-4" /> Advertencia
-          </div>
-          <div className="flex-1 py-3 rounded-xl bg-verdict-red-bg text-verdict-red-text text-xs font-medium flex flex-col items-center gap-1">
-            <XCircle className="w-4 h-4" /> Bloqueado
+        <div className="max-w-2xl mx-auto px-6 pt-28 pb-20 sm:pt-32 sm:pb-24 text-center">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 ring-1 ring-white/25 text-white text-xs font-medium mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-cian"></span>
+            Validación de IA aplicada a reglas de negocio críticas
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-white mb-5 leading-tight">
+            Sabe si tu envío pasará la aduana, antes de despacharlo.
+          </h1>
+          <p className="text-lg text-papel mb-9">
+            Easy CUSTOMS analiza cualquier envío internacional y determina, en segundos, si puede
+            transportarse por vía aérea — evitando retenciones, devoluciones o destrucciones en aduana.
+          </p>
+          <Link
+            to="/consulta/nueva"
+            className="inline-block bg-white text-cobalt px-8 py-4 rounded-xl font-medium hover:bg-papel transition-colors"
+          >
+            Evaluar un envío ahora
+          </Link>
+
+          <div className="flex justify-center gap-3 max-w-sm mx-auto mt-12 p-2 rounded-xl bg-papel">
+            <div className="flex-1 py-3 rounded-xl bg-verdict-green-bg text-verdict-green-text text-xs font-medium flex flex-col items-center gap-1">
+              <CheckCircle2 className="w-4 h-4" /> Apto
+            </div>
+            <div className="flex-1 py-3 rounded-xl bg-verdict-amber-bg text-verdict-amber-text text-xs font-medium flex flex-col items-center gap-1">
+              <AlertTriangle className="w-4 h-4" /> Advertencia
+            </div>
+            <div className="flex-1 py-3 rounded-xl bg-verdict-red-bg text-verdict-red-text text-xs font-medium flex flex-col items-center gap-1">
+              <XCircle className="w-4 h-4" /> Bloqueado
+            </div>
           </div>
         </div>
       </header>
