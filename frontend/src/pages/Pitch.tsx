@@ -107,8 +107,8 @@ export function Pitch() {
         {/* Velo cobalto: el avión (más visible arriba, donde el velo es tenue)
             da presencia de marca; el velo se refuerza hacia el centro/abajo
             para la legibilidad del texto claro. */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/45 via-cobalt/62 to-cobalt/70" />
-        <div className="absolute inset-0 -z-10 bg-cobalt/20" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/75 via-cobalt/62 to-cobalt/45" />
+        <div className="absolute inset-0 -z-10 bg-cobalt/60" />
 
         <div className="max-w-2xl mx-auto px-6 pt-14 pb-28 sm:pt-24 sm:pb-20 text-center">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 ring-1 ring-white/25 text-white text-xs font-medium mb-6">
@@ -155,6 +155,21 @@ export function Pitch() {
       Prueba el Rastreador Inteligente y la Calculadora de Envíos e Impuestos Aduaneros de Easy CUSTOMS,
       diseñados con IA para darte resultados precisos al instante.
     </p>
+
+<div className="max-w-4xl mx-auto px-6 pb-10 grid sm:grid-cols-3 gap-5">
+  {valores.map((v) => (
+    <div key={v.numero} className="rounded-xl border border-slate-200 bg-white p-6">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-9 h-9 shrink-0 rounded-lg bg-cobalt/10 text-cobalt flex items-center justify-center font-bold text-sm">
+          {v.numero}
+        </div>
+        <h3 className="font-semibold text-slate-900">{v.titulo}</h3>
+      </div>
+      {/* <p className="text-sm text-slate-600">{v.texto}</p> */}
+    </div>
+  ))}
+</div>
+
     <Link
       to="/herramientas"
       className="inline-flex items-center justify-center gap-2 bg-cobalt hover:bg-cobalt-600 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
@@ -167,29 +182,27 @@ export function Pitch() {
   </div>
 </section>
 
-      {/* Diferenciadores */}
-      <section className="max-w-4xl mx-auto px-6 pb-20 grid sm:grid-cols-3 gap-5">
-        {valores.map((v) => (
-          <div key={v.numero} className="rounded-xl border border-slate-200 bg-white p-6">
-            <div className="w-9 h-9 rounded-lg bg-cobalt/10 text-cobalt flex items-center justify-center font-bold text-sm mb-4">
-              {v.numero}
-            </div>
-            <h3 className="font-semibold text-slate-900 mb-2">{v.titulo}</h3>
-            <p className="text-sm text-slate-600">{v.texto}</p>
-          </div>
-        ))}
-      </section>
-
       {/* Cómo funciona */}
-      <section className="bg-white border-y border-slate-200">
+      <section className="relative isolate overflow-hidden">
+        {/* Imagen de fondo: buque portacontenedores en altamar */}
+        <img
+          src="/images/AduanaBarco.webp"
+          alt="Buque portacontenedores navegando en altamar"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[68%_45%]"
+        />
+        {/* Velo cobalto: mismo tratamiento que el hero, para legibilidad del texto claro */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/80 via-cobalt/68 to-cobalt/85" />
+
         <div className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
+          <p className="text-xs font-semibold text-white uppercase tracking-wide mb-2 text-center">
             Cómo funciona
           </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white text-center mb-4">
             De la recepción del paquete al despacho, sin sorpresas en aduana
           </h2>
-          <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
+          <p className="text-papel text-center max-w-2xl mx-auto mb-14">
             Un flujo diseñado para integrarse antes del despacho — no reemplaza tu operación logística,
             la protege.
           </p>
@@ -228,34 +241,51 @@ export function Pitch() {
           el impacto se mide en tiempo y dinero.
         </p>
 
-        <div className="grid sm:grid-cols-3 gap-6">
-          {beneficios.map((b) => {
-            const Icon = b.icon;
-            return (
-              <div key={b.titulo} className="rounded-xl border border-slate-200 bg-white p-6">
-                <div className="w-10 h-10 rounded-lg bg-cian/10 text-cian flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <h3 className="font-semibold text-cobalt mb-2">{b.titulo}</h3>
-                <p className="text-sm text-slate-600">{b.texto}</p>
-              </div>
-            );
-          })}
+<div className="grid sm:grid-cols-3 gap-6">
+  {beneficios.map((b) => {
+    const Icon = b.icon;
+    return (
+      <div key={b.titulo} className="rounded-xl border border-slate-200 bg-white p-6">
+        {/* Contenedor flex para alinear icono y título en línea */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-lg bg-cian/10 text-cian flex items-center justify-center shrink-0">
+            <Icon className="w-5 h-5" />
+          </div>
+          <h3 className="font-semibold text-cobalt">{b.titulo}</h3>
         </div>
+        
+        <p className="text-sm text-slate-600">{b.texto}</p>
+      </div>
+    );
+  })}
+</div>
       </section>
       {/* Casillero e Importación/Exportación — comparativa */}
-<section className="max-w-4xl mx-auto px-6 py-20">
-  <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
-    Casillero e importación/exportación directa
-  </p>
-  <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-4">
-    La misma logística, con cero sorpresas en aduana
-  </h2>
-  <p className="text-slate-600 text-center max-w-2xl mx-auto mb-14">
-    Así se compara la experiencia de un casillero virtual tradicional frente a un despacho
-    pre-validado por Easy CUSTOMS.
-  </p>
-  <ComparisonTable />
+<section className="relative isolate overflow-hidden">
+  {/* Imagen de fondo: contenedores cargándose en el muelle */}
+  <img
+    src="/images/AduanaMuelle.webp"
+    alt="Contenedores de carga siendo cargados en el muelle"
+    loading="lazy"
+    decoding="async"
+    className="absolute inset-0 -z-20 h-full w-full object-cover object-[38%_35%]"
+  />
+  {/* Velo cobalto: mismo tratamiento que el hero y "Cómo funciona" */}
+  <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/80 via-cobalt/68 to-cobalt/85" />
+
+  <div className="max-w-4xl mx-auto px-6 py-20">
+    <p className="text-xs font-semibold text-white uppercase tracking-wide mb-2 text-center">
+      Casillero e importación/exportación directa
+    </p>
+    <h2 className="text-2xl sm:text-3xl font-semibold text-white text-center mb-4">
+      La misma logística, con cero sorpresas en aduana
+    </h2>
+    <p className="text-papel text-center max-w-2xl mx-auto mb-14">
+      Así se compara la experiencia de un casillero virtual tradicional frente a un despacho
+      pre-validado por Easy CUSTOMS.
+    </p>
+    <ComparisonTable />
+  </div>
 </section>
 
       {/* Cita / posicionamiento */}
@@ -267,18 +297,31 @@ export function Pitch() {
       </section>
 
       {/* FAQ */}
-      <section className="max-w-2xl mx-auto px-6 py-20">
-        <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2 text-center">
-          Preguntas frecuentes
-        </p>
-        <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt text-center mb-12">
-          Dudas comunes sobre la integración y el motor de IA
-        </h2>
+      <section className="relative isolate overflow-hidden">
+        {/* Imagen de fondo: tránsito marítimo en puerto */}
+        <img
+          src="/images/TransitoMaritimo.webp"
+          alt="Puerto de tránsito marítimo con grúas y buques de carga"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[40%_38%]"
+        />
+        {/* Velo cobalto: mismo tratamiento que el hero, "Cómo funciona" y la comparativa */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/80 via-cobalt/68 to-cobalt/85" />
 
-        <div className="space-y-3">
-          {faqs.map((faq) => (
-            <FaqItem key={faq.pregunta} pregunta={faq.pregunta} respuesta={faq.respuesta} />
-          ))}
+        <div className="max-w-2xl mx-auto px-6 py-20">
+          <p className="text-xs font-semibold text-white uppercase tracking-wide mb-2 text-center">
+            Preguntas frecuentes
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white text-center mb-12">
+            Dudas comunes sobre la integración y el motor de IA
+          </h2>
+
+          <div className="space-y-3">
+            {faqs.map((faq) => (
+              <FaqItem key={faq.pregunta} pregunta={faq.pregunta} respuesta={faq.respuesta} />
+            ))}
+          </div>
         </div>
       </section>
 

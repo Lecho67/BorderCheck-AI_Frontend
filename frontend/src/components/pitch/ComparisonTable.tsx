@@ -50,13 +50,15 @@ function Estado({ texto, positivo }: { texto: string; positivo: boolean | null }
 export function ComparisonTable() {
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Encabezados (desktop) */}
+      {/* Encabezados (desktop). Texto claro: el componente se usa sobre el
+          fondo fotográfico con velo cobalto de la sección "Casillero e
+          importación/exportación" en Pitch.tsx. */}
       <div className="hidden sm:grid grid-cols-[1.2fr_1fr_1fr] gap-4 mb-3 px-1">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Criterio</span>
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+        <span className="text-xs font-semibold text-papel/70 uppercase tracking-wide">Criterio</span>
+        <span className="text-xs font-semibold text-papel/70 uppercase tracking-wide">
           Paquetería tradicional
         </span>
-        <span className="text-xs font-semibold text-cobalt uppercase tracking-wide">Easy CUSTOMS</span>
+        <span className="text-xs font-semibold text-white uppercase tracking-wide">Easy CUSTOMS</span>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white overflow-hidden divide-y divide-slate-200">
