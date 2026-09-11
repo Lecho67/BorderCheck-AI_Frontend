@@ -107,10 +107,10 @@ export function Pitch() {
         {/* Velo cobalto: el avión (más visible arriba, donde el velo es tenue)
             da presencia de marca; el velo se refuerza hacia el centro/abajo
             para la legibilidad del texto claro. */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/45 via-cobalt/62 to-cobalt/85" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-cobalt/45 via-cobalt/62 to-cobalt/70" />
         <div className="absolute inset-0 -z-10 bg-cobalt/20" />
 
-        <div className="max-w-2xl mx-auto px-6 pt-28 pb-20 sm:pt-32 sm:pb-24 text-center">
+        <div className="max-w-2xl mx-auto px-6 pt-14 pb-28 sm:pt-24 sm:pb-20 text-center">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 ring-1 ring-white/25 text-white text-xs font-medium mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-cian"></span>
             Validación de IA aplicada a reglas de negocio críticas
@@ -119,8 +119,8 @@ export function Pitch() {
             Sabe si tu envío pasará la aduana, antes de despacharlo.
           </h1>
           <p className="text-lg text-papel mb-9">
-            Easy CUSTOMS analiza cualquier envío internacional y determina, en segundos, si puede
-            transportarse por vía aérea — evitando retenciones, devoluciones o destrucciones en aduana.
+            Analiza cualquier envío internacional y determina, en segundos, si puede
+            transportarse por vía aérea evitando retenciones, devoluciones o destrucciones en aduana.
           </p>
           <Link
             to="/consulta/nueva"
@@ -129,7 +129,7 @@ export function Pitch() {
             Evaluar un envío ahora
           </Link>
 
-          <div className="flex justify-center gap-3 max-w-sm mx-auto mt-12 p-2 rounded-xl bg-papel">
+          {/* <div className="flex justify-center gap-3 max-w-sm mx-auto mt-12 p-2 rounded-xl bg-papel">
             <div className="flex-1 py-3 rounded-xl bg-verdict-green-bg text-verdict-green-text text-xs font-medium flex flex-col items-center gap-1">
               <CheckCircle2 className="w-4 h-4" /> Apto
             </div>
@@ -139,7 +139,7 @@ export function Pitch() {
             <div className="flex-1 py-3 rounded-xl bg-verdict-red-bg text-verdict-red-text text-xs font-medium flex flex-col items-center gap-1">
               <XCircle className="w-4 h-4" /> Bloqueado
             </div>
-          </div>
+          </div> */}
         </div>
       </header>
       {/* CTA hacia Herramientas Interactivas */}
