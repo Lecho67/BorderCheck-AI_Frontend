@@ -56,9 +56,9 @@ de la base y su configuración viven en el proyecto Supabase.
 | A2 | Sin headers de seguridad / CSP. | ✅ En `frontend/vercel.json`: CSP (`frame-src` de Power BI, `connect-src` de Supabase REST+WSS), `HSTS`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cache-Control` inmutable para `/assets`. Probado sin violaciones en páginas públicas + shell. **Verificar en el preview** las páginas autenticadas, sobre todo `/reportes` (Recharts + Power BI). |
 | A3 | **Allowlist de redirect de Supabase Auth.** Reset de contraseña y `detectSessionInUrl` necesitan el dominio de prod **y** los de preview (`*.vercel.app`) en Supabase → Auth → URL Configuration. | ❌ Abierto — Simon (§9). |
 | A4 | Sin pipeline de deploy. | ✅ Vercel despliega en push a `main` + preview por PR. `ci.yml` sigue como gate de calidad. |
-| A5 | **CORS del motor de reglas + `connect-src`.** El backend debe allowlistear el origen de prod y de preview para el preflight de `/api/v1/shipments/evaluate`. **Y** el `connect-src` de la CSP debe sumar la URL del backend cuando exista. | ❌ Abierto — cross-equipo. |
+| A5 | **CORS del motor de reglas + `connect-src`.** El backend debe allowlistear el origen de prod y de preview para el preflight de `/api/v1/shipments/evaluate`. **Y** el `connect-src` de la CSP debe sumar la URL del backend cuando exista. | 🔷 Parcial. Lado frontend ya resuelto: `src/lib/api.ts` dejó de mandar `Authorization` (el `cors()` del backend no lo incluye en `allowedHeaders` — rompía el preflight) y ahora manda `X-API-Key` (`VITE_X_API_KEY`). El `.env` del backend ya lista `https://border-check-ai-frontend.vercel.app` en `CORS_ORIGINS`, pero **le falta el/los origen(es) de preview** (`*.vercel.app` por PR) y su entrada de `localhost:5173` está mal escrita (`http://localhost:5173/consulta/nueva` con path — el header `Origin` nunca incluye path, así que esa entrada no matchea nada; debería ser solo `http://localhost:5173`). El `connect-src` de la CSP sigue sin la URL del backend — bloqueado por la decisión #2 (no hay URL de prod estable todavía; agregar un wildcard de `trycloudflare.com` no es buena idea porque abriría `connect-src` a cualquier túnel, propio o de un atacante, vía XSS). |
 | A6 | **Matiz de RLS abierto.** Un agente puede sobrescribir un caso `assigned_agent_id IS NULL` sin "tomarlo" antes (`CLAUDE.md`). | ⏳ Decisión de launch. |
-| A7 | **Envs en build-time.** `VITE_*` se inlinea en `vite build`. Cargar `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` y (cuando exista) `VITE_API_BASE_URL` en Vercel → Environment Variables **antes** del primer deploy. Sin `VITE_API_BASE_URL` la app corre con el mock. | ❌ Abierto — Simon (§9). |
+| A7 | **Envs en build-time.** `VITE_*` se inlinea en `vite build`. Cargar `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` y (cuando existan) `VITE_API_BASE_URL` + `VITE_X_API_KEY` en Vercel → Environment Variables **antes** del primer deploy. Sin `VITE_API_BASE_URL` la app corre con el mock. | ❌ Abierto — Simon (§9). |
 
 ---
 
@@ -84,6 +84,7 @@ service-role key, contraseña de DB, secreto de proveedor externo, token de Powe
 | `VITE_SUPABASE_URL` | Pública OK | En el bundle. |
 | `VITE_SUPABASE_ANON_KEY` | Pública OK | En el bundle; RLS es la frontera. |
 | `VITE_API_BASE_URL` | Pública OK | En el bundle. Vacía ⇒ mock local. |
+| `VITE_X_API_KEY` | Pública OK (igual que las de arriba: cualquier `VITE_*` es visible en el bundle) | Header `X-API-Key` hacia el motor de reglas. No es un secreto real de protección — es rate-limiting/allowlisting básico, no autenticación de usuario final. Si se filtra, rotar la key en `API_KEYS` del backend. |
 | `E2E_*` (`.env.e2e`) | **Secreta** | Contraseñas de cuentas E2E + (a futuro) service-role key. Git-ignored ✅, docker-ignored ✅. Nunca subir a Vercel. |
 
 CORS / rate-limiting / Helmet: no aplican en el SPA — van en el CDN (headers) + Supabase
@@ -140,6 +141,11 @@ Sanitización de inputs: React escapa JSX por defecto; no hay `dangerouslySetInn
 - [ ] `build.sourcemap: true` + integrar Sentry (gate `PROD`)
 - [ ] `ErrorBoundary`: `⚠` → `<AlertTriangle>`
 - [ ] (opcional) E2E en CI con secrets; "Wait for CI" en Vercel
+- [ ] Sumar la URL real del backend al `connect-src` de `frontend/vercel.json` cuando exista (decisión #2)
+
+**Frontend — hecho (sesión CORS/API key):**
+- [x] `src/lib/api.ts`: se dejó de enviar `Authorization: Bearer <jwt>` (no está en `allowedHeaders` del CORS del backend) y se agregó `X-API-Key` desde `VITE_X_API_KEY` (opcional — si no está seteada, el request va sin el header).
+- [x] `src/vite-env.d.ts` + `.env.example`: tipado y documentación de `VITE_X_API_KEY`.
 
 **Base de datos (SQL Editor, con verificación):**
 - [ ] Esquema versionado en `supabase/migrations/`
@@ -149,8 +155,11 @@ Sanitización de inputs: React escapa JSX por defecto; no hay `dangerouslySetInn
 - [x] Agregar el dominio de prod **y** `*.vercel.app` a Auth → URL Configuration
 
 **Cross-equipo (backend):**
-- [ ] CORS del motor de reglas allowlistea el origen de prod y de preview
-- [ ] Sumar la URL del backend al `connect-src` de la CSP (`frontend/vercel.json`)
+- [x] CORS del motor de reglas allowlistea el origen de prod (`https://border-check-ai-frontend.vercel.app` ya está en `CORS_ORIGINS`)
+- [ ] Sumar los orígenes de **preview** (`*.vercel.app` por PR) a `CORS_ORIGINS` — hoy solo está el de prod
+- [ ] Arreglar la entrada de `localhost:5173` en `CORS_ORIGINS`: tiene un path pegado (`http://localhost:5173/consulta/nueva`) que hace que nunca matchee un `Origin` real; debería ser solo `http://localhost:5173`
+- [ ] Confirmar que `API_KEYS` del backend incluye la key que carga `VITE_X_API_KEY` en Vercel
+- [ ] Sumar la URL del backend al `connect-src` de la CSP (`frontend/vercel.json`) — bloqueado hasta tener URL de prod
 - [ ] Confirmar códigos HS reales en logs
 - [ ] URL de producción del backend
 
