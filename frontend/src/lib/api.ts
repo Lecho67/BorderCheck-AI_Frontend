@@ -10,6 +10,7 @@ import {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 const USE_MOCK = !API_BASE_URL;
+const API_KEY = import.meta.env.VITE_X_API_KEY ?? "";
 
 /**
  * Único punto de intercambio con el backend real (motor de reglas de
@@ -26,9 +27,11 @@ const USE_MOCK = !API_BASE_URL;
  *   Response 500: { error, message, detail? }
  *
  * El backend NO valida el JWT de Supabase (no tiene auth ni persistencia
- * propia), así que seguimos siendo nosotros quienes:
- *   1. Adjuntamos el JWT igual, por si en el futuro agregan validación.
- *   2. Guardamos el resultado en `customs_queries` desde el cliente.
+ * propia) — la sesión de Supabase se sigue usando solo para guardar el
+ * historial desde el cliente. La autenticación ante el motor de reglas es
+ * por API key (`X-API-Key`, ver `VITE_X_API_KEY`): su CORS ya no permite el
+ * header `Authorization` (no está en `allowedHeaders`), así que enviarlo
+ * rompería el preflight y el fetch fallaría antes de llegar al backend.
  */
 export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnvio> {
   if (USE_MOCK) {
@@ -47,9 +50,7 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(session?.access_token
-        ? { Authorization: `Bearer ${session.access_token}` }
-        : {}),
+      ...(API_KEY ? { "X-API-Key": API_KEY } : {}),
     },
     body: JSON.stringify(shipmentRequest),
   });

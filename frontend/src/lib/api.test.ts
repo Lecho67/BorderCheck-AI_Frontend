@@ -71,3 +71,47 @@ describe("evaluarEnvio — guardado en el historial", () => {
     expect(insertMock).not.toHaveBeenCalled();
   });
 });
+
+describe("evaluarEnvio — headers hacia el motor de reglas", () => {
+  // El CORS del backend (allowedHeaders) no incluye "Authorization" — mandarlo
+  // rompería el preflight, así que ya no debe ir en el request.
+  it("no manda Authorization aunque haya sesión de Supabase", async () => {
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        final_status: "APROBADO",
+        evaluated_at: "2026-01-01T00:00:00Z",
+        alerts: [],
+        tax_estimation: { requires_taxes: false },
+      }),
+    });
+
+    await evaluarEnvio(wizard());
+
+    const headers = (fetch as Mock).mock.calls[0][1].headers as Record<string, string>;
+    expect(headers).not.toHaveProperty("Authorization");
+  });
+
+  it("manda X-API-Key cuando VITE_X_API_KEY está seteada", async () => {
+    vi.stubEnv("VITE_X_API_KEY", "test-key-123");
+    vi.resetModules();
+    const { evaluarEnvio: evaluarEnvioConKey } = await import("./api");
+
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        final_status: "APROBADO",
+        evaluated_at: "2026-01-01T00:00:00Z",
+        alerts: [],
+        tax_estimation: { requires_taxes: false },
+      }),
+    });
+
+    await evaluarEnvioConKey(wizard());
+
+    const headers = (fetch as Mock).mock.calls[0][1].headers as Record<string, string>;
+    expect(headers["X-API-Key"]).toBe("test-key-123");
+
+    vi.unstubAllEnvs();
+  });
+});
