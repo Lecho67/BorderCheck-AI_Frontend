@@ -78,6 +78,75 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
   return diagnostico;
 }
 
+export interface HsCodeSuggestion {
+  hsCode: string;
+  hsDescription: string;
+  confidence: number;
+  possibleHazmat: boolean;
+}
+
+/** Timeout del lado del cliente para /hs-code-suggestion. Un poco por
+ * encima del timeout del backend hacia Ollama (OLLAMA_MAPPER_TIMEOUT_MS,
+ * 8s por defecto) para no cortar la petición antes de que el propio
+ * backend termine de degradar a su fallback determinista. */
+const HS_SUGGESTION_TIMEOUT_MS = 10_000;
+
+/**
+ * Sugerencia de HS code standalone (`POST /api/v1/shipments/hs-code-suggestion`),
+ * pensada para dispararse en segundo plano al pasar del Paso 2 al Paso 3 del
+ * wizard de envío — antes de tener el resto de los datos del envío. Nunca
+ * lanza: ante cualquier fallo (red, timeout, backend caído, sin
+ * VITE_API_BASE_URL, o el propio backend degradando a su fallback con
+ * confidence_score 0) devuelve `null` para que el llamador deje el campo
+ * vacío y el usuario lo complete a mano, sin interrumpir el flujo del wizard.
+ */
+export async function sugerirHsCode(
+  descripcionItem: string,
+  categoria?: string
+): Promise<HsCodeSuggestion | null> {
+  if (USE_MOCK) return null;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), HS_SUGGESTION_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/shipments/hs-code-suggestion`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(API_KEY ? { "X-API-Key": API_KEY } : {}),
+      },
+      body: JSON.stringify({
+        product_description: descripcionItem,
+        ...(categoria ? { category: categoria } : {}),
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) return null;
+
+    const body = await response.json();
+    // confidence_score 0 = el propio backend degradó a su fallback
+    // determinista (Ollama caído, timeout, circuito abierto...): no vale la
+    // pena pre-llenar el campo con "999999", es preferible dejarlo vacío.
+    if (typeof body?.hs_code !== "string" || !(body.confidence_score > 0)) {
+      return null;
+    }
+
+    return {
+      hsCode: body.hs_code,
+      hsDescription: body.hs_description,
+      confidence: body.confidence_score,
+      possibleHazmat: Boolean(body.possible_hazmat),
+    };
+  } catch {
+    // Red caída, timeout (AbortError), JSON inválido: degradación silenciosa.
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 /**
  * Guarda el veredicto en `customs_queries` para que aparezca en
  * `/dashboard/historial` (que ya lee de Supabase). Si falla, no rompemos el

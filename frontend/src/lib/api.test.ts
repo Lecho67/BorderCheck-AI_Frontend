@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { evaluarEnvio } from "./api";
+import { evaluarEnvio, sugerirHsCode } from "./api";
 import { supabase } from "./supabase";
 import { declaracionesEspecialesVacias, type WizardFormData } from "./types";
 
@@ -111,6 +111,96 @@ describe("evaluarEnvio — headers hacia el motor de reglas", () => {
 
     const headers = (fetch as Mock).mock.calls[0][1].headers as Record<string, string>;
     expect(headers["X-API-Key"]).toBe("test-key-123");
+
+    vi.unstubAllEnvs();
+  });
+});
+
+describe("sugerirHsCode", () => {
+  it("devuelve la sugerencia mapeada cuando el backend responde con confianza > 0", async () => {
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        hs_code: "610910",
+        hs_description: "Camisetas de algodón",
+        confidence_score: 0.9,
+        possible_hazmat: false,
+      }),
+    });
+
+    const sugerencia = await sugerirHsCode("camiseta de algodón blanca", "Ropa");
+
+    expect(sugerencia).toEqual({
+      hsCode: "610910",
+      hsDescription: "Camisetas de algodón",
+      confidence: 0.9,
+      possibleHazmat: false,
+    });
+
+    const [url, init] = (fetch as Mock).mock.calls[0];
+    expect(url).toContain("/api/v1/shipments/hs-code-suggestion");
+    const body = JSON.parse(init.body);
+    expect(body).toEqual({ product_description: "camiseta de algodón blanca", category: "Ropa" });
+  });
+
+  it("manda el body sin 'category' cuando no se pasa categoría", async () => {
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        hs_code: "854370",
+        hs_description: "Aparato eléctrico",
+        confidence_score: 0.8,
+        possible_hazmat: false,
+      }),
+    });
+
+    await sugerirHsCode("cargador USB-C");
+
+    const body = JSON.parse((fetch as Mock).mock.calls[0][1].body);
+    expect(body).toEqual({ product_description: "cargador USB-C" });
+  });
+
+  it("devuelve null cuando el backend degrada a su fallback (confidence_score 0)", async () => {
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        hs_code: "999999",
+        hs_description: "No se pudo clasificar automáticamente.",
+        confidence_score: 0,
+        possible_hazmat: true,
+      }),
+    });
+
+    const sugerencia = await sugerirHsCode("producto cualquiera");
+
+    expect(sugerencia).toBeNull();
+  });
+
+  it("devuelve null si la respuesta no es ok, sin lanzar", async () => {
+    (fetch as Mock).mockResolvedValue({ ok: false, json: async () => ({}) });
+
+    const sugerencia = await sugerirHsCode("producto cualquiera");
+
+    expect(sugerencia).toBeNull();
+  });
+
+  it("devuelve null si fetch rechaza (red caída, timeout), sin lanzar", async () => {
+    (fetch as Mock).mockRejectedValue(new Error("network error"));
+
+    const sugerencia = await sugerirHsCode("producto cualquiera");
+
+    expect(sugerencia).toBeNull();
+  });
+
+  it("devuelve null sin llamar a fetch cuando no hay VITE_API_BASE_URL (modo mock)", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", "");
+    vi.resetModules();
+    const { sugerirHsCode: sugerirEnMock } = await import("./api");
+
+    const sugerencia = await sugerirEnMock("producto cualquiera");
+
+    expect(sugerencia).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
 
     vi.unstubAllEnvs();
   });
