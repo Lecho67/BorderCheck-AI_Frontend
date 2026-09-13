@@ -205,11 +205,16 @@ type ErrorKey =
 
 type FormErrors = Partial<Record<ErrorKey, string>>;
 
-/** Estado de la sugerencia de HS code en segundo plano (Paso 2 -> Paso 3). */
+/** Estado de la sugerencia de HS code en segundo plano (Paso 2 -> Paso 3).
+ * "low_confidence" es una respuesta válida del backend (no un error): la
+ * clasificación no llegó al umbral mínimo de confianza, así que se muestra
+ * un aviso discreto en vez del badge de IA. "error" es un fallo real (red,
+ * timeout, backend caído) y se maneja en silencio, sin aviso visible. */
 type HsSuggestionState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "success"; hsCode: string }
+  | { status: "low_confidence" }
   | { status: "error" };
 
 /** Qué claves de error bloquean el avance de cada paso — usado tanto para
@@ -400,18 +405,18 @@ export function ShipmentForm({ onSubmit, isSubmitting }: ShipmentFormProps) {
     setHsSuggestion({ status: "loading" });
 
     sugerirHsCode(descripcion, form.categoria || undefined)
-      .then((sugerencia) => {
-        if (!sugerencia) {
-          setHsSuggestion({ status: "error" });
+      .then((resultado) => {
+        if (resultado.status !== "success") {
+          setHsSuggestion({ status: resultado.status });
           return;
         }
-        setHsSuggestion({ status: "success", hsCode: sugerencia.hsCode });
+        setHsSuggestion({ status: "success", hsCode: resultado.hsCode });
         // Si el usuario ya escribió algo (a mano, o mientras la sugerencia
         // viajaba), no se pisa su valor.
         setForm((prev) =>
           prev.partidaArancelariaTentativa
             ? prev
-            : { ...prev, partidaArancelariaTentativa: sugerencia.hsCode }
+            : { ...prev, partidaArancelariaTentativa: resultado.hsCode }
         );
       })
       .catch(() => setHsSuggestion({ status: "error" }));
@@ -627,6 +632,11 @@ export function ShipmentForm({ onSubmit, isSubmitting }: ShipmentFormProps) {
                 }
                 disabled={hsSuggestion.status === "loading"}
               />
+              {hsSuggestion.status === "low_confidence" && (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  No se pudo inferir la partida arancelaria. Ingresa una manualmente.
+                </p>
+              )}
             </div>
           </div>
           <p className="text-xs text-slate-400">
