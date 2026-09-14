@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Download } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { fetchVolumenMensual, type PuntoVolumenMensual } from "@/lib/reportsService";
+import { fetchClienteIdsDelGestor } from "@/lib/gestorService";
 import { toast } from "@/lib/toast";
 
 export function NativeReportsView() {
@@ -12,10 +13,16 @@ export function NativeReportsView() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!profile || !user) return;
     let activo = true;
     setLoading(true);
-    const userId = profile?.role === "admin" ? undefined : user?.id;
-    fetchVolumenMensual(userId)
+
+    const cargar = async () => {
+      const userIds = profile.role === "admin" ? undefined : await fetchClienteIdsDelGestor(user.id);
+      return fetchVolumenMensual(userIds);
+    };
+
+    cargar()
       .then((data) => {
         if (activo) setDatos(data);
       })

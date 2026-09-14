@@ -11,11 +11,14 @@ const MESES_A_MOSTRAR = 6;
 
 /**
  * Volumen de envíos por mes, Aprobados vs. Retenidos (todo lo que no sea
- * APROBADO: PRECAUCION, REQUIERE_DOCUMENTACION, BLOQUEO). Si se pasa userId,
- * se filtra a las consultas de ese cliente; si no, es el agregado global
- * (uso pensado para admin).
+ * APROBADO: PRECAUCION, REQUIERE_DOCUMENTACION, BLOQUEO). Si se pasa
+ * `userIds`, se filtra a las consultas de esos clientes (cartera de un
+ * gestor); si no, es el agregado global (uso pensado para admin).
+ *
+ * `userIds` es un array (no un solo id) porque un gestor no tiene
+ * `customs_queries` propias — las de su cartera son las de sus clientes.
  */
-export async function fetchVolumenMensual(userId?: string): Promise<PuntoVolumenMensual[]> {
+export async function fetchVolumenMensual(userIds?: string[]): Promise<PuntoVolumenMensual[]> {
   const desde = new Date();
   desde.setMonth(desde.getMonth() - (MESES_A_MOSTRAR - 1));
   desde.setDate(1);
@@ -26,9 +29,9 @@ export async function fetchVolumenMensual(userId?: string): Promise<PuntoVolumen
     .select("ai_verdict, created_at")
     .gte("created_at", desde.toISOString());
 
-  if (userId) query = query.eq("user_id", userId);
+  if (userIds) query = query.in("user_id", userIds);
 
-  const { data, error } = await query;
+  const { data, error } = userIds && userIds.length === 0 ? { data: [], error: null } : await query;
   if (error) throw new Error(error.message);
 
   const buckets = new Map<string, { aprobados: number; retenidos: number }>();
