@@ -73,6 +73,17 @@ const beneficios = [
   },
 ];
 
+const equipo = [
+  {
+    nombre: "Simon Colonia Amador",
+    foto: "/team/simon.jpg",
+  },
+  {
+    nombre: "Diego Alejandro Caro Vaca",
+    foto: "/team/diego.png",
+  },
+];
+
 const faqs = [
   {
     pregunta: "¿Cómo se integra Easy CUSTOMS con mi operación de paquetería o e-commerce actual?",
@@ -294,6 +305,34 @@ export function Pitch() {
           "No es una app de ocio — resuelve un problema real de dinero y legalidad en la logística
           internacional."
         </p>
+      </section>
+
+      {/* Equipo */}
+      <section className="bg-white border-y border-slate-200 max-w-3xl mx-auto px-6 py-20 text-center">
+        <p className="text-xs font-semibold text-cobalt uppercase tracking-wide mb-2">
+          Quiénes estamos detrás
+        </p>
+        <h2 className="text-2xl sm:text-3xl font-semibold text-cobalt mb-4">Nuestro equipo</h2>
+        <p className="text-slate-600 max-w-2xl mx-auto mb-14">
+          Dos personas construyendo Easy CUSTOMS de punta a punta: la idea, el producto y la
+          ingeniería full-stack.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-10 max-w-xl mx-auto">
+          {equipo.map((persona) => (
+            <div key={persona.nombre} className="flex flex-col items-center">
+              <img
+                src={persona.foto}
+                alt={persona.nombre}
+                loading="lazy"
+                decoding="async"
+                className="w-28 h-28 rounded-full object-cover border border-slate-200 mb-4"
+              />
+              <h3 className="font-semibold text-slate-900">{persona.nombre}</h3>
+              <p className="text-sm text-slate-500 font-medium">Cofundador</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* FAQ */}
