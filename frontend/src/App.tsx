@@ -6,6 +6,7 @@ import { RequireCompliance } from "@/components/RequireCompliance";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ToastContainer } from "@/components/ui/ToastContainer";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 // Pitch es la home ("/" y "/pitch"): se carga eager para que la primera visita
 // no vea un spinner. El resto de las vistas van por ruta con React.lazy.
 import { Pitch } from "@/pages/Pitch";
@@ -42,6 +43,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <ToastContainer />
+      <CookieConsentBanner />
     </div>
   );
 }

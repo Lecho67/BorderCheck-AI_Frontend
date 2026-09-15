@@ -13,11 +13,16 @@ export function Register() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Honeypot anti-spam: campo invisible para personas (fuera de pantalla,
+  // aria-hidden, sin tabIndex) que los bots de registro automático sí
+  // completan. Si llega con valor, se descarta el envío en silencio.
+  const [empresaHoneypot, setEmpresaHoneypot] = useState('');
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (empresaHoneypot) return;
     setError(null);
     setLoading(true);
     try {
@@ -50,6 +55,17 @@ export function Register() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <p className="text-sm text-red-500">{error}</p>}
+
+        <input
+          type="text"
+          name="empresa"
+          value={empresaHoneypot}
+          onChange={(e) => setEmpresaHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden opacity-0"
+        />
 
         <Input
           type="text"

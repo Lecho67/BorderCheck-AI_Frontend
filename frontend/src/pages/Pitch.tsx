@@ -183,7 +183,7 @@ export function Pitch() {
 
     <Link
       to="/herramientas"
-      className="inline-flex items-center justify-center gap-2 bg-cobalt hover:bg-cobalt-600 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
+      className="inline-flex items-center justify-center gap-2 border border-cobalt text-cobalt hover:bg-cobalt/5 font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-colors"
     >
       Probar herramientas interactivas
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
