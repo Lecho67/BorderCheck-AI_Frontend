@@ -80,7 +80,7 @@ const equipo = [
   },
   {
     nombre: "Diego Alejandro Caro Vaca",
-    foto: "/team/diego.png",
+    foto: "/team/diego.jpg",
   },
 ];
 
