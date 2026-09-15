@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { solicitarCambioContrasena } from '@/lib/profileService';
 import { toast } from '@/lib/toast';
 
@@ -174,8 +175,7 @@ export function Login() {
         />
 
         <div>
-          <Input
-            type="password"
+          <PasswordInput
             label="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

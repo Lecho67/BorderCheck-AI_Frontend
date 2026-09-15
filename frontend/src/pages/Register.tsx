@@ -4,6 +4,7 @@ import { CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -66,8 +67,7 @@ export function Register() {
           placeholder="tu@correo.com"
           required
         />
-        <Input
-          type="password"
+        <PasswordInput
           label="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
