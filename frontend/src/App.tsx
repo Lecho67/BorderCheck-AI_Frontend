@@ -6,6 +6,7 @@ import { RequireCompliance } from "@/components/RequireCompliance";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ToastContainer } from "@/components/ui/ToastContainer";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 // Pitch es la home ("/" y "/pitch"): se carga eager para que la primera visita
 // no vea un spinner. El resto de las vistas van por ruta con React.lazy.
 import { Pitch } from "@/pages/Pitch";
@@ -22,6 +23,8 @@ const Locker = lazy(() => import("@/pages/Locker"));
 const Documents = lazy(() => import("@/pages/Documents"));
 const Tools = lazy(() => import("@/pages/Tools"));
 const SupportCenter = lazy(() => import("@/pages/SupportCenter").then((m) => ({ default: m.SupportCenter })));
+const Terminos = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.Terminos })));
+const Privacidad = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.Privacidad })));
 const Profile = lazy(() => import("@/pages/Profile").then((m) => ({ default: m.Profile })));
 const VerifyIdentity = lazy(() => import("@/pages/VerifyIdentity").then((m) => ({ default: m.VerifyIdentity })));
 const AdminPanel = lazy(() => import("@/pages/AdminPanel").then((m) => ({ default: m.AdminPanel })));
@@ -40,6 +43,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <ToastContainer />
+      <CookieConsentBanner />
     </div>
   );
 }
@@ -67,6 +71,8 @@ export default function App() {
               <Route path="/registro" element={<Register />} />
               <Route path="/herramientas" element={<Tools />} />
               <Route path="/soporte" element={<SupportCenter />} />
+              <Route path="/terminos" element={<Terminos />} />
+              <Route path="/privacidad" element={<Privacidad />} />
 
               {/* Rutas privadas */}
               <Route

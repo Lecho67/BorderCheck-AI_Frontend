@@ -1,12 +1,14 @@
-import { forwardRef, useId, type InputHTMLAttributes } from "react";
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  /** Ícono/botón fijo a la derecha del input (ej. el toggle de PasswordInput). */
+  endAdornment?: ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className = "", id, ...props }, ref) => {
+  ({ label, error, className = "", id, endAdornment, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
     return (
@@ -16,14 +18,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <input
-          id={inputId}
-          ref={ref}
-          className={`w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent ${
-            error ? "border-red-400" : "border-slate-300"
-          } ${className}`}
-          {...props}
-        />
+        <div className="relative">
+          <input
+            id={inputId}
+            ref={ref}
+            className={`w-full rounded-xl border p-3 ${endAdornment ? "pr-11" : ""} focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent ${
+              error ? "border-red-400" : "border-slate-300"
+            } ${className}`}
+            {...props}
+          />
+          {endAdornment && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">{endAdornment}</div>
+          )}
+        </div>
         {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
       </div>
     );

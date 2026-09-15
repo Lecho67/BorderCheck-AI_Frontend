@@ -17,6 +17,16 @@ function contarVeredictos(consultas: CustomsQuery[]): Record<string, number> {
 }
 
 /**
+ * Solo los IDs de los clientes en la cartera de un gestor (sin sus
+ * consultas) — usado para filtrar reportes/métricas sin traer de más.
+ */
+export async function fetchClienteIdsDelGestor(gestorId: string): Promise<string[]> {
+  const { data, error } = await supabase.from("profiles").select("id").eq("gestor_id", gestorId);
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => row.id as string);
+}
+
+/**
  * Clientes de la cartera de un gestor con sus consultas aduaneras.
  *
  * Dos consultas: primero los perfiles con `gestor_id = <gestor>`, después

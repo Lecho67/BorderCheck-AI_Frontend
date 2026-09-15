@@ -13,8 +13,12 @@ export function Footer() {
           <Link to="/soporte" className="hover:text-slate-600 transition-colors">
             Centro de ayuda
           </Link>
-          <span>Privacidad</span>
-          <span>Términos</span>
+          <Link to="/privacidad" className="hover:text-slate-600 transition-colors">
+            Privacidad
+          </Link>
+          <Link to="/terminos" className="hover:text-slate-600 transition-colors">
+            Términos
+          </Link>
         </div>
       </div>
     </footer>

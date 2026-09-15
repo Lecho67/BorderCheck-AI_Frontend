@@ -8,3 +8,7 @@ Disallow: /perfil
 Disallow: /casillero
 Disallow: /documentos
 Disallow: /consulta
+Disallow: /landing
+Disallow: /restablecer-contrasena
+
+Sitemap: https://border-check-ai-frontend.vercel.app/sitemap.xml

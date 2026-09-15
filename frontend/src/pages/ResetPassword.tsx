@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { KeyRound, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { toast } from "@/lib/toast";
 
 export function ResetPassword() {
@@ -89,30 +90,22 @@ export function ResetPassword() {
       <p className="text-slate-600 mb-8">Ingresá tu nueva contraseña para completar el restablecimiento.</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Nueva contraseña</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Mínimo 8 caracteres"
-            minLength={8}
-            required
-            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Confirmar nueva contraseña</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Repetí la contraseña"
-            minLength={8}
-            required
-            className="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cobalt focus:border-transparent"
-          />
-        </div>
+        <PasswordInput
+          label="Nueva contraseña"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder="Mínimo 8 caracteres"
+          minLength={8}
+          required
+        />
+        <PasswordInput
+          label="Confirmar nueva contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Repetí la contraseña"
+          minLength={8}
+          required
+        />
 
         <Button type="submit" disabled={isLoading} className="w-full">
           {isLoading ? "Actualizando..." : "Actualizar contraseña"}

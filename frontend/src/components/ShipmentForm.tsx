@@ -612,8 +612,8 @@ export function ShipmentForm({ onSubmit, isSubmitting }: ShipmentFormProps) {
                   Partida arancelaria (HS Code) — opcional
                 </label>
                 {hsSuggestion.status === "loading" && (
-                  <span className="flex items-center gap-1 text-[11px] text-cian shrink-0">
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                  <span className="flex items-center gap-1 text-[11px] text-cobalt shrink-0">
+                    <Loader2 className="w-3 h-3 animate-spin text-cian" />
                     Generando...
                   </span>
                 )}
