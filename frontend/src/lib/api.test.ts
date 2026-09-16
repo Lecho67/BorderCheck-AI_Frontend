@@ -117,7 +117,7 @@ describe("evaluarEnvio — headers hacia el motor de reglas", () => {
 });
 
 describe("sugerirHsCode", () => {
-  it("devuelve la sugerencia mapeada cuando el backend responde con confianza > 0", async () => {
+  it("devuelve status success con la sugerencia mapeada cuando el backend confía en su clasificación", async () => {
     (fetch as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -128,9 +128,10 @@ describe("sugerirHsCode", () => {
       }),
     });
 
-    const sugerencia = await sugerirHsCode("camiseta de algodón blanca", "Ropa");
+    const resultado = await sugerirHsCode("camiseta de algodón blanca", "Ropa");
 
-    expect(sugerencia).toEqual({
+    expect(resultado).toEqual({
+      status: "success",
       hsCode: "610910",
       hsDescription: "Camisetas de algodón",
       confidence: 0.9,
@@ -160,46 +161,46 @@ describe("sugerirHsCode", () => {
     expect(body).toEqual({ product_description: "cargador USB-C" });
   });
 
-  it("devuelve null cuando el backend degrada a su fallback (confidence_score 0)", async () => {
+  it("devuelve status low_confidence cuando el backend descarta la clasificación (hs_code null)", async () => {
     (fetch as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
-        hs_code: "999999",
-        hs_description: "No se pudo clasificar automáticamente.",
-        confidence_score: 0,
-        possible_hazmat: true,
+        hs_code: null,
+        hs_description: null,
+        confidence_score: 0.3,
+        possible_hazmat: false,
       }),
     });
 
-    const sugerencia = await sugerirHsCode("producto cualquiera");
+    const resultado = await sugerirHsCode("asdasdasd");
 
-    expect(sugerencia).toBeNull();
+    expect(resultado).toEqual({ status: "low_confidence" });
   });
 
-  it("devuelve null si la respuesta no es ok, sin lanzar", async () => {
+  it("devuelve status error si la respuesta no es ok, sin lanzar", async () => {
     (fetch as Mock).mockResolvedValue({ ok: false, json: async () => ({}) });
 
-    const sugerencia = await sugerirHsCode("producto cualquiera");
+    const resultado = await sugerirHsCode("producto cualquiera");
 
-    expect(sugerencia).toBeNull();
+    expect(resultado).toEqual({ status: "error" });
   });
 
-  it("devuelve null si fetch rechaza (red caída, timeout), sin lanzar", async () => {
+  it("devuelve status error si fetch rechaza (red caída, timeout), sin lanzar", async () => {
     (fetch as Mock).mockRejectedValue(new Error("network error"));
 
-    const sugerencia = await sugerirHsCode("producto cualquiera");
+    const resultado = await sugerirHsCode("producto cualquiera");
 
-    expect(sugerencia).toBeNull();
+    expect(resultado).toEqual({ status: "error" });
   });
 
-  it("devuelve null sin llamar a fetch cuando no hay VITE_API_BASE_URL (modo mock)", async () => {
+  it("devuelve status error sin llamar a fetch cuando no hay VITE_API_BASE_URL (modo mock)", async () => {
     vi.stubEnv("VITE_API_BASE_URL", "");
     vi.resetModules();
     const { sugerirHsCode: sugerirEnMock } = await import("./api");
 
-    const sugerencia = await sugerirEnMock("producto cualquiera");
+    const resultado = await sugerirEnMock("producto cualquiera");
 
-    expect(sugerencia).toBeNull();
+    expect(resultado).toEqual({ status: "error" });
     expect(fetch).not.toHaveBeenCalled();
 
     vi.unstubAllEnvs();

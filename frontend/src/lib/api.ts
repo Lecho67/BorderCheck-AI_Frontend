@@ -78,12 +78,25 @@ export async function evaluarEnvio(data: WizardFormData): Promise<DiagnosticoEnv
   return diagnostico;
 }
 
-export interface HsCodeSuggestion {
-  hsCode: string;
-  hsDescription: string;
-  confidence: number;
-  possibleHazmat: boolean;
-}
+/**
+ * Resultado de pedir una sugerencia de HS code. Tres desenlaces distintos
+ * a propósito (no un simple `| null`) porque el frontend reacciona distinto
+ * a cada uno:
+ *   - "success": hay un código para pre-llenar y mostrar el badge de IA.
+ *   - "low_confidence": el backend SÍ respondió, pero decidió (umbral de
+ *     confianza mínima del lado del servidor — ver hsCodeSuggestionController.ts
+ *     en el backend) que la clasificación no es lo bastante confiable como
+ *     para ofrecerla. No es un error: es una respuesta válida que dice "no
+ *     hay sugerencia". El campo debe quedar vacío y mostrar un aviso
+ *     discreto invitando a completarlo a mano.
+ *   - "error": fallo real (red, timeout, backend caído). Degradación
+ *     silenciosa, sin aviso visible — el usuario no tiene por qué enterarse
+ *     de un problema de infraestructura, solo completa el campo si quiere.
+ */
+export type HsCodeSuggestionOutcome =
+  | { status: "success"; hsCode: string; hsDescription: string; confidence: number; possibleHazmat: boolean }
+  | { status: "low_confidence" }
+  | { status: "error" };
 
 /** Timeout del lado del cliente para /hs-code-suggestion. Un poco por
  * encima del timeout del backend hacia Ollama (OLLAMA_MAPPER_TIMEOUT_MS,
@@ -95,16 +108,15 @@ const HS_SUGGESTION_TIMEOUT_MS = 10_000;
  * Sugerencia de HS code standalone (`POST /api/v1/shipments/hs-code-suggestion`),
  * pensada para dispararse en segundo plano al pasar del Paso 2 al Paso 3 del
  * wizard de envío — antes de tener el resto de los datos del envío. Nunca
- * lanza: ante cualquier fallo (red, timeout, backend caído, sin
- * VITE_API_BASE_URL, o el propio backend degradando a su fallback con
- * confidence_score 0) devuelve `null` para que el llamador deje el campo
- * vacío y el usuario lo complete a mano, sin interrumpir el flujo del wizard.
+ * lanza: ante cualquier fallo de red/timeout/backend caído resuelve a
+ * `{ status: "error" }`; el umbral de confianza mínima lo decide el backend
+ * (single source of truth), este helper solo traduce su respuesta.
  */
 export async function sugerirHsCode(
   descripcionItem: string,
   categoria?: string
-): Promise<HsCodeSuggestion | null> {
-  if (USE_MOCK) return null;
+): Promise<HsCodeSuggestionOutcome> {
+  if (USE_MOCK) return { status: "error" };
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), HS_SUGGESTION_TIMEOUT_MS);
@@ -123,17 +135,18 @@ export async function sugerirHsCode(
       signal: controller.signal,
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) return { status: "error" };
 
     const body = await response.json();
-    // confidence_score 0 = el propio backend degradó a su fallback
-    // determinista (Ollama caído, timeout, circuito abierto...): no vale la
-    // pena pre-llenar el campo con "999999", es preferible dejarlo vacío.
-    if (typeof body?.hs_code !== "string" || !(body.confidence_score > 0)) {
-      return null;
+
+    // hs_code null = el backend decidió que la confianza era insuficiente
+    // (o ininteligible) — no es un fallo de red, es una respuesta válida.
+    if (typeof body?.hs_code !== "string") {
+      return { status: "low_confidence" };
     }
 
     return {
+      status: "success",
       hsCode: body.hs_code,
       hsDescription: body.hs_description,
       confidence: body.confidence_score,
@@ -141,7 +154,7 @@ export async function sugerirHsCode(
     };
   } catch {
     // Red caída, timeout (AbortError), JSON inválido: degradación silenciosa.
-    return null;
+    return { status: "error" };
   } finally {
     clearTimeout(timeoutId);
   }

@@ -14,7 +14,7 @@ vi.mock("@/lib/api", () => ({
 const sugerirHsCodeMock = vi.mocked(sugerirHsCode);
 
 beforeEach(() => {
-  sugerirHsCodeMock.mockReset().mockResolvedValue(null);
+  sugerirHsCodeMock.mockReset().mockResolvedValue({ status: "error" });
 });
 
 function setup(isSubmitting = false) {
@@ -271,6 +271,7 @@ describe("ShipmentForm — sugerencia de HS code (Paso 2 -> Paso 3)", () => {
     expect(hsInput).toBeDisabled();
 
     resolver({
+      status: "success",
       hsCode: "854370",
       hsDescription: "Aparato eléctrico",
       confidence: 0.85,
@@ -283,12 +284,12 @@ describe("ShipmentForm — sugerencia de HS code (Paso 2 -> Paso 3)", () => {
   });
 
   it("no sobreescribe un HS code que el usuario ya escribió a mano", async () => {
-    sugerirHsCodeMock.mockResolvedValueOnce(null);
+    sugerirHsCodeMock.mockResolvedValueOnce({ status: "error" });
     const user = userEvent.setup();
     setup();
 
-    // Primer paso por el wizard: sin sugerencia (null), el usuario escribe
-    // su propio código en el Paso 3.
+    // Primer paso por el wizard: sin sugerencia, el usuario escribe su
+    // propio código en el Paso 3.
     await llegarAPaso2(user);
     await elegirSelect(user, "Selecciona un país", "Colombia");
     await user.type(
@@ -304,6 +305,7 @@ describe("ShipmentForm — sugerencia de HS code (Paso 2 -> Paso 3)", () => {
     // esta vez con resultado) y avanza de nuevo.
     await user.click(screen.getByRole("button", { name: "Anterior" }));
     sugerirHsCodeMock.mockResolvedValueOnce({
+      status: "success",
       hsCode: "999888",
       hsDescription: "Otra cosa",
       confidence: 0.7,
@@ -322,7 +324,7 @@ describe("ShipmentForm — sugerencia de HS code (Paso 2 -> Paso 3)", () => {
   });
 
   it("no relanza la petición si se vuelve al Paso 2 y se avanza de nuevo sin cambiar la descripción", async () => {
-    sugerirHsCodeMock.mockResolvedValue(null);
+    sugerirHsCodeMock.mockResolvedValue({ status: "error" });
     const user = userEvent.setup();
     setup();
 
@@ -339,5 +341,31 @@ describe("ShipmentForm — sugerencia de HS code (Paso 2 -> Paso 3)", () => {
     await user.click(screen.getByRole("button", { name: "Siguiente" }));
 
     expect(sugerirHsCodeMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("baja confianza: no pre-llena, no muestra el badge de IA, y avisa que se complete a mano", async () => {
+    sugerirHsCodeMock.mockResolvedValueOnce({ status: "low_confidence" });
+    const user = userEvent.setup();
+    setup();
+
+    await llegarAPaso2(user);
+    await elegirSelect(user, "Selecciona un país", "Colombia");
+    await user.type(
+      screen.getByPlaceholderText("Ej. Audífonos inalámbricos con estuche de carga"),
+      "asdasdasd"
+    );
+    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+
+    const hsInput = await waitFor(() => {
+      const input = screen.getByPlaceholderText("Ej. 851762");
+      expect(
+        screen.getByText("No se pudo inferir la partida arancelaria. Ingresa una manualmente.")
+      ).toBeInTheDocument();
+      return input;
+    });
+
+    expect(hsInput).toHaveValue("");
+    expect(hsInput).not.toBeDisabled();
+    expect(screen.queryByText("Sugerido por IA")).not.toBeInTheDocument();
   });
 });
